@@ -8,7 +8,7 @@
 #
 #* Creation Date : 29-01-2013
 #
-#* Last Modified : Mon 04 Feb 2013 04:45:41 PM ART
+#* Last Modified : Tue 05 Feb 2013 03:26:43 PM ART
 #
 #* Created By :  Ezequiel Castillo
 #
@@ -36,18 +36,18 @@ def replace_words(text, word_dic):
         return word_dic[match.group(0)]
     return rc.sub(translate, text)
 
-def multiple_subst(infile, replace_pattern):
+def multiple_subst(strin, replace_pattern):
     # read the file
-    fin = open(infile, "r")
-    str1 = fin.read()
-    fin.close()
+    #fin = open(infile, "r")
+    #str1 = fin.read()
+    #fin.close()
     # add 'replace pattern' : 'replacement' to dictionary
     dict_make = dictFromSequence(replace_pattern)
     # call the function and get the changed text
-    str2 = replace_words(str1, dict_make)
+    strout = replace_words(strin, dict_make)
     # write changed text back out
     fout = open("run-"+infile, "w")
-    fout.write(str2)
+    fout.write(strout)
     fout.close()
 
 
@@ -74,7 +74,7 @@ class Base(object):
             return filesList
 
     def createFolders(self, suffixNo=None, suffixName=None, foldersName="run"):
-        """Create subfolders containing all files declared with the filesToCopy
+        """Create subfolders containing all files declared within the filesToCopy
         option (all files included, otherwise) and ignoring those declared at the
         modFiles option"""
 
@@ -84,7 +84,7 @@ class Base(object):
 
         if suffixNo or suffixName:
             if suffixNo:
-                self.suffixList = range(suffixNo)
+                self.suffixList = range(1, suffixNo+1)
             else:
                 self.suffixList = suffixName
         else:
@@ -114,5 +114,5 @@ class Base(object):
 
 if __name__ == "__main__":
     a = Base(modFiles='ispymodule.py')
-    a.createFolders(suffixNo=9)
+    a.createFolders(suffixNo=30)
     #a.replacePattern
