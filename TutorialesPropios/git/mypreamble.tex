@@ -1,0 +1,80 @@
+\usepackage[utf8x]{inputenc}
+\usepackage[spanish,activeacute,es-noshorthands]{babel} % Caracteres conacentos. Modificado E. Castillo.
+\usepackage{amsmath,amssymb,amsfonts,latexsym,cancel,chemarrow} %Soporte para símbolos y font matemáticos
+\usepackage{verbatim}
+\usepackage{color}
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{threeparttable} %Footnotes en las tablas
+\usepackage{booktabs}          
+\usepackage{multirow} 
+\usepackage{rotating}
+\usepackage{listings} % Ambiente para incluir Codigo Fuente 
+\usepackage{a4wide}
+\usepackage{sidecap} %Side Caption
+\usepackage[scriptsize,bf]{caption} %Caption negrita y chiquita
+\usepackage{tikz}
+\usetikzlibrary{calc,3d}
+\usepackage{gnuplot-lua-tikz}
+\usepackage{grffile} %Para leer archivo .algo.pdf
+\usepackage{array}
+\usepackage[version=3]{mhchem}
+\usepackage{setspace}
+%%\onehalfspacing
+\usepackage{parskip}
+\setlength{\parindent}{15pt}
+\setlength{\parskip}{1ex plus4mm minus3mm}
+%\parskip=1\baselineskip \advance\parskip by 0pt plus 2pt
+
+\usepackage{blindtext}
+
+%*****COLORS*****
+\definecolor{mygreen}{RGB}{0,117,0}
+\definecolor{myviolet}{RGB}{200,193,249}
+\definecolor{mylightyellow}{RGB}{249,248,193}
+
+
+\graphicspath{{img/}} 
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+
+
+\lstdefinelanguage{Git}{
+  basicstyle=\small\ttfamily,
+  breaklines=true,
+  frame=single,
+  morestring=[b]',
+  moredelim=[is][\color{red}\ttfamily]{|}{|},
+  moredelim=[is][\color{gray}\ttfamily]{||}{||},
+  framerule=0pt,
+  rulesep=4pt,
+  framextopmargin=4pt,
+  framexbottommargin=4pt,
+  aboveskip=2ex,
+  belowskip=1ex,
+  numbers=none,  % where to put the line-numbers; possible values are (none, left, right)
+  %numbersep=0pt,
+  %numberstyle=\tiny\color{gray},
+  %stepnumber=2,
+  tabsize=4,
+  classoffset=0,
+  keywords={git},
+  keywordstyle=\color{blue}\bfseries,
+  classoffset=1,
+  morekeywords={remote, add, clone, rename, rm, fetch, pull, 
+                push, commit}, keywordstyle=\color{mygreen}\bfseries,
+  classoffset=0,
+  sensitive=false,
+  %stringstyle=\ttfamily
+}
+\lstdefinestyle{input}
+  { 
+  backgroundcolor=\color{myviolet},
+  }
+\lstdefinestyle{output}
+  {
+  backgroundcolor=\color{mylightyellow},
+  identifierstyle=\color{gray} 
+  }
+
+\lstset{language=Git}

@@ -1,0 +1,145 @@
+% * Copyright 2012 Sergio García GodTIC-Templates 
+% * Modificado por Martín Ludueña 
+% * Modificado por Ezequiel Castillo
+
+\usepackage[utf8x]{inputenc}
+\usepackage[spanish,activeacute,es-noshorthands]{babel} % Caracteres conacentos. Modificado E. Castillo.
+
+%\usetheme{/theme}
+\usepackage{amsmath,amssymb,amsfonts,latexsym,cancel,chemarrow} %Soporte para símbolos y font matemáticos
+\usepackage{thumbpdf}
+\usepackage{wasysym}
+\usepackage{ucs}
+%\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage{pifont}
+\usepackage{color}
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\usepackage{textcomp}
+
+%*****COLORS*****
+\definecolor{mygreen}{RGB}{0,117,0}
+\definecolor{myorange}{rgb}{1,0.5,0}
+\definecolor{myviolet}{RGB}{152,152,217}
+
+
+\graphicspath{{img/}} 
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\usepackage{listings} % Ambiente para incluir Codigo Fuente 
+
+% Paquetes agregados por Martin Ludueña
+\usepackage{threeparttable} %Footnotes en las tablas
+\usepackage{booktabs}          
+\usepackage{xmpmulti}	% para multiinclude  
+\usepackage{multirow} 
+\usepackage{rotating}
+%*******************************************
+
+% Paquetes agregados por Ezequiel Castillo
+\usepackage{a4wide}
+% \usepackage[T1]{fontenc}
+% \usepackage{fouriernc}
+\usepackage[scriptsize,bf]{caption} %Caption negrita y chiquita
+\usepackage{tikz}
+\usetikzlibrary{calc,3d}
+\usepackage{gnuplot-lua-tikz}
+\usepackage{grffile} %Para leer archivo .algo.pdf
+\usepackage{array}
+\usepackage[version=3]{mhchem}
+\usepackage{booktabs}
+% \usepackage{dotlessi}
+% \usepackage{hyperref}
+% \usepackage{sidecap} %Side Caption
+% \usepackage[sc]{mathpazo}
+% \usepackage{setspace}
+% \onehalfspacing
+
+% \usepackage{fancyhdr}
+% \pagestyle{fancy}
+% \fancyhead[LO,RE]{Izquierda}
+% \fancyhead[RO,RE]{Derecha}
+% \fancyfoot[CO,CE] {\thepage}
+%*******************************************
+% \usepackage{color}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\definecolor{ocre}{RGB}{255,255,153}
+
+% \lstdefinelanguage{JavaScript}{
+  %keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  %keywordstyle=\color{blue}\bfseries,
+  %ndkeywords={class, export, boolean, throw, implements, import, this},
+  %ndkeywordstyle=\color{darkgray}\bfseries,
+  %identifierstyle=\color{black},
+  %sensitive=false,
+  %comment=[l]{//},
+  %morecomment=[s]{/*}{*/},
+  %commentstyle=\color{purple}\ttfamily,
+  %stringstyle=\color{red}\ttfamily,
+  %morestring=[b]',
+  %morestring=[b]"
+%}
+
+% \lstset{tabsize=4,
+  %showspaces=false,
+  %showtabs=false,
+  %frame=l,
+  %framerule=1pt,
+  %aboveskip=0.5cm,
+  %framextopmargin=3pt,
+  %framexbottommargin=3pt,
+  %framexleftmargin=18pt,
+  %framesep=.4pt,
+  %rulesep=.4pt,
+  %stringstyle=\ttfamily,
+  %showstringspaces = false,
+  %basicstyle=\footnotesize\ttfamily,
+  %keywordstyle=\bfseries,
+  %numbers=left,
+  %numbersep=6pt,
+  %numberstyle=\color[cmyk]{0.43, 0.35, 0.35,0.01}\bfseries\scriptsize\ttfamily,
+  %numberfirstline = true,
+  %breaklines=true,
+  %stepnumber=1,
+  %backgroundcolor=\color{white},
+  %xleftmargin=18pt,
+  %framexrightmargin=0pt,
+  %xrightmargin=0pt,
+  %language=JavaScript
+%}
+
+\lstdefinelanguage{Git}{
+  classoffset=0,
+  keywords={git},
+  keywordstyle=\color{blue}\bfseries,
+  classoffset=1,
+  morekeywords={remote, add}, keywordstyle=\color{mygreen}\bfseries,
+  classoffset=0,
+  identifierstyle=\color{red},
+  sensitive=false,
+  stringstyle=\color{red}\ttfamily
+}
+\lstset{language=Git,
+  backgroundcolor=\color{myviolet},
+  basicstyle=\small,
+  breakatwhitespace=false,
+  breaklines=true,
+  %commentstyle=\color{dkgreen},
+  extendedchar=true,
+  frame=single,
+  morestring=[b]',
+  moredelim=[is][\color{red}\ttfamily]{|}{|},
+  framerule=0pt,
+  aboveskip=1ex,
+  belowskip=1ex,
+  numbers=none,  % where to put the line-numbers; possible values are (none, left, right)
+  %numbersep=0pt,
+  numberstyle=\tiny\color{gray},
+  stepnumber=2,
+  %stringstyle=\color{mauve},
+  tabsize=4
+  %title=\lstname
+}

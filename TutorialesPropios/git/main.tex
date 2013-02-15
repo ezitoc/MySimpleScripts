@@ -1,0 +1,143 @@
+%
+%
+%     File Name : main.tex
+%
+%       Purpose :
+%
+% Creation Date : 06-02-2013
+%
+% Last Modified : Fri 15 Feb 2013 01:30:56 PM ART
+%
+%    Created By :  Ezequiel Castillo
+%
+%
+\documentclass[a4paper,12pt]{article}
+
+\include{mypreamble}
+
+\begin{document}
+
+\title{Quick reference guide to \texttt{Git}}
+\date{}
+\author{Castillo, M. Ezequiel}
+
+
+\maketitle
+
+This mini-tutorial will help you on basic \texttt{Git} commands for working
+with remotes. This mini-guide can, in principle be updated periodically as I
+find more useful commands.
+
+
+
+\section{Working with \emph{your} Remotes}
+
+
+\subsection{Cloning your Remotes}
+
+First, \texttt{cd} to your project directory. Then type the following:
+\begin{lstlisting}[style=input]
+git clone |https://github.com/ezitoc/MySimpleScripts.git|
+\end{lstlisting}
+This will create a new folder at the current working directory called
+\texttt{MySimpleScripts}.
+This is similar to \texttt{checkout} command from Subversion.
+Now if you run:
+\begin{lstlisting}[style=input]
+git remote -v
+\end{lstlisting}
+this will show:
+\begin{lstlisting}[style=output]
+||origin  https://github.com/ezitoc/MySimpleScripts.git||
+\end{lstlisting}
+which is the URL that Git has stored for the shortname to be
+expanded to:
+
+\subsection{Adding Remote Repositories}
+Let's say you want to add a Remote but this time with a different shortname,
+for example, \texttt{ezitoc} (be aware, you are creating a new project, if you
+just want to rename, there is a special command for this).
+You should type:
+\begin{lstlisting}[style=input]
+git remote add ezitoc |https://github.com/ezitoc/MySimpleScripts.git|
+\end{lstlisting}
+Now, by running:
+\begin{lstlisting}[style=input]
+git remote -v
+\end{lstlisting}
+you will get:
+\begin{lstlisting}[style=output]
+||ezitoc  https://github.com/ezitoc/MySimpleScripts.git||
+\end{lstlisting}
+
+\subsection{Renaming and removing a Remote}
+For renaming you will have to enter the following:
+\begin{lstlisting}[style=input]
+git remote rename origin ezitoc
+\end{lstlisting}
+
+For removing just type:
+\begin{lstlisting}[style=input]
+git remote rm ezitoc
+\end{lstlisting}
+
+\subsection{Fetching and pulling}
+Some definitions:
+\begin{itemize}
+  \item {\textbf{Fetch:}} pulls the data to your local repository but it
+    doesn't automatically merge it with any of your work or modify what you're
+    currently working on.
+  \item {\textbf{Pull:}} if you have a branch set up, automatically fetch and
+    merge a remote branch into your current branch.
+\end{itemize}
+
+To get data from your remote projects, you can run:
+\begin{lstlisting}[style=input]
+git fetch ezitoc
+\end{lstlisting}
+
+To pull data from your remote projects, you can run:
+\begin{lstlisting}[style=input]
+git pull ezitoc
+\end{lstlisting}
+
+\subsection{Creating new files}
+In order to start tracking new files you can write:
+\begin{lstlisting}[style=input]
+git add filename
+\end{lstlisting}
+Once you have modified \texttt{filename} you will need to stag it, before you
+push changes.
+
+\subsection{Staging files}
+To change a file that was already tracked you have to use the multi-purpose
+command \texttt{add} to stag files.
+\begin{lstlisting}[style=input]
+git add filename
+\end{lstlisting}
+
+\subsection{Commiting}
+Once you have set up your stagging area, you will need to run:
+\begin{lstlisting}[style=input]
+git commit
+\end{lstlisting}
+and you will be redirected to your editor. Before exiting you must specify a
+commit message. You can also set the \texttt{-v} flag to which the diff will
+be included in your commit message. Besides this, you can pass the inline flag
+\texttt{-m} and a message between quotes to be included in the commit message,
+which will result in no redirection to your editor.
+
+Once you have commit your changes, you will need push the changes to the
+server repository. 
+
+\subsection{Pushing}
+When you want to share your work or back up, you will have to run:
+\begin{lstlisting}[style=input]
+git push ezitoc master
+\end{lstlisting}
+where \texttt{master} is your master-branch (which is set by default when
+using the \texttt{clone} command). This command works if you cloned from a
+server to which you have write access and nobody have push in the meantime.
+
+
+\end{document}
