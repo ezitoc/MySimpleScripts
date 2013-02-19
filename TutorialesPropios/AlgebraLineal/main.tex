@@ -1,0 +1,218 @@
+
+%
+%
+%     File Name :
+%
+%       Purpose :
+%
+% Creation Date :
+%
+% Last Modified : Tue 19 Feb 2013 07:04:50 PM ART
+%
+%    Created By :  Ezequiel Castillo
+%
+%
+
+\documentclass[a4paper,12pt]{article}
+
+\include{mypreamble}
+
+\begin{document}
+
+%------------------------------------------
+%------------------------------------------
+\section{Sistemas de ecuaciones lineales y matrices}
+
+%------------------------------------------
+\subsection{Ecuaciones lineales}
+
+\begin{concept}[i]
+  Todo sistema de ecuaciones lineales no tiene soluciones, tiene exactamente
+  una solución o tiene una infinidad de soluciones.
+\end{concept}
+
+Las \textbf{\emph{operaciones elementales}} en las filas son las siguientes:
+
+\begin{concept}
+  \begin{enumerate}
+    \item Multiplicar una fila por una constante diferente de cero.
+    \item Intercambiar dos filas.
+    \item Sumar un múltiplo de una fila a otra fila.
+  \end{enumerate}
+\end{concept}
+
+%------------------------------------------
+\subsection{Sistemas lineales homogéneos}
+Un sistema de ecuaciones lineales es \textbf{\emph{homogéneo}} si todos los
+términos constantes son cero; es decir el sistema es de la forma:
+\begin{align*}
+  \begin{matrix}
+    a_{11}x_1 &+& a_{12}x_2 &+& \cdots &+& a_{1n}x_n &=& 0     \\
+    a_{21}x_1 &+& a_{22}x_2 &+& \cdots &+& a_{2n}x_n &=& 0     \\
+    \vdots    & &\vdots     & &        & &\vdots     & & \vdots\\
+    a_{m1}x_1 &+& a_{m2}x_2 &+& \cdots &+& a_{mn}x_n &=& 0
+  \end{matrix}
+\end{align*}
+
+Todo sistema de ecuaciones lineales homogéneo es consistente, ya que siempre
+existe la \textbf{\textit{solución trivial}} (es decir, $x_1=1$, $x_2=1$,
+\ldots, $x_n=1=0$).
+Debido a que un sistema lineal homogéneo siempre tiene la solución trivial,
+entonces para sus soluciones sólo hay dos posibilidades.
+
+\begin{concept}
+  \begin{itemize}
+    \item El sistema tiene sólo la solución trivial.
+    \item El sistema tiene infinidad de soluciones además de la solución
+      trivial.
+  \end{itemize}
+\end{concept}
+
+\begin{theorem}
+  Un sistema de ecuaciones lineales homogéneo con más incógnitas que
+  ecuaciones tiene infinidad de soluciones
+  \label{theo:1}
+\end{theorem}
+
+%------------------------------------------
+\subsection{Matrices y operaciones con matrices}
+
+\begin{concept}[i]
+  Una \textbf{matriz} es un arreglo rectangular de números. Los números en el arreglo
+  se denominan \textbf{elementos} de la matriz.
+\end{concept}
+
+Una matriz general $m\times n$ puede expresarse como:
+\begin{align*}
+  A = \begin{bmatrix}
+    a_{11}& a_{12}& \cdots& a_{1n}\\
+    a_{21}& a_{22}& \cdots& a_{2n}\\
+    \vdots&\vdots &       &\vdots \\
+    a_{m1}& a_{m2}& \cdots& a_{mn}
+  \end{bmatrix}
+  = \left[ a_{ij} \right]_{m\times n} = \left[ a_{ij} \right]
+\end{align*}
+
+%------------------------------------------
+\subsection{Operaciones con matrices}
+
+\begin{concept}[i]
+  Dos matrices son \textbf{iguales} si tienen el mismo tamaño y sus elementos
+  correspondientes son iguales.
+\end{concept}
+
+\begin{concept}[i]
+  Si $A$ y $B$ son matrices del mismo tamaño, entonces la \textbf{suma}
+  $A+B$ es la matriz obtenida al sumar los elementos de $B$ con los elementos
+  correspondientes de $A$. No es posible sumar o restar matrices de tamaños
+  diferentes.
+\end{concept}
+En notación matricial:
+  \begin{align*}
+    (A+B)_{ij} = (A)_{ij} + (B)_{ij} = a_{ij} + b_{ij} \\
+    (A-B)_{ij} = (A)_{ij} - (B)_{ij} = a_{ij} - b_{ij}
+  \end{align*}
+
+\begin{concept}[i]
+  Si $A$ es cualquier matriz y $c$ es cualquier escalar, entonces el
+  \textbf{producto} $cA$ es la matriz obtenida al multiplicar cada elemento de
+  $A$ por $c$.
+\end{concept}
+En notación matricial:
+\begin{equation*}
+  (cA)_{ij} = c(A)_{ij} = ca_{ij}
+\end{equation*}
+
+\begin{concept}
+  Si $A$ es una matriz $m\times r$ y $B$ es una matriz $r\times n$, entonces
+  el \textbf{producto} $AB$ es la matriz $m\times n$ cuyos elementos se
+  determinan como sigue. Para encontrar el elemento en la fila $i$ y en la
+  columna $j$ de $AB$, considerar sólo la fila $i$ de la Matriz $A$ y la
+  columna $j$ de la matriz $B$. Multiplicar entre si los elementos
+  correspondientes del renglón y de la columna mencionados y luego sumar los
+  productos resultantes.
+\end{concept}
+En notación matricial:
+\begin{align*}
+  \left[ (AB)_{ij} \right]_{m\times n} = \sum_{k=1}^r A_{ik}B_{kj}
+\end{align*}
+La matriz resultante será de $m\times n$.
+
+%------------------------------------------
+\subsection{Multiplicación de matrices por columnas y por renglones}
+
+\begin{align*}
+  j^{th} \textrm{ matriz columna de } AB &= A \left[ j^{th} \textrm{matriz columa de} B
+  \right] \\
+  i^{th}\textrm{ matriz fila de } AB &= \left[ j^{th} \textrm{ matriz columa de } A
+  \right] B
+\end{align*}
+
+Si $\textbf{a}_1$, $\textbf{a}_2$, \ldots, $\textbf{a}_m$ denotan las matrices
+fila de $A$ y $\textbf{b}_1$, $\textbf{b}_2$, \ldots, $\textbf{b}_n$ denotan
+las matrices columna de $B$, entonces por lo establecido recién se concluye
+que:
+
+\begin{align*}
+  AB =
+  A\begin{bmatrix}\textbf{b}_1&\textbf{b}_2&\cdots&\textbf{b}_n \end{bmatrix}
+    =
+    \begin{bmatrix}A\textbf{b}_1&A\textbf{b}_2&\cdots&A\textbf{b}_n\end{bmatrix}
+\end{align*}
+
+\begin{align*}
+  AB = \begin{bmatrix}
+    \textbf{a}_1 \\
+    \textbf{a}_2 \\
+    \vdots       \\
+    \textbf{a}_m
+  \end{bmatrix} B = \begin{bmatrix}
+    \textbf{a}_1B \\
+    \textbf{a}_2B \\
+    \vdots        \\
+    \textbf{a}_mB
+  \end{bmatrix}
+\end{align*}
+
+%------------------------------------------
+\subsection{Productos de matrices como combinaciones lineales}
+
+Sean:
+
+\begin{align*}
+  A = \begin{bmatrix}
+    a_{11}& a_{12}& \cdots& a_{1n}\\
+    a_{21}& a_{22}& \cdots& a_{2n}\\
+    \vdots&\vdots &       &\vdots \\
+    a_{m1}& a_{m2}& \cdots& a_{mn}
+  \end{bmatrix} &
+  & \textbf{x} = \begin{bmatrix}
+    x_1    \\
+    x_2    \\
+    \vdots \\
+    x_m
+  \end{bmatrix} &
+  & \textbf{b} = \begin{bmatrix}
+    b_1    \\
+    b_2    \\
+    \vdots \\
+    b_m
+  \end{bmatrix} &
+\end{align*}
+
+Mediante esta elección es posible expresar al sistema de ecuaciones:
+\begin{align*}
+  \begin{matrix}
+    a_{11}x_1 &+& a_{12}x_2 &+& \cdots &+& a_{1n}x_n &=& b_1     \\
+    a_{21}x_1 &+& a_{22}x_2 &+& \cdots &+& a_{2n}x_n &=& b_2     \\
+    \vdots    & &\vdots     & &        & &\vdots     & & \vdots\\
+    a_{m1}x_1 &+& a_{m2}x_2 &+& \cdots &+& a_{mn}x_n &=& b_m
+  \end{matrix}
+\end{align*}
+como:
+\begin{align*}
+  A\textbf{x}=\textbf{b}
+\end{align*}
+
+
+\end{document}
