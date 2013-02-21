@@ -7,7 +7,7 @@
 %
 % Creation Date :
 %
-% Last Modified : Thu 21 Feb 2013 03:23:28 PM ART
+% Last Modified : Thu 21 Feb 2013 06:16:12 PM ART
 %
 %    Created By :  Ezequiel Castillo
 %
@@ -92,6 +92,23 @@ Una matriz general $m\times n$ puede expresarse como:
   \end{bmatrix}
   = \left[ a_{ij} \right]_{m\times n} = \left[ a_{ij} \right]
 \end{align*}
+
+A continuación definiremos en que consiste una matriz que se encuentra en su
+\bi{forma escalonada reducida}:
+\begin{concept}[i]
+  \begin{enumerate}
+    \item Si una fila no consta completamente de ceros, entonces el primer
+      número diferente de cero en la fila es un 1. (Que se denomina
+      \textbf{1 principal}).
+    \item Si hay filas que constan completamente de ceros, se agrupan en
+      la parte inferior de la matriz.
+    \item En dos filas consecutivas cualesquiera que no consten completamente
+      de ceros, el 1 principal de la fila inferior aparece más a la derecha
+      que el 1 principal de la fila superior.
+    \item Cada columna que contenga un 1 principal tiene cero en todas las
+      demás posiciones.
+  \end{enumerate}
+\end{concept}
 
 %------------------------------------------
 \subsection{Operaciones con matrices}
@@ -279,7 +296,7 @@ son iguales.
   \label{theo:aritmat}
 \end{theorem}
 
-Probaremos el inciso \emph{(d)}. Para ello es necesario probar que
+\demo Probaremos el inciso \emph{(d)}. Para ello es necesario probar que
 $A(B+C)$ y $AB+AC$ son del mismo tamaño y que los elementos correspondientes
 son iguales. Para formar $A(B+C)$, $B$ y $C$ deben ser del mismo tamaño, por
 ejemplo, $n\times m$. Entonces $A$ debe tener el mismo número de columnas para
@@ -335,12 +352,140 @@ aritmética de números reales se cumple que:
 En general los resultados correspondientes \textbf{no} son ciertos en aritmética
 matricial.
 
+A pesar de lo dicho anteriormente, existen varias propiedades conocidas de
+número real cero que \emph{se cumplen} en las matrices cero:
+\begin{theorem}
+  Suponiendo que los tamaños de las matrices son tales que las operaciones
+  indicadas se pueden efectuar, entonces son válidas las siguientes reglas de
+  aritmética matricial.
+  \begin{enumerate}[(a)]
+    \item $A+0=0+A=A$
+    \item $A-A=0$
+    \item $0-A=-A$
+    \item $A0=0$; $0A=0$
+  \end{enumerate}
+  \label{theo:cero}
+\end{theorem}
+
 %------------------------------------------
 \subsection{Matrices identidad}
 
 \begin{concept}
-  Una matriz \textbf{cuadrada} que tiene unos en la diagonal principal y ceros
+  Una matriz \textit{cuadrada} que tiene unos en la diagonal principal y ceros
   fuera de ésta se denomina \bi{matriz identidad}.
 \end{concept}
 
+En aritmética matricial la matriz identidad juega un papel bastante semejante
+al que desempeña el número 1 en las relaciones numéricas $a\cdot1=1\cdot a=a$:
+\begin{align*}
+  AI=A \qquad \mbox{y} \qquad IA=A
+\end{align*}
+
+Como se muestra en el teorema siguiente, las matrices identidad surgen
+naturalmente en el estudio de formas escalonadas reducidas de matrices
+\emph{cuadradas}.
+
+\begin{theorem}
+  Si $R$ es la forma escalonada reducida de una matriz $A$ de $n\times n$,
+  entonces $R$ tiene un renglón de ceros, o bien, $R$ es la matriz identidad
+  $I_n$.
+\end{theorem}
+
+%------------------------------------------
+\subsection{Inversa de una matriz}
+
+\begin{concept}
+  Si $A$ es una matriz cuadrada y si se puede encontrar una matriz $B$ del
+  mismo tamaño tal que $AB=BA=I$, entonces se dice que $A$ es
+  \bi{invertible} y $B$ se denomina \bi{inversa} de $A$
+\end{concept}
+
+%------------------------------------------
+\subsection{Propiedades de las inversas}
+
+\begin{theorem}
+  Si $B$ y $C$ son, ambas, inversas de la matriz $A$, entonces $B=C$
+  \label{theo:propinv}
+\end{theorem}
+
+\demo Ya que $B$ es inversa de $A$ se tiene que:
+\begin{align*}
+     BA=&I && \mbox{(\emph{multiplicando por derecha} por $C$ ambos miembros)}\\
+  (BA)C=&IC&& \mbox{(ley asociativa de la multiplicación)}\\
+  B(CA)=&C && \\
+     BI=&C && \mbox{(suposición inicial)} \\
+      B=&C  
+\end{align*}
+
+Otra propiedad de las inversas:
+\begin{align*}
+  AA^{-1}=I \qquad \mbox{y} \qquad A^{-1}A=I
+\end{align*}
+
+\begin{theorem}
+  Si $A$ y $B$ son matrices invertibles del mismo tamaño, entonces:
+  \begin{enumerate}[(a)]
+    \item $AB$ es invertible
+    \item $(AB)^{-1}=B^{-1}A^{-1}$
+  \end{enumerate}
+  \label{theo:compinv}
+\end{theorem}
+
+\demo Si se puede demostrar que:
+\begin{align*}
+  (AB)(B^{-1}A^{-1})=(B^{-1}A^{-1})(AB)=I
+\end{align*}
+entonces se habrá demostrado simultáneamente que la matriz $AB$ es invertible
+y que $(AB)^{-1}=B^{-1}A^{-1}$.
+Siguiendo el siguiente razonamiento:
+\begin{align*}
+  (AB)(B^{-1}A^{-1})=&(B^{-1}A^{-1})(AB) \\
+  A(BB^{-1})A^{-1}=&B^{-1}(A^{-1}A)B \\
+  AIA^{-1}=&B^{-1}IB \\
+  AA^{-1}=&B^{-1}B \\
+  I=&I
+\end{align*}
+
+Aunque la siguiente declaración no se demostrará, este último concepto se
+puede extender para incluir tres o más factores.
+\begin{concept}[i]
+  Un producto de cualquier número de matrices invertibles es invertible, y la
+  inversa del producto es el producto de las inversas en orden invertido.
+\end{concept}
+
+%------------------------------------------
+\subsection{Potencias de una matriz}
+\begin{concept}
+  Si $A$ es una matriz cuadrada, entonces las potencias enteras no negativas
+  se definen como:
+  \begin{align*}
+    A^0=I \qquad \mbox{y} \qquad A^n=\prod_i^nA \quad\mbox{con $n>0$}
+  \end{align*}
+  A su vez, si $A$ es invertible, entonces las potencias negativas de
+  $A$ se definen como:
+  \begin{align*}
+    A^{-n} = \left( A^{-1} \right)^n = \prod_i^nA^{-1} \quad\mbox{con $n>0$}
+  \end{align*}
+\end{concept}
+
+\begin{theorem}
+  Si $A$ es una matriz cuadrada y $r$ y $s$ son enteros, entonces:
+  \begin{align*}
+    A^rA^s=A^{r+s} \qquad \mbox{y} \qquad (A^r)^s=A^{rs}
+  \end{align*}
+  \label{theo:expmatr}
+\end{theorem}
+
+\begin{theorem}
+  Si $A$ es una matriz invertible, entonces:
+  \begin{enumerate}[(a)]
+    \item $A^{-1}$ es invertible y $(A^{-1})^{-1}=A$.
+    \item $A^n$ es invertible y $(A^n)^{-1}=(A^{-1})^n$ para $n=0,1,2,$\ldots
+    \item Para cualquier escalar $k$ diferente de cero, la matriz $kA$ es
+      invertible y $(kA)^{-1}=\tfrac{1}{k}A^{-1}$.
+  \end{enumerate}
+  \label{theo:expmatr2}
+\end{theorem}
+
+\demo
 \end{document}

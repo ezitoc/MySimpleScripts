@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.8.29)  21 FEB 2013 15:11
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.8.29)  21 FEB 2013 18:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -681,19 +681,44 @@ Package mdframed Info: mdframed detected package amsthm
 
 
 {/home/ezequiel/.local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.ma
-p}] [2] [3]
+p}] [2] [3] [4]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theoerem header of amsthm
-(mdframed)              on input line 259.
- [4] [5] [6] (./main.aux
+(mdframed)              on input line 276.
+ [5]
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theoerem header of amsthm
+(mdframed)              on input line 357.
+Package mdframed Info: Box was splittet wrong
+(mdframed)              on input line 368.
+ [6]
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theoerem header of amsthm
+(mdframed)              on input line 388.
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theoerem header of amsthm
+(mdframed)              on input line 406.
+ [7]
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theoerem header of amsthm
+(mdframed)              on input line 425.
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theoerem header of amsthm
+(mdframed)              on input line 471.
+ [8]
+Package mdframed Info: Not enough space on this page on input line 477.
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theoerem header of amsthm
+(mdframed)              on input line 479.
+ [9] (./main.aux
 LaTeX Info: Redefining \. on input line 4.
 LaTeX Info: Redefining \% on input line 4.
 ) ) 
 Here is how much of TeX's memory you used:
- 10134 strings out of 493488
- 165614 string characters out of 3136661
- 247381 words of memory out of 3000000
- 13228 multiletter control sequences out of 15000+200000
+ 10141 strings out of 493488
+ 165710 string characters out of 3136661
+ 246473 words of memory out of 3000000
+ 13235 multiletter control sequences out of 15000+200000
  11448 words of font info for 44 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
  42i,16n,31p,843b,562s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -709,10 +734,10 @@ zequiel/.local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pf
 b></home/ezequiel/.local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmsy8.pfb></home/ezequiel/.local/texlive/2012/texmf-dist/fonts/type1/public/am
 sfonts/cm/cmti12.pfb>
-Output written on main.pdf (6 pages, 121238 bytes).
+Output written on main.pdf (9 pages, 134233 bytes).
 PDF statistics:
- 63 PDF objects out of 1000 (max. 8388607)
- 44 compressed objects within 1 object stream
+ 74 PDF objects out of 1000 (max. 8388607)
+ 52 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
