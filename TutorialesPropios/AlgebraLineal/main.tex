@@ -7,7 +7,7 @@
 %
 % Creation Date :
 %
-% Last Modified : Tue 19 Feb 2013 07:04:50 PM ART
+% Last Modified : Thu 21 Feb 2013 03:23:28 PM ART
 %
 %    Created By :  Ezequiel Castillo
 %
@@ -213,6 +213,134 @@ como:
 \begin{align*}
   A\textbf{x}=\textbf{b}
 \end{align*}
+La matriz $A$ se denomina \textbf{\emph{matriz de coeficientes}} del sistema.
 
+
+%------------------------------------------
+\subsection{Transpuesta de una matriz}
+
+\begin{concept}[i]
+  Si $A$ es cualquier matriz $m\times n$, entonces la \textbf{transpuesta de
+    $A$}, denotada por $A^T$, se define como la matriz $n\times m$ que se
+    obtiene al intercambiar las filas y las columnas de $A$, es decir, la
+    primera columna de $A^T$ es la primer fila de $A$, la segunda columna de
+    $A^T$ es la segunda fila de $A$, y así sucesivamente.
+\end{concept}
+En notación matricial:
+\begin{align*}
+  \left( A^T \right)_{ij} = (A)_{ji}
+\end{align*}
+
+%------------------------------------------
+\subsection{Traza de una matriz}
+
+\begin{concept}[i]
+  Si $A$ es una matriz cuadrada, entonces la \textbf{\emph{traza de A}},
+  denotada por $\tr (A)$, se define como la suma de la diagonal principal de
+  $A$. La traza de $A$ no está definida si $A$ no es una matriz cuadrada.
+\end{concept}
+En notación matricial:
+\begin{align*}
+  \tr (A)_{n\times n}=\sum_{i=1}^n a_{ii}
+\end{align*}
+
+%------------------------------------------
+%------------------------------------------
+\section{Reglas de la aritmética de matrices}
+
+%------------------------------------------
+\subsection{Propiedades de las operaciones con matrices}
+
+Muchas de las reglas básicas de la aritmética de los números reales también se
+cumplen para matrices, aunque unas cuantas no. Por ejemplo, para números
+reales $a$ y $b$ siempre se cumple que $ab=ba$ (\emph{ley conmutativa de la
+multiplicación}). Para matrices, sin embargo, $AB$ y $BA$ no necesariamente
+son iguales.
+\begin{theorem}
+  Suponiendo que los tamaños de las matrices son tales que las operaciones
+  indicadas se pueden efectuar, entonces son válidas las siguientes reglas de
+  aritmética matricial.
+
+  \begin{enumerate}[(a)]
+    \item $A+B=B+A$ \hfill \bi{Ley conmutativa de la adición}
+    \item $A+(B+C)=(A+B)+C$ \hfill \bi{Ley asociativa de la adición}
+    \item $A(BC)=(AB)C$ \hfill \bi{Ley asociativa de la multiplicación}
+    \item $A(B+C)=AB+AC$ \hfill \bi{Ley distributiva por la izquierda}
+    \item $(B+C)A=BA+CA$ \hfill \bi{Ley distributiva por la derecha}
+    \item $A(B-C)=AB-AC$
+    \item $(B-C)A=BA-CA$
+    \item $a(B+C)=aB+aC$
+    \item $a(B-C)=aB-aC$
+    \item $(a+b)C=aC+bC$
+    \item $(a-b)C=aC-bC$
+    \item $a(bC)=(ab)C$
+    \item $a(BC)=(aB)C=B(aC)$
+  \end{enumerate}
+  \label{theo:aritmat}
+\end{theorem}
+
+Probaremos el inciso \emph{(d)}. Para ello es necesario probar que
+$A(B+C)$ y $AB+AC$ son del mismo tamaño y que los elementos correspondientes
+son iguales. Para formar $A(B+C)$, $B$ y $C$ deben ser del mismo tamaño, por
+ejemplo, $n\times m$. Entonces $A$ debe tener el mismo número de columnas para
+que la multiplicación pueda llevarse a cabo, digamos por ejemplo, $r\times n$
+de modo que $A(B+C)$ tendrá dimensiones $r\times m$. Veamos ahora la otra
+igualdad. Con estas definiciones para $A$, $B$ y $C$ se cumple que tanto
+$AB$ como $AC$ tienen dimensiones de $r\times n$. Por lo tanto $A(B+C)$ y
+$AB+AC$ son del mismo tamaño.
+Queda entonces probar que los elementos correspondientes de $A(B+C)$ y $AB+AC$
+son iguales, es decir que:
+\begin{align*}
+  [A(B+C)]_{ij}=[AB+AC]_{ij}
+\end{align*}
+para todos los valores de $i$ y $j$. Por las definiciones de adición y de
+multiplicación de matrices se tiene:
+\begin{align*}
+  \left[ A(B+C)_{ij}
+  \right]=&a_{i1}(b_{1j}+c_{1j})+a_{i2}(b_{2j}+c_{2j})+\cdots+a_{im}(b_{mj}+c_{mj}) \\
+         =&a_{i1}b_{1j}+a_{i1}c_{1j}+a_{i2}b_{2j}+a_{i2}c_{2j}+\cdots+a_{im}b_{mj}+a_{im}c_{mj}
+\end{align*}
+Pero:
+\begin{align*}
+  a_{i1}b_{1j}+a_{i2}b_{2j}+\cdots+a_{im}b_{mj}=[AB]_{ij} \\
+  a_{i1}c_{1j}+a_{i2}c_{2j}+\cdots+a_{im}c_{mj}=[AC]_{ij}
+\end{align*}
+Por lo tanto:
+\begin{align*}
+  [A(B+C)]_{ij}=&[AB]_{ij}+[AC]_{ij} \\
+               =&[AB+AC]_{ij}
+\end{align*}
+Con esto queda demostrado que los elementos correspondientes de $A(B+C)$ y
+$AB+AC$ son iguales.
+
+La demostración del inciso \emph{c} es más complicada.
+
+%------------------------------------------
+\subsection{Matrices cero}
+
+\begin{concept}
+  Una matriz que tiene sus elementos iguales a cero se denomina \bi{matriz
+  cero}.
+\end{concept}
+
+Como ya se sabe que algunas de las reglas de la aritmética para los números reales
+no se cumplen en la aritmética matricial, es temerario asumir que todas las
+propiedades del número real cero se cumplen para las matrices cero. En la
+aritmética de números reales se cumple que:
+\begin{itemize}
+  \item Si $ab=ac$ y $a\ne 0$, entonces $b=c$ (\emph{ley de cancelación}).
+  \item Si $ad=0$ entonces por lo menos uno de los factores del miembro
+    izquierdo es cero.
+\end{itemize}
+En general los resultados correspondientes \textbf{no} son ciertos en aritmética
+matricial.
+
+%------------------------------------------
+\subsection{Matrices identidad}
+
+\begin{concept}
+  Una matriz \textbf{cuadrada} que tiene unos en la diagonal principal y ceros
+  fuera de ésta se denomina \bi{matriz identidad}.
+\end{concept}
 
 \end{document}
