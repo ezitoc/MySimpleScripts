@@ -7,7 +7,7 @@
 %
 % Creation Date :
 %
-% Last Modified : Thu 21 Feb 2013 06:16:12 PM ART
+% Last Modified : Fri 22 Feb 2013 12:51:48 AM ART
 %
 %    Created By :  Ezequiel Castillo
 %
@@ -488,4 +488,62 @@ puede extender para incluir tres o más factores.
 \end{theorem}
 
 \demo
+\begin{enumerate}[(a)]
+  \item Como $AA^{-1}=A^{-1}A=I$, la matriz $A^{-1}$ es invertible y
+    $(A^{-1})^{-1}=A$.
+  \item De la extensión del teorema \ref{theo:compinv} (no demostrado aquí)
+    podemos decir que debido a que $A$ es invertible entonces $A^n$ es
+    invertible y su inversa es el producto de las inversas en orden invertido.
+    Esto es:
+    \begin{align*}
+      \left( A^n \right)^{-1} &= \left( A^{-1} \right)^n \\
+      &= A^{-n}
+    \end{align*}
+  \item Si $k$ es cualquier escalar diferente de cero, entonces por los
+    resultados \emph{(l)} y \emph{(m)} del teorema \ref{theo:aritmat} es
+    posible escribir:
+    \begin{align*}
+      (kA)\left( \frac{1}{k}A^{-1} \right) &= \frac{1}{k}(kA)A^{-1} \\
+                                            &=\left( \frac{1}{k}k \right)AA^{-1} \\
+                                            &= 1I \\
+                                            &= I
+    \end{align*}
+\end{enumerate}
+
+
+%------------------------------------------
+\subsection{Propiedades de la transpuesta}
+
+\begin{theorem}
+  Si los tamaños de las matrices son tales que se pueden efectuar las
+  operaciones planteadas, entonces:
+  \begin{enumerate}[(a)]
+    \item $\left( (A)^T \right) ^T=A$
+    \item $(A+B)^T=A^T+B^T$ y $(A-B)^T=A^T-B^T$
+    \item $(kA)^T=kA^T$, donde $k$ es cualquier escalar
+    \item $(AB)^T=B^TA^T$
+  \end{enumerate}
+  \label{theo:operactrans}
+\end{theorem}
+
+\demo Al considerar que al transponer una matriz se intercambian sus filas por
+sus columnas, los incisos \emph{(a)}, \emph{(b)} y \emph{(c)} deben ser
+evidentes. Para demostrar el inciso \emph{(d)} supongamos:
+\begin{align*}
+  A=\left[ a_{ij} \right]_{m\times r} \qquad \mbox{y} \qquad B=\left[ b_{ij} \right]_{r\times n}
+\end{align*}
+A continuación demostraremos que $(AB)^T$ y $B^TA^T$ son del mismo tamaño. El
+producto $AB$ tendrá un tamaño de $m\times n$. Ahora bien, la transpuesta del
+producto $(AB)^T$ tendrá dimensiones $n\times m$. Por otro lado:
+\begin{align*}
+  A^T=\left[ a'_{ij} \right]_{r\times m} \qquad \mbox{y} \qquad B^T=\left[ b'_{ij} \right]_{n\times r}
+\end{align*}
+De modo que el producto $B^TA^T$ tendrá un tamaño $n\times m$. Por lo que
+$(AB)^T$ y $B^TA^T$ tienen ambos el mismo tamaño.
+Nos queda demostrar que los elementos correspondientes de $(AB)^T$ y $B^TA^T$
+son los mismos, es decir:
+\begin{align*}
+  \left( (AB)^T \right)_{ij} = \left( B^TA^T \right)_{ij}
+\end{align*}
+
 \end{document}
