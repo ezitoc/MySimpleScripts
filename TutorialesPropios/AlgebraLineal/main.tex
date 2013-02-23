@@ -7,7 +7,7 @@
 %
 % Creation Date :
 %
-% Last Modified : Fri 22 Feb 2013 12:51:48 AM ART
+% Last Modified : Fri 22 Feb 2013 05:23:46 PM ART
 %
 %    Created By :  Ezequiel Castillo
 %
@@ -21,10 +21,16 @@
 
 %------------------------------------------
 %------------------------------------------
-\section{Sistemas de ecuaciones lineales y matrices}
+%------------------------------------------
+\section{Matrices}
+
 
 %------------------------------------------
-\subsection{Ecuaciones lineales}
+%------------------------------------------
+\subsection{Sistemas de ecuaciones lineales y matrices}
+
+%------------------------------------------
+\subsubsection{Ecuaciones lineales}
 
 \begin{concept}[i]
   Todo sistema de ecuaciones lineales no tiene soluciones, tiene exactamente
@@ -42,7 +48,7 @@ Las \textbf{\emph{operaciones elementales}} en las filas son las siguientes:
 \end{concept}
 
 %------------------------------------------
-\subsection{Sistemas lineales homogéneos}
+\subsubsection{Sistemas lineales homogéneos}
 Un sistema de ecuaciones lineales es \textbf{\emph{homogéneo}} si todos los
 términos constantes son cero; es decir el sistema es de la forma:
 \begin{align*}
@@ -75,7 +81,7 @@ entonces para sus soluciones sólo hay dos posibilidades.
 \end{theorem}
 
 %------------------------------------------
-\subsection{Matrices y operaciones con matrices}
+\subsubsection{Matrices y operaciones con matrices}
 
 \begin{concept}[i]
   Una \textbf{matriz} es un arreglo rectangular de números. Los números en el arreglo
@@ -111,7 +117,7 @@ A continuación definiremos en que consiste una matriz que se encuentra en su
 \end{concept}
 
 %------------------------------------------
-\subsection{Operaciones con matrices}
+\subsubsection{Operaciones con matrices}
 
 \begin{concept}[i]
   Dos matrices son \textbf{iguales} si tienen el mismo tamaño y sus elementos
@@ -156,7 +162,7 @@ En notación matricial:
 La matriz resultante será de $m\times n$.
 
 %------------------------------------------
-\subsection{Multiplicación de matrices por columnas y por renglones}
+\subsubsection{Multiplicación de matrices por columnas y por renglones}
 
 \begin{align*}
   j^{th} \textrm{ matriz columna de } AB &= A \left[ j^{th} \textrm{matriz columa de} B
@@ -192,7 +198,7 @@ que:
 \end{align*}
 
 %------------------------------------------
-\subsection{Productos de matrices como combinaciones lineales}
+\subsubsection{Productos de matrices como combinaciones lineales}
 
 Sean:
 
@@ -234,7 +240,7 @@ La matriz $A$ se denomina \textbf{\emph{matriz de coeficientes}} del sistema.
 
 
 %------------------------------------------
-\subsection{Transpuesta de una matriz}
+\subsubsection{Transpuesta de una matriz}
 
 \begin{concept}[i]
   Si $A$ es cualquier matriz $m\times n$, entonces la \textbf{transpuesta de
@@ -249,7 +255,7 @@ En notación matricial:
 \end{align*}
 
 %------------------------------------------
-\subsection{Traza de una matriz}
+\subsubsection{Traza de una matriz}
 
 \begin{concept}[i]
   Si $A$ es una matriz cuadrada, entonces la \textbf{\emph{traza de A}},
@@ -263,10 +269,10 @@ En notación matricial:
 
 %------------------------------------------
 %------------------------------------------
-\section{Reglas de la aritmética de matrices}
+\subsection{Reglas de la aritmética de matrices}
 
 %------------------------------------------
-\subsection{Propiedades de las operaciones con matrices}
+\subsubsection{Propiedades de las operaciones con matrices}
 
 Muchas de las reglas básicas de la aritmética de los números reales también se
 cumplen para matrices, aunque unas cuantas no. Por ejemplo, para números
@@ -333,7 +339,7 @@ $AB+AC$ son iguales.
 La demostración del inciso \emph{c} es más complicada.
 
 %------------------------------------------
-\subsection{Matrices cero}
+\subsubsection{Matrices cero}
 
 \begin{concept}
   Una matriz que tiene sus elementos iguales a cero se denomina \bi{matriz
@@ -368,7 +374,7 @@ número real cero que \emph{se cumplen} en las matrices cero:
 \end{theorem}
 
 %------------------------------------------
-\subsection{Matrices identidad}
+\subsubsection{Matrices identidad}
 
 \begin{concept}
   Una matriz \textit{cuadrada} que tiene unos en la diagonal principal y ceros
@@ -392,7 +398,7 @@ naturalmente en el estudio de formas escalonadas reducidas de matrices
 \end{theorem}
 
 %------------------------------------------
-\subsection{Inversa de una matriz}
+\subsubsection{Inversa de una matriz}
 
 \begin{concept}
   Si $A$ es una matriz cuadrada y si se puede encontrar una matriz $B$ del
@@ -401,7 +407,7 @@ naturalmente en el estudio de formas escalonadas reducidas de matrices
 \end{concept}
 
 %------------------------------------------
-\subsection{Propiedades de las inversas}
+\subsubsection{Propiedades de las inversas}
 
 \begin{theorem}
   Si $B$ y $C$ son, ambas, inversas de la matriz $A$, entonces $B=C$
@@ -454,7 +460,7 @@ puede extender para incluir tres o más factores.
 \end{concept}
 
 %------------------------------------------
-\subsection{Potencias de una matriz}
+\subsubsection{Potencias de una matriz}
 \begin{concept}
   Si $A$ es una matriz cuadrada, entonces las potencias enteras no negativas
   se definen como:
@@ -512,7 +518,7 @@ puede extender para incluir tres o más factores.
 
 
 %------------------------------------------
-\subsection{Propiedades de la transpuesta}
+\subsubsection{Propiedades de la transpuesta}
 
 \begin{theorem}
   Si los tamaños de las matrices son tales que se pueden efectuar las
@@ -545,5 +551,309 @@ son los mismos, es decir:
 \begin{align*}
   \left( (AB)^T \right)_{ij} = \left( B^TA^T \right)_{ij}
 \end{align*}
+Para encontrar $\left( (AB)^T \right)_{ij}$ primero encontramos el producto
+$AB$:
+\begin{align*}
+  (AB)_{ij}&= a_{i1}b_{1j}+a_{i2}b_{2j}+\ldots+a_{ir}b_{rj} \\
+  &= \sum_{k=1}^r a_{ik}b_{kj}
+\end{align*}
+La transpuesta de este último resultado es:
+\begin{align*}
+  \left( (AB)^T \right)_{ij} &= (AB)_{ji} \\
+  &= \sum_{k=1}^r a_{jk}b_{ki}
+\end{align*}
+Notar el intercambio de subíndices con respecto al último resultado.
+Analicemos ahora el otro miembro de la igualdad $\left( B^TA^T \right)_{ij}$.
+\begin{align*}
+  \left( B^TA^T \right)_{ij} &= \sum_{k=1}^r b'_{ik}a'_{kj} \\
+  &= \sum_{k=1}^r b_{ki}a_{jk} \\
+  &= \sum_{k=1}^r a_{jk}b_{ki}
+\end{align*}
+Con esto queda demostrado que $(AB)^T$ y $B^TA^T$ son iguales.
 
+Aunque no se demostrará el siguiente hecho, el inciso \emph{(d)} del último
+teorema se puede extender para incluir tres o más factores:
+\begin{concept}[i]
+  La transpuesta de un producto de cualquier número de matrices es igual al
+  producto de sus transpuestas en orden invertido.
+\end{concept}
+
+%------------------------------------------
+\subsubsection{Invertibilidad de una transpuesta}
+
+\begin{theorem}
+  Si $A$ es una matriz invertible, entonces $A^T$ también es invertible y:
+  \begin{align}
+    \left( A^T \right)^{-1} = \left( A^{-1} \right)^T
+    \label{eqn:invtrans}
+  \end{align}
+  \label{theo:invtrans}
+\end{theorem}
+
+\demo Se puede probar la invertibilidad de $A^T$ y obtener \eqref{eqn:invtrans}
+al demostrar que:
+\begin{align*}
+  A^T\left( A^{-1} \right)^T = \left( A^{-1} \right)^T A^T = I
+\end{align*}
+Por el inciso \emph{(d)} del teorema \ref{theo:operactrans}:
+\begin{align*}
+  \left( A^T\left( A^{-1} \right)^T \right)^T &= \left( \left( A^{-1} \right)^T
+  A^T \right)^T \\
+  \left( \left( A^{-1} \right)^T \right)^T \left( A^T \right)^T &= \left( A^T
+  \right)^T \left( \left( A^{-1} \right)^T \right)^T \\
+  A^{-1}A &= AA^{-1} \\
+  I &= I
+\end{align*}
+
+
+%------------------------------------------
+\subsection{Matrices elementales y un método para determinar $A^{-1}$}
+
+%------------------------------------------
+\subsubsection{Matrices elementales}
+
+\begin{concept}
+  Una matriz $n\times n$ se denomina \bi{matriz elemental} si se puede obtener
+  a partir de la matriz identidad $I_n$ al efectuar una sola operación
+  elemental en las filas.
+\end{concept}
+
+\begin{theorem}
+  Toda matriz elemental es invertible, y la inversa es también una matriz
+  elemental
+  \label{theo:elematr}
+\end{theorem}
+
+\demo Si $E$ es una matriz elemental, entonces $E$ se obtiene al efectuar
+algunas operaciones en las filas de $I$. Sea $E_0$ la matriz que se obtiene
+cuando la inversa de esta operación se efectúa en I. Entonces usando el hecho
+de que las operaciones inversas en las filas cancelan mutuamente su efecto, se
+concluye que:
+\begin{align*}
+  E_0E=I \qquad \mbox{y} \qquad EE_0=I
+\end{align*}
+
+El siguiente teorema establece algunas relaciones fundamentales entre
+invertibilidad, sistemas lineales homogéneos, formas escalonadas reducidas y
+matrices elementales.
+
+\begin{theorem}
+  Si $A$ es una matriz $n\times n$, entonces las siguientes proposiciones son
+  equivalentes, es decir, todas son verdaderas o todas son falsas.
+  \begin{enumerate}[(a)]
+    \item $A$ es invertible.
+    \item $A\xvec=\textbf{0}$ sólo tiene la solución trivial.
+    \item La forma escalonada reducida de $A$ es $I_n$.
+    \item A se puede expresar como un producto de matrices elementales.
+  \end{enumerate}
+  \label{theo:relacfund}
+\end{theorem}
+
+\demo Se demostrará la equivalencia estableciendo la cadena de implicaciones
+$a\Rightarrow b\Rightarrow c\Rightarrow d\Rightarrow a$.
+
+$a\Rightarrow b$: Si $A$ es invertible y sea  $\xvec_0$ cualquier solución de
+$A\xvec=\textbf{0}$; así, $A\xvec_0=0$. Al multiplicar ambos miembros de la
+ecuación por la matriz $A^{-1}$ se obtiene:
+\begin{align*}
+  A^{-1}(A\xvec_0) &= A^{-1}\textbf{0} \\
+  (A^{-1}A)\xvec_0 &= \textbf{0} \\
+          I\xvec_0 &= 0 \\
+           \xvec_0 &= 0
+\end{align*}
+Por lo tanto $A\xvec_0=\textbf{0}$ sólo tiene la solución trivial.
+
+$b\Rightarrow c$: Sea $A\xvec=\textbf{0}$. La matriz:
+\begin{align*}
+  \begin{bmatrix}
+    a_{11}& a_{12}& \cdots& a_{1n} \\
+    a_{21}& a_{22}& \cdots& a_{2n} \\
+    \vdots&\vdots &       &\vdots  \\
+    a_{m1}& a_{m2}& \cdots& a_{mn} 
+  \end{bmatrix}
+\end{align*}
+puede llevarse por medio de operaciones elementales en las filas a:
+\begin{align*}
+  \begin{bmatrix}
+    1&   0& \cdots& 0 \\
+    0&   1& \cdots& 0 \\
+    \vdots&\vdots & \ddots  &\vdots  \\
+    0&   0& \cdots& 1 
+  \end{bmatrix}
+\end{align*}
+Por lo tanto la forma escalonada reducida de $A$ es la matriz $I_n$.
+
+$b\Rightarrow c$: Suponer que la forma escalonada reducida de $A$ es
+$I_n$ implica que $A$ se puede reducir a $I_n$ mediante una sucesión finita de
+operaciones elementales en las filas. Esto es lo mismo que escribir:
+\begin{align}
+  E_k\cdots E_2E_1A=I_n
+  \label{eqn:oem}
+\end{align}
+Por el teorema \ref{theo:elematr}, las matrices $E_k\cdots E_2E_1A=I_n$ son
+invertibles. Al multiplicar por izquierda a ambos miembros de la ecuación
+\eqref{eqn:oem} se obtiene:
+\begin{align*}
+  A=E_1^{-1}E_2^{-1}\cdots E_k^{-1}I_n=E_1^{-1}E_2^{-1}\cdots E_k^{-1}
+\end{align*}
+Por lo que queda demostrado que $A$ puede expresarse como un producto de
+matrices elementales.
+
+$b\Rightarrow c$: Si $A$ es un producto de matrices elementales entonces por
+los teoremas \ref{theo:compinv} y \ref{theo:elematr} la matriz es un producto
+de matrices invertibles, y por lo tanto es invertible.
+
+%------------------------------------------
+\subsubsection{Equivalencia por renglones}
+Las matrices que se pueden obtener a partir de otra matriz mediante la
+ejecución de una sucesión finita de operaciones elementales en las filas se
+denominan \bi{equivalentes por renglones}. Con esta terminología por los
+incisos \emph{(a)} y \emph{(c)} del teorema \ref{theo:relacfund} se concluye
+que una matriz $A_{n\times n}$ es invertible si y sólo si es equivalentes por
+renglones a la matriz identidad $I_{n}$.
+
+%------------------------------------------
+\subsubsection{Un método para invertir matrices}
+
+\begin{concept}[i]
+  Para determinar la inversa de una matriz invertible $A$, es necesario
+  encontrar una sucesión de operaciones elementales en las filas que reduzca a
+  $A$ a la matriz identidad y luego efectuar esta misma sucesión de
+  operaciones en $I_n$ para obtener $A_{-{1}}$.
+\end{concept}
+
+
+%------------------------------------------
+\subsection{Matrices diagonales, triangulares y simétricas}
+
+%------------------------------------------
+\subsubsection{Matrices diagonales}
+
+\begin{concept}
+  Una matriz cuadrada en la que todos los elementos fuera de la diagonal son
+  cero se denomina \bi{matriz diagonal} y puede representarse como:
+  \begin{align*}
+    D=
+  \begin{bmatrix}
+    d_1&   0& \cdots& 0 \\
+    0&   d_2& \cdots& 0 \\
+    \vdots&\vdots & \ddots  &\vdots  \\
+    0&   0& \cdots& d_n 
+  \end{bmatrix}
+  \end{align*}
+\end{concept}
+
+Una matriz diagonal es invertible sólo si todos los elementos de su diagonal
+son distintos de cero, en este caso la inversa es:
+\begin{align*}
+  D^{-1}=
+\begin{bmatrix}
+  1/d_1 &   0   & \cdots  & 0 \\
+  0     &  1/d_2& \cdots  & 0 \\
+  \vdots&\vdots & \ddots  &\vdots  \\
+  0     &   0   & \cdots  & 1/d_n 
+\end{bmatrix}
+\end{align*}
+
+Por otro lado, las potencias de las matrices diagonales son fáciles de
+calcular. Sea $k$ un número entero positivo, entonces:
+\begin{align*}
+  D^k=
+\begin{bmatrix}
+  d_1^k &   0   & \cdots  & 0 \\
+  0     &  d_2^k& \cdots  & 0 \\
+  \vdots&\vdots & \ddots  &\vdots  \\
+  0     &   0   & \cdots  & d_n^k 
+\end{bmatrix}
+\end{align*}
+
+Finalmente para multiplicar una matriz $A$ por izquierda por una matriz
+diagonal $D$, es posible multiplicar filas sucesivas de $A$ por los elementos
+diagonales sucesivos de $D$; y para multiplicar $A$ por la derecha por
+$D$ es posible multiplicar columnas sucesivas de $A$ por los elementos
+diagonales sucesivos de $D$.
+
+%------------------------------------------
+\subsubsection{Matrices triangulares}
+
+\begin{concept}
+  Una matriz \emph{cuadrada} en la que todos los elementos arriba de la
+  diagonal principal son cero se denomina \bi{triangular inferior}, y una
+  matriz \emph{cuadrada} en la que todos los elementos debajo de la
+  diagonal principal son cero se denomina \bi{triangular superior}.
+\end{concept}
+
+%------------------------------------------
+\subsubsection{Matrices simétricas}
+
+\begin{concept}[i]
+  Una matriz cuadrada es \bi{simétrica} si:
+  \begin{align*}
+    A=A^T
+  \end{align*}
+\end{concept}
+
+\begin{theorem}
+  Si $A$ y $B$ son matrices simétricas del mismo tamaño y si $k$ es cualquier
+  escalar, entonces:
+  \begin{enumerate}[(a)]
+    \item $A^T$ es simétrica.
+    \item $A+B$ y $A-B$ son simétricas
+    \item $kA$ es simétrica.
+  \end{enumerate}
+  \label{theo:simetmat}
+\end{theorem}
+
+\obse En general no es cierto que el producto de matrices simétricas es
+simétrico. Para ver esto, por el inciso \emph{(d)} del teorema
+\ref{theo:operactrans}, se tiene:
+\begin{align*}
+  (AB)^T=B^TA^T=BA
+\end{align*}
+Como $AB$ y $BA$ suelen ser diferentes, se concluye que en términos generales
+$AB$ no es simétrico. Sin embargo, en el caso que $AB=BA$, entonces se dice
+que $A$ y $B$ \bi{conmutan}. En resumen:
+\begin{concept}[i]
+  El producto de dos matrices simétricas es simétrico si y sólo si las
+  matrices conmutan.
+\end{concept}
+
+\begin{theorem}
+  Si $A$ es una matriz simétrica invertible, entonces $A^{-1}$ es simétrica.
+  \label{theo:matrsiminv}
+\end{theorem}
+
+\demo Supongamos que $A$ es simétrica e invertible. Por el teorema
+\ref{theo:invtrans} y el hecho de que $A=A^T$, se tiene:
+\begin{align*}
+  \left( A^{-1} \right)^T=\left( A^T \right)^{-1}=A^{-1}
+\end{align*}
+lo que demuestra que $A^{-1}$ es simétrica.
+
+%------------------------------------------
+\subsubsection{Matrices de la forma $AA^T$ y $A^TA$}
+
+Los productos de matrices de la forma $AA^T$ y $A^TA$ son siempre simétricos
+porque:
+\begin{align*}
+  \left( AA^T \right)^T = \left( A^T \right)^TA^T = AA^T \quad \mbox{y} \quad
+  \left( A^TA \right)^T=A^T\left( A^T \right)^T=A^TA
+\end{align*}
+
+\begin{theorem}
+  Si $A$ es una matriz invertible, entonces $AA^T$ y $A^TA$ también son
+  invertibles.
+  \label{theo:invATA}
+\end{theorem}
+
+\demo Como $A$ es invertible, entonces por el teorema \ref{theo:invtrans}
+también lo es $A^T$. Así, $AA^T$ y $A^TA$ son invertibles, ya que son el
+producto de matrices invertibles.
+
+
+\newpage
+%------------------------------------------
+%------------------------------------------
+%------------------------------------------
+\section{Determinantes}
 \end{document}
