@@ -27,3 +27,13 @@
 \BOOKMARK [3][-]{subsubsection.1.4.3}{Matrices sim\351tricas}{subsection.1.4}% 27
 \BOOKMARK [3][-]{subsubsection.1.4.4}{Matrices de la forma AAT y ATA}{subsection.1.4}% 28
 \BOOKMARK [1][-]{section.2}{Determinantes}{}% 29
+\BOOKMARK [2][-]{subsection.2.1}{La funci\363n determinante}{section.2}% 30
+\BOOKMARK [3][-]{subsubsection.2.1.1}{Permutaciones}{subsection.2.1}% 31
+\BOOKMARK [2][-]{subsection.2.2}{Evaluaci\363n de determinantes por reducci\363n de filas}{section.2}% 32
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Un teorema b\341sico}{subsection.2.2}% 33
+\BOOKMARK [3][-]{subsubsection.2.2.2}{Determinantes de matrices triangulares}{subsection.2.2}% 34
+\BOOKMARK [3][-]{subsubsection.2.2.3}{Elementales en las filas sobre un determinante}{subsection.2.2}% 35
+\BOOKMARK [3][-]{subsubsection.2.2.4}{Determinantes de matrices elementales}{subsection.2.2}% 36
+\BOOKMARK [3][-]{subsubsection.2.2.5}{Propiedades b\341sicas de los determinantes}{subsection.2.2}% 37
+\BOOKMARK [3][-]{subsubsection.2.2.6}{Determinante de un producto de matrices}{subsection.2.2}% 38
+\BOOKMARK [3][-]{subsubsection.2.2.7}{Prueba de la invertibilidad mediante un determinante}{subsection.2.2}% 39

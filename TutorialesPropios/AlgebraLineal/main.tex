@@ -7,7 +7,7 @@
 %
 % Creation Date :
 %
-% Last Modified : Fri 22 Feb 2013 05:23:46 PM ART
+% Last Modified : Mon 25 Feb 2013 07:18:59 PM ART
 %
 %    Created By :  Ezequiel Castillo
 %
@@ -395,6 +395,7 @@ naturalmente en el estudio de formas escalonadas reducidas de matrices
   Si $R$ es la forma escalonada reducida de una matriz $A$ de $n\times n$,
   entonces $R$ tiene un renglón de ceros, o bien, $R$ es la matriz identidad
   $I_n$.
+  \label{theo:matriz_identidad}
 \end{theorem}
 
 %------------------------------------------
@@ -617,6 +618,14 @@ Por el inciso \emph{(d)} del teorema \ref{theo:operactrans}:
   a partir de la matriz identidad $I_n$ al efectuar una sola operación
   elemental en las filas.
 \end{concept}
+
+\begin{theorem}
+  Si la matriz elemental $E$ resulta de la ejecución de ciertas operaciones en
+  los renglones de $I_m$ y si $A$ es una matriz $m\times n$, entonces el
+  producto $EA$ es la matriz que se obtiene cuando la misma operación en las
+  filas se efectúa en $A$.
+  \label{theo:matr_elem}
+\end{theorem}
 
 \begin{theorem}
   Toda matriz elemental es invertible, y la inversa es también una matriz
@@ -856,4 +865,249 @@ producto de matrices invertibles.
 %------------------------------------------
 %------------------------------------------
 \section{Determinantes}
+
+%------------------------------------------
+%------------------------------------------
+\subsection{La función determinante}
+
+%------------------------------------------
+\subsubsection{Permutaciones}
+
+\begin{concept}
+  Una \bi{permutación} del conjunto de enteros $\left\{ 1,2,\ldots,n \right\}$
+  es un arreglo de éstos en algún orden sin omisiones ni repeticiones.
+\end{concept}
+
+Una inversión consiste en un cambio en el orden entre dos elementos siempre y
+cuando un entero mayor precede a uno menor.
+
+Para calcular el número de inversiones en una permutación
+$(j_1,j_2,\ldots,j_n)$ se prosigue de la siguiente forma:
+\begin{enumerate}
+  \item Encontrar el número de enteros que son menores que $j_1$ y que están
+    después de $j_1$ en la permutación.
+  \item Encontrar el número de enteros que son menores que $j_2$ y que están
+    después de $j_2$ en la permutación.
+  \item Continuar este proceso desde $j_3$ hasta $j_{n-1}$.
+  \item La suma de estos números es el número total de inversiones que hay en
+    la permutación.
+\end{enumerate}
+Por ejemplo, en la permutación $(6,1,3,4,5,2)$ el número de inversiones es
+$5+0+1+1+1=8$. Este número indica que se deben haber realizado 8 inversiones a
+partir del conjunto de enteros $(1,2,3,4,5,6)$ para llegar a la permutación
+$(6,1,3,4,5,2)$.
+
+Se dice que una permutación es \bi{par} si el número total de inversiones es
+un entero par, y es \bi{impar} si el número total de inversiones es un número
+entero impar.
+
+Por \bi{producto elemental} de una matriz $A_{n\times n}$ se entiende cualquier producto
+de $n$ elementos de $A$, de los cuales ningún par de elementos proviene de la
+misma fila o de la misma columna. De esta manera una matriz $A_{n\times n}$
+tiene $n!$ productos elementales. Estos productos son de la forma
+$a_{1j_1}a_{2j_2}\ldots a_{nj_n}$, donde $(j_1,j_2,\ldots,j_n)$ es una
+permutación de conjunto $\left\{ 1,2,3,\ldots,n \right\}$. El signo de cada producto
+elemental será positivo si la permutación $(j_1,j_2,\ldots,j_n)$ es par y
+negativo si la permutación $(j_1,j_2,\ldots,j_n)$ es impar.
+
+\bigskip
+
+\begin{concept}
+  Sea $A$ una matriz cuadrada. La \bi{función determinante} se denota por
+  \bi{det}, y $\det(A)$ se define como la suma de los productos elementales
+  con signo de $A$. El número $\det(A)$ se denomina \bi{determinante de A}.
+\end{concept}
+
+%------------------------------------------
+%------------------------------------------
+\subsection{Evaluación de determinantes por reducción de filas}
+
+%------------------------------------------
+\subsubsection{Un teorema básico}
+
+\begin{theorem}
+  Sea $A$ una matriz cuadrada.
+  \begin{enumerate}[(a)]
+    \item Si $A$ tiene una fila de ceros o una columna de ceros, entonces
+      $\det(A)=0$.
+    \item $\det(A)=\det(A^T)$.
+  \end{enumerate}
+  \label{theo:detbasic}
+\end{theorem}
+
+\demo \emph{(a)}.Como todo producto elemental con signo de $A$ tiene un factor de cada
+fila y un factor de cada columna, entonces todo producto elemental con signo
+tiene necesariamente un factor de una fila cero o de una columna cero.
+\emph{(b)}. Se omite la demostración de este inciso, pero se recuerda que un
+producto elemental tiene un factor de cada fila y un factor de cada columna,
+de modo que es evidente que $A$ y $A^T$ tienen exactamente el mismo conjunto
+de productos elementales.
+
+%------------------------------------------
+\subsubsection{Determinantes de matrices triangulares}
+
+\begin{theorem}
+  Si $A$ es una matriz triangular $n\times n$ (triangular superior, inferior o
+  diagonal), entonces $\det(A)$ es el producto de los elementos de la diagonal
+  principal; es decir:
+  \begin{align*}
+    \det(A)=\prod_i^n a_{ii}
+  \end{align*}
+  \label{theo:triangdet}
+\end{theorem}
+
+%------------------------------------------
+\subsubsection{Elementales en las filas sobre un determinante}
+
+\begin{theorem}
+  Sea $A$ una matriz $n\times n$
+  \begin{enumerate}[(a)]
+    \item Si $B$ es la matriz que se obtiene cuando una sola fila o una sola
+      columna de $A$ se multiplica por un escalar $k$, entonces:
+      \begin{align*}
+        \det(B)=k\det(A)
+      \end{align*}
+    \item Si $B$ es la matriz que se obtiene cuando se intercambian dos filas
+      o dos columnas, entonces:
+      \begin{align*}
+        \det(B)=-\det(A)
+      \end{align*}
+    \item Si $B$ es la matriz que se obtiene cuando un múltiplo de una fila de
+      $A$ se suma a otra fila o cuando un múltiplo de una columna se suma a
+      otra columna, entonces:
+      \begin{align*}
+        \det(B)=\det(A)
+      \end{align*}
+  \end{enumerate}
+  \label{theo:det_op_elem}
+\end{theorem}
+
+%------------------------------------------
+\subsubsection{Determinantes de matrices elementales}
+\begin{theorem}
+  Sea $E$ una matriz elemental $n\times n$.
+  \begin{enumerate}[(a)]
+    \item Si $E$ se obtiene al multiplicar una fila por $k$ un renglón de
+      $I_n$, entonces $\det(E)=k$.
+    \item Si $E$ se obtiene al intercambiar dos filas de $I_n$, entonces
+      $\det(E)=-1$.
+    \item Si $E$ se obtiene al sumar un múltiplo de una fila de $I_n$ a otra
+      fila, entonces $\det(E)=1$.
+  \end{enumerate}
+  \label{theo:det_matr_elem}
+\end{theorem}
+
+%------------------------------------------
+\subsubsection{Propiedades básicas de los determinantes}
+
+\begin{concept}
+  \begin{align*}
+    \det(kA)=k^n\det(A)
+  \end{align*}
+\end{concept}
+
+Desafortunadamente, en general no existe una relación simple entre
+$\det(A)$, $\det(B)$ y $\det(A+B)$ y:
+\begin{align*}
+  \det(A) + \det(B) \ne \det(A+B)
+\end{align*}
+
+\begin{theorem}
+  Sean $A$, $B$ y $C$ matrices $n\times n$ que sólo difieren en una fila, por
+  ejemplo, la r-ésima, y suponer que la r-ésima fila de $C$ se puede obtener
+  sumando los elementos correspondientes de las r-esimas filas de $A$ y
+  $B$. Entonces:
+  \begin{align*}
+    \det(C)=\det(A)+\det(B)
+  \end{align*}
+  El mismo resultado es cierto para columnas.
+  \label{theo:det_suma}
+\end{theorem}
+
+%------------------------------------------
+\subsubsection{Determinante de un producto de matrices}
+
+La siguiente afirmación es cierta:
+\begin{align}
+  \det(AB)=\det(A)\det(B)
+  \label{eqn:prod_det}
+\end{align}
+Como la demostración de este teorema es bastante minuciosa, primero es
+necesario desarrollar algunos resultados preliminares. Se comenzará con el
+caso en el que $A$ es una matriz elemental. Debido a que este caso especial
+sirve como prueba de un teorema mayor (la demostración de
+\eqref{eqn:prod_det}), entonces lo denominamos lema:
+
+\begin{lemma}
+  Si $B$ es una matriz $n\times n$ y $E$ es una matriz elemental $n\times n$,
+  entonces:
+  \begin{align*}
+    \det(EB)=\det(E)\det(B)
+  \end{align*}
+  \label{lem:prod_det_1}
+\end{lemma}
+
+\demo Se consideran tres casos, cada uno dependiendo de la operación en el
+renglón con que se obtiene $E$.
+
+\case{1} Si $E$ se obtiene al multiplicar por $k$ una fila de $I_n$, entonces,
+por el teorema \ref{theo:matr_elem}, $EB$ se obtiene a partir de $B$ al
+multiplicar por $k$ una fila; así, por el teorema \ref{theo:det_op_elem}a se
+tiene que:
+\begin{align*}
+  \det(EB)=k\det(B)
+\end{align*}
+Pero por el teorema \ref{theo:det_matr_elem}a se tiene que $\det(E)=k$, de
+modo que:
+\begin{align*}
+  \det(EB)=\det(E)\det(B)
+\end{align*}
+
+\case{2 y 3} Las demostraciones de estos casos siguen el mismo patrón que para
+el caso anterior.
+
+\obse Por aplicaciones repetidas del lema \ref{lem:prod_det_1} se concluye que
+si $B$ es una matriz $n\times n$ y $E_1$, $E_2$ \ldots $E_r$ son matrices
+elementales $n\times n$ entonces:
+\begin{align}
+  \det(E_1E_2\cdots E_rB)=\det(E_1)\det(E_2)\cdots\det(E_r)\det(B)
+  \label{eq:det_prod_matr}
+\end{align}
+
+%------------------------------------------
+\subsubsection{Prueba de la invertibilidad mediante un determinante}
+
+\begin{theorem}
+  Una matriz cuadrada $A$ es invertible si y sólo si $\det(A)\ne0$
+  \label{theo:proof_inv_matr}
+\end{theorem}
+
+\demo Sea $R$ la forma escalonada reducida de $A$.
+
+Como paso preliminar se demostrará que tanto $\det(A)$ como $\det(R)$ son cero
+o diferentes de cero. Sean $E_1$, $E_2$ \ldots $E_r$ las matrices elementales
+que corresponden a las operaciones elementales en los renglones con que se
+obtiene $R$ a partir de $A$. Así:
+\begin{align*}
+  R=E_r\cdots E_2E_1A
+\end{align*}
+y según \eqref{eq:det_prod_matr}:
+\begin{align}
+  \det(R)=\det(E_r)\cdots\det(E_2)\det(E_1)\det(A)
+  \label{eqn:det_matr_redu_elem}
+\end{align}
+Pero por el teorema \ref{theo:det_matr_elem}, los determinantes de las
+matrices elementales son diferentes de cero. (Tomar en cuenta que multiplicar
+por cero una fila \emph{no} es una operación elemental en los renglones
+permitida.) Así por \eqref{eqn:det_matr_redu_elem} se concluye que
+$\det(R)$ y $\det(A)$ son cero o diferentes de cero. Ahora se procederá a la
+parte importante de la demostración.
+
+Si $A$ es invertible, entonces por el teorema \ref{theo:relacfund} se tiene
+que $R=I$, de modo que $\det(R)=1\ne0$ y, en consecuencia, $\det(A)\ne0$.
+Recíprocamente, si $\det(A)\ne0$ entonces $\det(R)\ne0$, de modo que $R$ no
+puede contener un renglón de ceros. Por el teorema \ref{theo:matriz_identidad}
+se concluye que $R=I$, de modo que por el teorema \ref{theo:relacfund} se
+tiene que $A$ es invertible.
+
 \end{document}
