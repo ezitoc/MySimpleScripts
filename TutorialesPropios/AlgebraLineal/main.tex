@@ -7,7 +7,7 @@
 %
 % Creation Date :
 %
-% Last Modified : Tue 26 Feb 2013 12:37:57 AM ART
+% Last Modified : Tue 26 Feb 2013 08:30:17 PM ART
 %
 %    Created By :  Ezequiel Castillo
 %
@@ -1184,7 +1184,131 @@ como $det(A)\ne0$, la demostración puede completarse dividiendo ambos miembros
 por $\det(A)$.
 
 %------------------------------------------
+\subsubsection{Sistemas lineales de la forma $A\xvec=\lambda\xvec$}
+
+Muchas aplicaciones del álgebra lineal están relacionadas con sistemas de
+$n$ ecuaciones lineales en $n$ incógnitas que se expresan como:
+\begin{align}
+  A\xvec&=\lambda\xvec \\
+  (\lambda I-A)\xvec&=\textbf{0} \label{eqn:sist_ec_lineales}
+\end{align}
+
+El problema de interés esencial en sistemas lineales de la forma
+\eqref{eqn:sist_ec_lineales} es determinar los valores de $\lambda$ para los
+cuales el sistema tiene una solución no trivial; ese valor de $\lambda$ se
+denomina \bi{eingenvalor} o \bi{autovalor} de $A$. Si $\lambda$ es un
+autovalor de $A$, entonces las soluciones no triviales de
+\eqref{eqn:sist_ec_lineales} se denominan \bi{eingenvectores} o
+\bi{autovectores} de $A$ correspondientes a $\lambda$.
+
+De acuerdo con el teorema \ref{theo:proof_inv_matr} se concluye que el sistema
+$(\lambda I-A)\xvec=\mathbf{0}$ tiene una solución no trivial si y sólo si:
+\begin{align}
+  \det(\lambda I-A)=0
+  \label{eqn:ec_caracteristica}
+\end{align}
+Ésta se denomina \bi{ecuación característica} de $A$; los autovalores de
+$A$ se pueden encontrar resolviendo esta ecuación para $\lambda$. Notar que la
+matriz $(\lambda I-A)$ no es invertible.
+
 %------------------------------------------
-\subsection{Sistemas lineales de la forma $A\xvec=\lambda\xvec$}
+%------------------------------------------
+\subsection{Desarrollo por cofactores}
+
+%------------------------------------------
+\subsubsection{Menores y cofactores}
+
+\begin{concept}
+  Si $A$ es una matriz cuadrada, entonces el \bi{menor del elemento $a_{ij}$}
+  se denota por $M_{ij}$ y se define como el determinante de la submatriz que
+  queda después de quitar la $i$-ésima fila y la $j$-ésima columna de
+  $A$. El número $(-1)^{i+j}M_{ij}$ se denota por $C_{ij}$ y se denomina
+  \bi{cofactor del elemento $a_{ij}$}.
+\end{concept}
+
+\begin{theorem}
+  El determinante de una matriz $A_{n\times n}$ se puede calcular
+  multiplicando los elementos de cualquier fila (o de cualquier columna) por
+  sus cofactores y sumando los productos resultantes; es decir, para cada
+  $1\le i\le n$ y $1 \le j \le n$, se tiene que:
+  \begin{align*}
+    \det(A)&=\sum_{i=1}^n a_{ij}C_{ij} \quad \mbox{desarrollo por cofactores a
+    lo largo de la $j$-ésima columna} \\
+    \det(A)&=\sum_{j=1}^n a_{ij}C_{ij} \quad \mbox{desarrollo por cofactores a
+    lo largo de la $i$-ésima fila}
+  \end{align*}
+  \label{theo:det_des_cof}
+\end{theorem}
+
+%------------------------------------------
+\subsubsection{Adjunta de una matriz}
+
+Aunque no se demuestra la siguiente afirmación es verdadera:
+\begin{concept}
+  Resulta que si los elementos de cualquier fila se multiplican por cofactores
+  correspondientes de una fila \emph{diferente}, la suma de tales productos
+  siempre es cero. Este resultado también se aplica para columnas.
+\end{concept}
+
+\begin{concept}
+  Si $A$ es cualquier matriz $n\times n$ y $C_{ij}$ es el cofactor de
+  $a_{ij}$, entonces la matriz:
+  \begin{align*}
+    \begin{bmatrix}
+      C_{11}& C_{12}& \cdots& C_{1n}\\
+      C_{21}& C_{22}& \cdots& C_{2n}\\
+      \vdots&\vdots &       &\vdots \\
+      C_{n1}& C_{n2}& \cdots& C_{nn}
+    \end{bmatrix}
+  \end{align*}
+  se denomina \bi{matriz de cofactores de $A$}. La transpuesta de esta matriz
+  se denomina \bi{adjunta de A} y se denota por $\adj(A)$.
+\end{concept}
+
+%------------------------------------------
+\subsubsection{Fórmula para la inversa de una matriz}
+
+\begin{theorem}
+  Si $A$ es una matriz invertible, entonces
+  \begin{align*}
+    A^{-1}=\frac{1}{\det(A)}\adj(A)
+  \end{align*}
+  \label{theo:inv_adjunta}
+\end{theorem}
+
+\demo Primero se demostrará que:
+\begin{align*}
+  A\adj(A)=\det(A)I
+\end{align*}
+El elemento en la $i$-ésima fila y la $j$-ésima columna de $A\adj(A)$ es:
+\begin{align}
+  \left( A\adj(A) \right)_{ij}=\sum_{k=1}^n a_{ik}C_{jk}
+  \label{eqn:AAdj}
+\end{align}
+Si $i=j$, entonces \eqref{eqn:AAdj} es el desarrollo por cofactores de
+$\det(A)$ a lo largo de la $i$-ésima fila de $A$ (teorema
+\ref{theo:det_des_cof}), y si $i\ne j$ entonces las letras $a$ y los
+cofactores provienen de filas diferentes de $A$, de modo que el valor de
+\eqref{eqn:AAdj} es cero. En consecuencia:
+\begin{align*}
+  A\adj(A)=
+    \begin{bmatrix}
+      \det(A)& 0& \cdots& 0\\
+      0& \det(A)& \cdots& 0\\
+      \vdots&\vdots &       &\vdots \\
+      0& 0& \cdots& \det(A)
+    \end{bmatrix}
+    = \det(A)I
+\end{align*}
+Dado que $A$ es invertible, $\det(A)\ne0$. Por tanto la ecuación
+\eqref{eqn:AAdjM} puede volver a escribirse como:
+\begin{align*}
+  \frac{1}{\det(A)}\left[ A\adj(A) \right]&=I \\
+  A\left[ \frac{1}{\det(A)}\adj(A) \right]&=I
+\end{align*}
+Multiplicando por la izquierda ambos miembros por $A^{-1}$, se obtiene:
+\begin{align*}
+    A^{-1}=\frac{1}{\det(A)}\adj(A)
+\end{align*}
 
 \end{document}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.12.4)  26 FEB 2013 00:38
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.8.29)  26 FEB 2013 20:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -918,36 +918,53 @@ Package mdframed Info: mdframed detected package amsthm
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1188.
+(hyperref)                removing `math shift' on input line 1187.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\lambda' on input line 1188.
+(hyperref)                removing `\lambda' on input line 1187.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1188.
+(hyperref)                removing `math shift' on input line 1187.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1190.
 [22]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1190.
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theoerem header of amsthm
+(mdframed)              on input line 1229.
+ [23]
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theoerem header of amsthm
+(mdframed)              on input line 1271.
+
+
+LaTeX Warning: Reference `eqn:AAdjM' on page 24 undefined on input line 1304.
+
+[24]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1314.
+ [25]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1314.
  (./main.aux
 LaTeX Info: Redefining \. on input line 19.
 LaTeX Info: Redefining \% on input line 19.
 )
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1190.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1190.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1314.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1314.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: A1B7F66C69252144D0C55EF81B7E069E;3631.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1190.
+(rerunfilecheck)             Checksum: F7A681A8F4F11272784F5EB99F88329C;3977.
+
+
+LaTeX Warning: There were undefined references.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1314.
  ) 
 Here is how much of TeX's memory you used:
- 13704 strings out of 493488
- 219118 string characters out of 3136661
- 328968 words of memory out of 3000000
- 16623 multiletter control sequences out of 15000+200000
- 16405 words of font info for 64 fonts, out of 3000000 for 9000
+ 13725 strings out of 493488
+ 219442 string characters out of 3136661
+ 329237 words of memory out of 3000000
+ 16633 multiletter control sequences out of 15000+200000
+ 15787 words of font info for 62 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
  42i,17n,37p,959b,568s stack positions out of 5000i,500n,10000p,200000b,50000s
 </home/ezequiel/.local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm
@@ -966,10 +983,10 @@ public/amsfonts/cm/cmr8.pfb></home/ezequiel/.local/texlive/2012/texmf-dist/font
 s/type1/public/amsfonts/cm/cmsy10.pfb></home/ezequiel/.local/texlive/2012/texmf
 -dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></home/ezequiel/.local/texlive/2
 012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on main.pdf (22 pages, 207974 bytes).
+Output written on main.pdf (25 pages, 216098 bytes).
 PDF statistics:
- 474 PDF objects out of 1000 (max. 8388607)
- 431 compressed objects within 5 object streams
- 151 named destinations out of 1000 (max. 500000)
- 329 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 517 PDF objects out of 1000 (max. 8388607)
+ 471 compressed objects within 5 object streams
+ 164 named destinations out of 1000 (max. 500000)
+ 361 words of extra memory for PDF output out of 10000 (max. 10000000)
 
