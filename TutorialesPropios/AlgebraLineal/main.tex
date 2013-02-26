@@ -7,7 +7,7 @@
 %
 % Creation Date :
 %
-% Last Modified : Mon 25 Feb 2013 07:18:59 PM ART
+% Last Modified : Tue 26 Feb 2013 12:37:57 AM ART
 %
 %    Created By :  Ezequiel Castillo
 %
@@ -692,7 +692,7 @@ puede llevarse por medio de operaciones elementales en las filas a:
 \end{align*}
 Por lo tanto la forma escalonada reducida de $A$ es la matriz $I_n$.
 
-$b\Rightarrow c$: Suponer que la forma escalonada reducida de $A$ es
+$c\Rightarrow d$: Suponer que la forma escalonada reducida de $A$ es
 $I_n$ implica que $A$ se puede reducir a $I_n$ mediante una sucesión finita de
 operaciones elementales en las filas. Esto es lo mismo que escribir:
 \begin{align}
@@ -708,7 +708,7 @@ invertibles. Al multiplicar por izquierda a ambos miembros de la ecuación
 Por lo que queda demostrado que $A$ puede expresarse como un producto de
 matrices elementales.
 
-$b\Rightarrow c$: Si $A$ es un producto de matrices elementales entonces por
+$d\Rightarrow a$: Si $A$ es un producto de matrices elementales entonces por
 los teoremas \ref{theo:compinv} y \ref{theo:elematr} la matriz es un producto
 de matrices invertibles, y por lo tanto es invertible.
 
@@ -998,6 +998,15 @@ de productos elementales.
 \end{theorem}
 
 %------------------------------------------
+\subsubsection{Determinantes con filas o columnas proporcionales}
+
+\begin{theorem}
+  Si $A$ es una matriz cuadrada con dos filas o dos columnas proporcionales,
+  entonces $\det(A)=0$.
+  \label{theo:deter_matr_propor}
+\end{theorem}
+
+%------------------------------------------
 \subsubsection{Propiedades básicas de los determinantes}
 
 \begin{concept}
@@ -1109,5 +1118,73 @@ Recíprocamente, si $\det(A)\ne0$ entonces $\det(R)\ne0$, de modo que $R$ no
 puede contener un renglón de ceros. Por el teorema \ref{theo:matriz_identidad}
 se concluye que $R=I$, de modo que por el teorema \ref{theo:relacfund} se
 tiene que $A$ es invertible.
+
+Por los teoremas \ref{theo:proof_inv_matr} y \ref{theo:deter_matr_propor} se
+concluye que una matriz cuadrada con dos filas o columnas proporcionales no es
+invertible.
+
+\begin{theorem}
+  Si $A$ y $B$ son matrices cuadradas del mismo tamaño, entonces:
+  \begin{align*}
+    \det(AB)=\det(A)\det(B)
+  \end{align*}
+  \label{theo:det_prod_matr}
+\end{theorem}
+
+\demo La demostración se dividirá en dos casos que dependen de si $A$ es
+invertible o no lo es.
+
+\case{1} Si la matriz $A$ no es invertible, entonces por el teorema
+\ref{theo:compinv} tampoco lo es el producto $AB$. Así, por por el teorema
+\ref{theo:proof_inv_matr} se tiene que $\det(AB)=0$ y $\det(A)=0$, por tanto,
+se concluye que:
+\begin{align*}
+  \det(AB)=\det(A)\det(B)
+\end{align*}
+
+\case{2} Ahora se supone que $A$ es invertible. Por el teorema
+\ref{theo:relacfund}, la matriz $A$ se puede expresar como producto de
+matrices elementales, por ejemplo:
+\begin{align}
+  A=E_1E_2\cdots E_r
+  \label{eqn:matrix_A_elem}
+\end{align}
+de modo que:
+\begin{align*}
+  AB=E_1E_2\cdots E_rB
+\end{align*}
+Si se aplica \eqref{eq:det_prod_matr} a esta ecuación se obtiene:
+\begin{align*}
+  \det(AB)&=\det(E_1)\det(E_2)\cdots \det(E_r)\det(B) \\
+          &=\det(E_1E_2\cdots E_r)\det(B)
+\end{align*}
+que según \eqref{eqn:matrix_A_elem}, se puede escribir como:
+\begin{align*}
+  \det(AB)=\det(A)\det(B)
+\end{align*}
+
+El siguiente teorema proporciona una relación útil entre el determinante de
+una matriz y el determinante de su inversa.
+
+\begin{theorem}
+  Si $A$ es invertible, entonces:
+  \begin{align*}
+    \det\left( A^{-1} \right)=\frac{1}{\det(A)}
+  \end{align*}
+  \label{theo:det_inv_matriz}
+\end{theorem}
+
+\demo 
+\begin{align*}
+  A^{-1}A&=I \\
+  \det\left( A^{-1}A \right)&=\det(I) \\
+  \det\left( A^{-1} \right)\det(A)&=1
+\end{align*}
+como $det(A)\ne0$, la demostración puede completarse dividiendo ambos miembros
+por $\det(A)$.
+
+%------------------------------------------
+%------------------------------------------
+\subsection{Sistemas lineales de la forma $A\xvec=\lambda\xvec$}
 
 \end{document}
