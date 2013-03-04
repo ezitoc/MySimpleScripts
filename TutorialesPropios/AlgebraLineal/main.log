@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.12.4)  3 MAR 2013 19:53
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.12.4)  3 MAR 2013 23:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1272,22 +1272,32 @@ LaTeX Info: Redefining \% on input line 1806.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theoerem header of amsthm
 (mdframed)              on input line 1816.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1853.
-LaTeX Info: Redefining \. on input line 1853.
-LaTeX Info: Redefining \% on input line 1853.
-LaTeX Info: Redefining \. on input line 1853.
-LaTeX Info: Redefining \% on input line 1853.
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theoerem header of amsthm
+(mdframed)              on input line 1855.
+Package mdframed Info: Not enough space on this page on input line 1864.
+LaTeX Info: Redefining \. on input line 1864.
+LaTeX Info: Redefining \% on input line 1864.
+LaTeX Info: Redefining \. on input line 1864.
+LaTeX Info: Redefining \% on input line 1864.
  [34]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1853.
+Package mdframed Info: Not enough space on this page on input line 1864.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1870.
+LaTeX Info: Redefining \. on input line 1870.
+LaTeX Info: Redefining \% on input line 1870.
+LaTeX Info: Redefining \. on input line 1870.
+LaTeX Info: Redefining \% on input line 1870.
+ [35]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1870.
  (./main.aux (./config.aux)
 LaTeX Info: Redefining \. on input line 20.
 LaTeX Info: Redefining \% on input line 20.
 )
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1853.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1853.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1870.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1870.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 457FE7038B406582FD9CBE8D10B15716;5780.
+(rerunfilecheck)             Checksum: 58BC5A686734A122652121C1A226EFAB;5868.
 
 
 LaTeX Warning: There were undefined references.
@@ -1295,13 +1305,13 @@ LaTeX Warning: There were undefined references.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1853.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1870.
  ) 
 Here is how much of TeX's memory you used:
- 14023 strings out of 493488
- 222904 string characters out of 3136661
- 337635 words of memory out of 3000000
- 16840 multiletter control sequences out of 15000+200000
+ 14030 strings out of 493488
+ 222996 string characters out of 3136661
+ 337660 words of memory out of 3000000
+ 16842 multiletter control sequences out of 15000+200000
  20075 words of font info for 79 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
  42i,17n,45p,959b,589s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1328,10 +1338,10 @@ pfb></home/ezequiel/.local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmsy6.pfb></home/ezequiel/.local/texlive/2012/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmsy8.pfb></home/ezequiel/.local/texlive/2012/texmf-dist/fonts/type
 1/public/amsfonts/cm/cmti12.pfb>
-Output written on main.pdf (34 pages, 306918 bytes).
+Output written on main.pdf (35 pages, 308316 bytes).
 PDF statistics:
- 717 PDF objects out of 1000 (max. 8388607)
- 654 compressed objects within 7 object streams
- 231 named destinations out of 1000 (max. 500000)
- 513 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 729 PDF objects out of 1000 (max. 8388607)
+ 665 compressed objects within 7 object streams
+ 236 named destinations out of 1000 (max. 500000)
+ 521 words of extra memory for PDF output out of 10000 (max. 10000000)
 

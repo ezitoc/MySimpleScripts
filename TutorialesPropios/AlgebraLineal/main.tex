@@ -7,7 +7,7 @@
 %
 % Creation Date :
 %
-% Last Modified : Sun 03 Mar 2013 07:53:37 PM ART
+% Last Modified : Sun 03 Mar 2013 11:56:25 PM ART
 %
 %    Created By :  Ezequiel Castillo
 %
@@ -1849,5 +1849,22 @@ se cancelan entre sí:
   T_{A^{-1}}(T_A(\mathbf{x}))=A^{-1}A\mathbf{x}=I\mathbf{x}=\mathbf{x}
 \end{align*}
 
+%------------------------------------------
+\subsubsection{Propiedades de la linealidad}
 
+\begin{theorem}
+  Una transformación $T_:R^n\rightarrow R^m$ es lineal si y sólo si las
+  siguientes relaciones se cumplen para todos los vectores $\mathbf{u}$ y
+  $\mathbf{v}$ en $R^n$ y cualquier escalar $c$.
+  \begin{enumerate}[(a)]
+    \item $T(\mathbf{u}+\mathbf{v})=T(\mathbf{u})+T(\mathbf{v})$
+    \item $T(c\mathbf{u})=cT(\mathbf{u})$
+  \end{enumerate}
+  \label{theo:transf_lineal}
+\end{theorem}
+
+\demo Se puede demostrar de dos formas:
+Primero se supone que $T$ es una transformación lineal, y se hace que $A$ sea
+la matriz estándar para $T$. Por las propiedades aritméticas básicas de las
+matrices se concluye que:
 \end{document}
