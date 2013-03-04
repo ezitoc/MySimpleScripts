@@ -21,26 +21,44 @@
 \BOOKMARK [3][-]{subsubsection.1.3.1}{Matrices elementales}{subsection.1.3}% 21
 \BOOKMARK [3][-]{subsubsection.1.3.2}{Equivalencia por renglones}{subsection.1.3}% 22
 \BOOKMARK [3][-]{subsubsection.1.3.3}{Un m\351todo para invertir matrices}{subsection.1.3}% 23
-\BOOKMARK [2][-]{subsection.1.4}{Matrices diagonales, triangulares y sim\351tricas}{section.1}% 24
-\BOOKMARK [3][-]{subsubsection.1.4.1}{Matrices diagonales}{subsection.1.4}% 25
-\BOOKMARK [3][-]{subsubsection.1.4.2}{Matrices triangulares}{subsection.1.4}% 26
-\BOOKMARK [3][-]{subsubsection.1.4.3}{Matrices sim\351tricas}{subsection.1.4}% 27
-\BOOKMARK [3][-]{subsubsection.1.4.4}{Matrices de la forma AAT y ATA}{subsection.1.4}% 28
-\BOOKMARK [1][-]{section.2}{Determinantes}{}% 29
-\BOOKMARK [2][-]{subsection.2.1}{La funci\363n determinante}{section.2}% 30
-\BOOKMARK [3][-]{subsubsection.2.1.1}{Permutaciones}{subsection.2.1}% 31
-\BOOKMARK [2][-]{subsection.2.2}{Evaluaci\363n de determinantes por reducci\363n de filas}{section.2}% 32
-\BOOKMARK [3][-]{subsubsection.2.2.1}{Un teorema b\341sico}{subsection.2.2}% 33
-\BOOKMARK [3][-]{subsubsection.2.2.2}{Determinantes de matrices triangulares}{subsection.2.2}% 34
-\BOOKMARK [3][-]{subsubsection.2.2.3}{Elementales en las filas sobre un determinante}{subsection.2.2}% 35
-\BOOKMARK [3][-]{subsubsection.2.2.4}{Determinantes de matrices elementales}{subsection.2.2}% 36
-\BOOKMARK [3][-]{subsubsection.2.2.5}{Determinantes con filas o columnas proporcionales}{subsection.2.2}% 37
-\BOOKMARK [3][-]{subsubsection.2.2.6}{Propiedades b\341sicas de los determinantes}{subsection.2.2}% 38
-\BOOKMARK [3][-]{subsubsection.2.2.7}{Determinante de un producto de matrices}{subsection.2.2}% 39
-\BOOKMARK [3][-]{subsubsection.2.2.8}{Prueba de la invertibilidad mediante un determinante}{subsection.2.2}% 40
-\BOOKMARK [3][-]{subsubsection.2.2.9}{Sistemas lineales de la forma Ax=x}{subsection.2.2}% 41
-\BOOKMARK [2][-]{subsection.2.3}{Desarrollo por cofactores}{section.2}% 42
-\BOOKMARK [3][-]{subsubsection.2.3.1}{Menores y cofactores}{subsection.2.3}% 43
-\BOOKMARK [3][-]{subsubsection.2.3.2}{Adjunta de una matriz}{subsection.2.3}% 44
-\BOOKMARK [3][-]{subsubsection.2.3.3}{F\363rmula para la inversa de una matriz}{subsection.2.3}% 45
-\BOOKMARK [1][-]{section.3}{Espacios vectoriales euclidianos}{}% 46
+\BOOKMARK [2][-]{subsection.1.4}{Otros resultados sobre sistemas de ecuaciones e invertibilidad}{section.1}% 24
+\BOOKMARK [2][-]{subsection.1.5}{Matrices diagonales, triangulares y sim\351tricas}{section.1}% 25
+\BOOKMARK [3][-]{subsubsection.1.5.1}{Matrices diagonales}{subsection.1.5}% 26
+\BOOKMARK [3][-]{subsubsection.1.5.2}{Matrices triangulares}{subsection.1.5}% 27
+\BOOKMARK [3][-]{subsubsection.1.5.3}{Matrices sim\351tricas}{subsection.1.5}% 28
+\BOOKMARK [3][-]{subsubsection.1.5.4}{Matrices de la forma AAT y ATA}{subsection.1.5}% 29
+\BOOKMARK [1][-]{section.2}{Determinantes}{}% 30
+\BOOKMARK [2][-]{subsection.2.1}{La funci\363n determinante}{section.2}% 31
+\BOOKMARK [3][-]{subsubsection.2.1.1}{Permutaciones}{subsection.2.1}% 32
+\BOOKMARK [2][-]{subsection.2.2}{Evaluaci\363n de determinantes por reducci\363n de filas}{section.2}% 33
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Un teorema b\341sico}{subsection.2.2}% 34
+\BOOKMARK [3][-]{subsubsection.2.2.2}{Determinantes de matrices triangulares}{subsection.2.2}% 35
+\BOOKMARK [3][-]{subsubsection.2.2.3}{Elementales en las filas sobre un determinante}{subsection.2.2}% 36
+\BOOKMARK [3][-]{subsubsection.2.2.4}{Determinantes de matrices elementales}{subsection.2.2}% 37
+\BOOKMARK [3][-]{subsubsection.2.2.5}{Determinantes con filas o columnas proporcionales}{subsection.2.2}% 38
+\BOOKMARK [3][-]{subsubsection.2.2.6}{Propiedades b\341sicas de los determinantes}{subsection.2.2}% 39
+\BOOKMARK [3][-]{subsubsection.2.2.7}{Determinante de un producto de matrices}{subsection.2.2}% 40
+\BOOKMARK [3][-]{subsubsection.2.2.8}{Prueba de la invertibilidad mediante un determinante}{subsection.2.2}% 41
+\BOOKMARK [3][-]{subsubsection.2.2.9}{Sistemas lineales de la forma Ab=b}{subsection.2.2}% 42
+\BOOKMARK [2][-]{subsection.2.3}{Desarrollo por cofactores}{section.2}% 43
+\BOOKMARK [3][-]{subsubsection.2.3.1}{Menores y cofactores}{subsection.2.3}% 44
+\BOOKMARK [3][-]{subsubsection.2.3.2}{Adjunta de una matriz}{subsection.2.3}% 45
+\BOOKMARK [3][-]{subsubsection.2.3.3}{F\363rmula para la inversa de una matriz}{subsection.2.3}% 46
+\BOOKMARK [2][-]{subsection.2.4}{Resumen}{section.2}% 47
+\BOOKMARK [1][-]{section.3}{Espacios vectoriales euclidianos}{}% 48
+\BOOKMARK [2][-]{subsection.3.1}{Espacio euclidiano n dimensional}{section.3}% 49
+\BOOKMARK [3][-]{subsubsection.3.1.1}{vectores en el espacio n dimensional}{subsection.3.1}% 50
+\BOOKMARK [3][-]{subsubsection.3.1.2}{Propiedades de las operaciones vectoriales en el espacio n dimensional}{subsection.3.1}% 51
+\BOOKMARK [3][-]{subsubsection.3.1.3}{Norma y distancia en el espacio euclidiano n dimensional}{subsection.3.1}% 52
+\BOOKMARK [3][-]{subsubsection.3.1.4}{Ortogonalidad}{subsection.3.1}% 53
+\BOOKMARK [3][-]{subsubsection.3.1.5}{Notaci\363n matricial}{subsection.3.1}% 54
+\BOOKMARK [3][-]{subsubsection.3.1.6}{F\363rmula matricial para el producto punto}{subsection.3.1}% 55
+\BOOKMARK [3][-]{subsubsection.3.1.7}{Un producto punto considerado como multiplicaci\363n matricial}{subsection.3.1}% 56
+\BOOKMARK [2][-]{subsection.3.2}{Transformaciones lineales de Rn a Rm}{section.3}% 57
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Funciones de Rn a Rm}{subsection.3.2}% 58
+\BOOKMARK [3][-]{subsubsection.3.2.2}{Transformaciones lineales de Rn a Rm}{subsection.3.2}% 59
+\BOOKMARK [3][-]{subsubsection.3.2.3}{Algunos comentarios sobre la notaci\363n}{subsection.3.2}% 60
+\BOOKMARK [3][-]{subsubsection.3.2.4}{Composiciones de transformaciones lineales}{subsection.3.2}% 61
+\BOOKMARK [2][-]{subsection.3.3}{Propiedades de las transformaciones lineales de Rn a Rm}{section.3}% 62
+\BOOKMARK [3][-]{subsubsection.3.3.1}{Transformaciones lineales uno a uno}{subsection.3.3}% 63
+\BOOKMARK [3][-]{subsubsection.3.3.2}{Inversa de un operador lineal uno a uno}{subsection.3.3}% 64
