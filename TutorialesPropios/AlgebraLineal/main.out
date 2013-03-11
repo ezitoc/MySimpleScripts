@@ -47,7 +47,7 @@
 \BOOKMARK [2][-]{subsection.2.4}{Resumen}{section.2}% 47
 \BOOKMARK [1][-]{section.3}{Espacios vectoriales euclidianos}{}% 48
 \BOOKMARK [2][-]{subsection.3.1}{Espacio euclidiano n dimensional}{section.3}% 49
-\BOOKMARK [3][-]{subsubsection.3.1.1}{vectores en el espacio n dimensional}{subsection.3.1}% 50
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Vectores en el espacio n dimensional}{subsection.3.1}% 50
 \BOOKMARK [3][-]{subsubsection.3.1.2}{Propiedades de las operaciones vectoriales en el espacio n dimensional}{subsection.3.1}% 51
 \BOOKMARK [3][-]{subsubsection.3.1.3}{Norma y distancia en el espacio euclidiano n dimensional}{subsection.3.1}% 52
 \BOOKMARK [3][-]{subsubsection.3.1.4}{Ortogonalidad}{subsection.3.1}% 53
@@ -63,3 +63,8 @@
 \BOOKMARK [3][-]{subsubsection.3.3.1}{Transformaciones lineales uno a uno}{subsection.3.3}% 63
 \BOOKMARK [3][-]{subsubsection.3.3.2}{Inversa de un operador lineal uno a uno}{subsection.3.3}% 64
 \BOOKMARK [3][-]{subsubsection.3.3.3}{Propiedades de la linealidad}{subsection.3.3}% 65
+\BOOKMARK [3][-]{subsubsection.3.3.4}{Interpretaci\363n geom\351trica de los autovectores}{subsection.3.3}% 66
+\BOOKMARK [1][-]{section.4}{Espacios vectoriales generales}{}% 67
+\BOOKMARK [2][-]{subsection.4.1}{Espacios vectoriales reales}{section.4}% 68
+\BOOKMARK [3][-]{subsubsection.4.1.1}{Axiomas de espacios vectoriales}{subsection.4.1}% 69
+\BOOKMARK [3][-]{subsubsection.4.1.2}{Ejemplos de espacios vectoriales}{subsection.4.1}% 70

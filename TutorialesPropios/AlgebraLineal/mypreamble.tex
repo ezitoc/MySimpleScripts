@@ -25,7 +25,8 @@
 \usepackage{parskip}
 \usepackage{mdframed}
 \usepackage{framed}
-\usepackage{enumerate}
+%\usepackage{enumerate}
+\usepackage[shortlabels]{enumitem}
 \usepackage{fancyhdr}
 
 \usepackage{xstring}
@@ -71,8 +72,8 @@
 
 %*****FANCYHDR******
 \pagestyle{fancy}
-\fancyhead[LE,RO]{\changefont \slshape \rightmark}
-\fancyhead[RE,LO]{\changefont \slshape \leftmark}
+\fancyhead[L]{}%\changefont \slshape \rightmark
+\fancyhead[R]{\changefont \slshape \rightmark}
 \fancyfoot[C]{\changefont \thepage}
 
 
