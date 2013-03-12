@@ -7,7 +7,7 @@
 %
 % Creation Date :
 %
-% Last Modified : Mon 11 Mar 2013 02:50:20 AM ART
+% Last Modified : Tue 12 Mar 2013 12:44:07 AM ART
 %
 %    Created By :  Ezequiel Castillo
 %
@@ -2061,6 +2061,177 @@ operaciones especificadas, espacio vectorial.
     un espacio vectorial. Los axiomas 1 y 6 se deducen de las definiciones de
     las operaciones estándar sobre $R^n$, los demás axiomas se deducen del
     teorema \ref{theo:prop_esp_vec}.
-  \item Segundo
+  \item Demostrar que el conjunto $V$ de todas las matrices $2\times 2$ con
+    elementos reales es un espacio vectorial si la adición vectorial se define
+    como la suma de matrices y la multiplicación escalar vectorial se define
+    como la multiplicación matricial.
+
+    \sol En este ejemplo resulta conveniente verificar los axiomas en el
+    siguiente orden: 1, 6, 2, 3, 7, , 9, 4, 5 y 10. Sea:
+    \begin{align*}
+      \mathbf{u}=
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      \qquad \mbox{y} \qquad
+      \mathbf{v}=
+      \begin{bmatrix}
+        v_{11} & v_{12} \\
+        v_{21} & v_{22}
+      \end{bmatrix}
+    \end{align*}
+    Para probar el axioma 1, es necesario mostrar que $\mathbf{u}+\mathbf{v}$
+    es un objeto en $V$, es decir debe demostrarse que $\mathbf{u}+\mathbf{v}$
+    es una matriz $2\times 2$. Pero este hecho se deduce por la definición de
+    adición de matrices, ya que:
+    \begin{align*}
+      \mathbf{u}+\mathbf{v}=
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      +
+      \begin{bmatrix}
+        v_{11} & v_{12} \\
+        v_{21} & v_{22}
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        u_{11} + v_{11} & u_{12} + v_{12}  \\
+        u_{21} + v_{21} & u_{22} + v_{22} 
+      \end{bmatrix}
+    \end{align*}
+    De manera semejante, el axioma 6 se cumple porque para cualquier número
+    real $k$ se tiene:
+    \begin{align*}
+      k\mathbf{u}=k
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        ku_{11} & ku_{12} \\
+        ku_{21} & ku_{22}
+      \end{bmatrix}
+    \end{align*}
+    de modo que $k\mathbf{u}$ es una matriz $2\times 2$ y en consecuencia, es
+    un objeto en $V$.
+
+    El axioma 2 se deduce del teorema \ref{theo:aritmat} \emph{(a)}, ya que:
+    \begin{align*}
+      \mathbf{u}+\mathbf{v}=
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      +
+      \begin{bmatrix}
+        v_{11} & v_{12} \\
+        v_{21} & v_{22}
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        v_{11} & v_{12} \\
+        v_{21} & v_{22}
+      \end{bmatrix}
+      +
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      =
+      \mathbf{v}+\mathbf{u}
+    \end{align*}
+    De manera semejante, el axioma 3 se deduce del inciso \emph{(b)} de ese
+    teorema, y los axiomas 7, 8 y 9 se deducen de los incisos \emph{(h)},
+    \emph{(j)} y \emph{(l)}, respectivamente, de ese teorema.
+
+    Para probar el axioma 4 es necesario encontrar un objeto $\mathbf{0}$ en
+    $V$ tal que $\mathbf{0}+\mathbf{u}=\mathbf{u}+\mathbf{0}=\mathbf{u}$ para
+    todo $\mathbf{u}$ en $V$. Esto puede lograrse al definir a $\mathbf{0}$
+    como:
+    \begin{align*}
+      \mathbf{0}=
+      \begin{bmatrix}
+        0&0\\
+        0&0
+      \end{bmatrix}
+    \end{align*}
+    Con esta definición:
+    \begin{align*}
+      \mathbf{0}+\mathbf{u}=
+      \begin{bmatrix}
+        0 & 0 \\
+        0 & 0
+      \end{bmatrix}
+      +
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      = \mathbf{u}
+    \end{align*}
+    Para probar el axioma 5 se debe demostrar que cada objeto $\mathbf{u}$
+    en $V$ tiene un negativo $-\mathbf{u}$ tal que
+    $\mathbf{u}+(-\mathbf{u})=\mathbf{0}$ y
+    $(-\mathbf{u})+\mathbf{u}=\mathbf{0}$. Esto se puede hacer definiendo el
+    negativo de $u$ como:
+    \begin{align*}
+      -\mathbf{u}=
+      \begin{bmatrix}
+        -u_{11} & -u_{12} \\
+        -u_{21} & -u_{22}
+      \end{bmatrix}
+    \end{align*}
+    Con esta definición:
+    \begin{align*}
+      \mathbf{u}+(-\mathbf{u})=
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      +
+      \begin{bmatrix}
+        -u_{11} & -u_{12} \\
+        -u_{21} & -u_{22}
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        0 & 0 \\
+        0 & 0
+      \end{bmatrix}
+      = \mathbf{0}
+    \end{align*}
+    y de manera semejante $(-\mathbf{u})+\mathbf{u}=\mathbf{0}$. Por último el
+    axioma 10 es un simple cálculo.
+    \begin{align*}
+      1\mathbf{u}=1
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      =\mathbf{u}
+    \end{align*}
+
+  \item El ejemplo 2 es un caso especial de una clase más general de espacios
+    vectoriales. Los razonamientos de ese ejemplo se pueden adaptar para
+    demostrar que el conjunto $V$ de todas las matrices $m\times n$ con
+    elementos reales, junto con las operaciones de matrices y multiplicación
+    escalar, es un espacio vectorial. La matriz cero $m\times n$ es el vector
+    $\mathbf{0}$, y si $\mathbf{u}$ es la matriz $U_{m\times n}$, entonces la
+    matriz $-U$ es el negativo $-\mathbf{u}$ del vector $\mathbf{u}$. Este
+    espacio vectorial se denotará bajo el símbolo $M_{m\times n}$.
 \end{enumerate}
 \end{document}

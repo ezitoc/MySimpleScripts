@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.12.4)  11 MAR 2013 02:50
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.12.4)  12 MAR 2013 00:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1238,17 +1238,20 @@ Package mdframed Warning: You got a bad break
 (mdframed)                You have to change the settings on input line 1984.
 
 [37]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 2066.
-LaTeX Info: Redefining \. on input line 2066.
-LaTeX Info: Redefining \% on input line 2066.
+LaTeX Info: Redefining \. on input line 2146.
+LaTeX Info: Redefining \% on input line 2146.
  [38]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 2066.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 2237.
+LaTeX Info: Redefining \. on input line 2237.
+LaTeX Info: Redefining \% on input line 2237.
+ [39]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 2237.
  (./main.aux (./config.aux)
 LaTeX Info: Redefining \. on input line 20.
 LaTeX Info: Redefining \% on input line 20.
 )
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 2066.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 2066.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 2237.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 2237.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 958FE48DC0313FBA39E6467F9DE61E2F;6305.
@@ -1259,13 +1262,13 @@ LaTeX Warning: There were undefined references.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 2066.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 2237.
  ) 
 Here is how much of TeX's memory you used:
- 14333 strings out of 493488
- 228075 string characters out of 3136661
- 343679 words of memory out of 3000000
- 17119 multiletter control sequences out of 15000+200000
+ 14336 strings out of 493488
+ 228092 string characters out of 3136661
+ 343696 words of memory out of 3000000
+ 17120 multiletter control sequences out of 15000+200000
  20075 words of font info for 79 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
  42i,17n,45p,959b,592s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1292,10 +1295,10 @@ pfb></home/ezequiel/.local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmsy6.pfb></home/ezequiel/.local/texlive/2012/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmsy8.pfb></home/ezequiel/.local/texlive/2012/texmf-dist/fonts/type
 1/public/amsfonts/cm/cmti12.pfb>
-Output written on main.pdf (38 pages, 317853 bytes).
+Output written on main.pdf (39 pages, 321729 bytes).
 PDF statistics:
- 791 PDF objects out of 1000 (max. 8388607)
- 723 compressed objects within 8 object streams
- 260 named destinations out of 1000 (max. 500000)
+ 797 PDF objects out of 1000 (max. 8388607)
+ 728 compressed objects within 8 object streams
+ 262 named destinations out of 1000 (max. 500000)
  561 words of extra memory for PDF output out of 10000 (max. 10000000)
 
