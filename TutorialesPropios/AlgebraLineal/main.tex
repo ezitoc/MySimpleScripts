@@ -7,7 +7,7 @@
 %
 % Creation Date :
 %
-% Last Modified : Tue 12 Mar 2013 12:44:07 AM ART
+% Last Modified : Wed 13 Mar 2013 12:37:12 AM ART
 %
 %    Created By :  Ezequiel Castillo
 %
@@ -2233,5 +2233,44 @@ operaciones especificadas, espacio vectorial.
     $\mathbf{0}$, y si $\mathbf{u}$ es la matriz $U_{m\times n}$, entonces la
     matriz $-U$ es el negativo $-\mathbf{u}$ del vector $\mathbf{u}$. Este
     espacio vectorial se denotará bajo el símbolo $M_{m\times n}$.
+  \item Sea $V$ el conjunto de las funciones con valores reales definidas
+    sobre toda recta real $(-\infty,\infty)$. Si $\mathbf{f}=f(x)$ y
+    $\mathbf{g}=g(x)$ son dos de estas funciones y $k$ es cualquier número
+    real, entonces la función suma $\mathbf{f}+\mathbf{g}$ y el múltiplo
+    $k\mathbf{f}$ se definen por:
+    \begin{align*}
+      (\mathbf{f}+\mathbf{g})(x)=f(x)+g(x) \\
+      (k\mathbf{f})(x)=kf(x)
+    \end{align*}
+    Con estas definiciones es posible demostrar que $V$ es un espacio
+    vectorial, el cual denotaremos por $\mathcal{F}(-\infty,\infty)$.
+
+    El vector $\mathbf{0}$ en $\mathcal{F}(-\infty,\infty)$ es la función
+    constante que es idénticamente cero para todo $x$. El negativo de un
+    vector $\mathbf{f}$ es la función $-\mathbf{f}=-f(x)$
 \end{enumerate}
+
+%------------------------------------------
+\subsubsection{Algunas propiedades de los vectores}
+
+\begin{theorem}
+  Sean $V$ un espacio vectorial, $\mathbf{u}$ un vector en $V$ y $k$ un
+  escalar; entonces:
+  \begin{enumerate}[(a)]
+    \item $0\mathbf{u}=\mathbf{0}$
+    \item $k\mathbf{0}=\mathbf{0}$
+    \item  $(-1)\mathbf{u}=-\mathbf{u}$
+    \item Si $k\mathbf{u}=\mathbf{0}$, entonces $k=0$ o $\mathbf{u}=0$
+  \end{enumerate}
+  \label{theo:prop_vect}
+\end{theorem}
+
+\demo Se demostrarán los incisos \emph{(a)} y \emph{(c)}.
+
+Para demostrar \emph{(a)} se puede escribir:
+\begin{align*}
+  0\mathbf{u}+0\mathbf{u} \\
+\end{align*}<++>
+
+
 \end{document}
