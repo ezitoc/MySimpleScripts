@@ -25,7 +25,8 @@
 \usepackage{parskip}
 \usepackage{mdframed}
 \usepackage{framed}
-\usepackage{enumerate}
+%\usepackage{enumerate}
+\usepackage[shortlabels]{enumitem}
 \usepackage{fancyhdr}
 
 \usepackage{xstring}
@@ -40,6 +41,7 @@
 \newcommand{\demo}{\noindent\textbf{Demostración: }}
 \newcommand{\obse}{\noindent\textsc{Observación: }}
 \newcommand{\case}[1]{\noindent\textit{Caso #1. }}
+\newcommand{\sol}{\noindent\textit{Solución. }}
 \newcommand{\changefont}{%
   \fontsize{9}{11}\selectfont
 }
@@ -71,8 +73,8 @@
 
 %*****FANCYHDR******
 \pagestyle{fancy}
-\fancyhead[LE,RO]{\changefont \slshape \rightmark}
-\fancyhead[RE,LO]{\changefont \slshape \leftmark}
+\fancyhead[L]{}%\changefont \slshape \rightmark
+\fancyhead[R]{\changefont \slshape \rightmark}
 \fancyfoot[C]{\changefont \thepage}
 
 

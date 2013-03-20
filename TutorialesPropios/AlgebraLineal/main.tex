@@ -7,7 +7,7 @@
 %
 % Creation Date :
 %
-% Last Modified : Sun 03 Mar 2013 11:56:25 PM ART
+% Last Modified : Wed 13 Mar 2013 12:37:12 AM ART
 %
 %    Created By :  Ezequiel Castillo
 %
@@ -1370,8 +1370,8 @@ En el siguiente teorema se resumen muchos teoremas previos.
 
 \subsection{Espacio euclidiano $n$ dimensional}
 
-\subsubsection{vectores en el espacio $n$ dimensional}
-
+\subsubsection{Vectores en el espacio $n$ dimensional}
+\label{sec:vec_espacio_n}
 \begin{concept}
   Si $n$ es un entero positivo, entonces una \bi{$n$-ada ordenada} es una
   sucesión de $n$ números reales $(a_1,a_2,\ldots ,a_n)$. El conjunto de todas
@@ -1864,7 +1864,413 @@ se cancelan entre sí:
 \end{theorem}
 
 \demo Se puede demostrar de dos formas:
+
 Primero se supone que $T$ es una transformación lineal, y se hace que $A$ sea
 la matriz estándar para $T$. Por las propiedades aritméticas básicas de las
 matrices se concluye que:
+\begin{align*}
+  T(\mathbf{u}+\mathbf{v})&=A(\mathbf{u}+\mathbf{v}) \\
+                          &=A\mathbf{u}+A\mathbf{v}  \\
+                          &=T(\mathbf{u})+T(\mathbf{v})
+\end{align*}
+
+Por otro lado, se supone que la transformación $T$ satisface las propiedades
+\emph{(a)} y \emph{(b)}. Se puede demostrar que $T$ es lineal si se encuentra
+una matriz $A$ con la propiedad:
+\begin{align*}
+  T(\mathbf{x})=A\mathbf{x}
+\end{align*}
+para todos los vectores $\mathbf{x}$ en $R^n$. Con lo anterior se demuestra
+que $T$ es la multiplicación por $A$ y, en consecuencia, que es lineal. Pero
+antes de poder obtener esa matriz es necesario observar que la propiedad
+\emph{(a)} se puede extender a tres o más términos; por ejemplo si
+$\mathbf{u}$, $\mathbf{v}$ y $\mathbf{w}$ son vectores cualesquiera en
+$R^n$, entonces agrupando primero $\mathbf{v}$ y $\mathbf{w}$ y aplicando la
+propiedad \emph{(a)} se obtiene:
+\begin{align*}
+  T(\mathbf{u}+\mathbf{v}+\mathbf{w})&=T(\mathbf{u}+(\mathbf{v}+\mathbf{w})) \\
+  &=T(\mathbf{u})+T(\mathbf{v}+\mathbf{w}) \\
+  &=T(\mathbf{u})+T(\mathbf{v})+T(\mathbf{w})
+\end{align*}
+Más generalmente, para vectores cualesquiera
+$\mathbf{v}_1,\mathbf{v}_2,\ldots,\mathbf{v}_k$ en $R^n$, se tiene:
+\begin{align*}
+  T(\mathbf{v}_1+\mathbf{v}_2+\cdots+\mathbf{v}_k)=T(\mathbf{v}_1)+T(\mathbf{v}_2)+\cdots+T(\mathbf{v}_k)
+\end{align*}
+Luego, para encontrar la matriz $A$, sean
+$\mathbf{e}_1,\mathbf{e}_2,\ldots,\mathbf{e}_n$ los vectores:
+\begin{align}
+  \mathbf{e}_1&=
+  \begin{bmatrix}
+    1 \\ 0 \\ 0 \\ \vdots \\ 0
+  \end{bmatrix}&
+  \mathbf{e}_2&=
+  \begin{bmatrix}
+    0 \\ 1 \\ 0 \\ \vdots \\ 0
+  \end{bmatrix}&
+  &\cdots&
+  \mathbf{e}_n&=
+  \begin{bmatrix}
+    0 \\ 0 \\ 0 \\ \vdots \\ 1
+  \end{bmatrix}&
+  \label{eqn:vect_base}
+\end{align}
+y sea $A$ la matriz cuyos vectores columna consecutivos son
+$T(\mathbf{e}_1),T(\mathbf{e}_2),\ldots,T(\mathbf{e}_n)$, es decir:
+\begin{align}
+  A=
+  \begin{bmatrix}
+    T(\mathbf{e}_1) &T(\mathbf{e}_2) &\cdots&T(\mathbf{e}_n) 
+  \end{bmatrix}
+  \label{eqn:A_como_T(e)}
+\end{align}
+Si:
+\begin{align*}
+  \mathbf{x}=
+  \begin{bmatrix}
+    x_1 \\ x_2 \\ \vdots \\ x_n
+  \end{bmatrix}
+\end{align*}
+es cualquier vector en $R^n$, entonces el producto $A\mathbf{x}$ es una
+combinación lineal de los vectores columna de $A$ con coeficientes de
+$\mathbf{x}$, de modo que:
+\begin{align*}
+  A\mathbf{x}&=x_1T(\mathbf{e}_1)+x_2T(\mathbf{e}_2)+\cdots+x_nT(\mathbf{e}_n) \\
+  &=T(x_1\mathbf{e}_1)+T(x_2\mathbf{e}_2)+\cdots+T(x_n\mathbf{e}_n) \\
+  &=T(x_1\mathbf{e}_1+x_2\mathbf{e}_2+\cdots+x_n\mathbf{e}_n) \\
+  &=T(x)
+\end{align*}
+con lo que se completa la demostración.
+
+La expresión \eqref{eqn:A_como_T(e)} es importante por derecho propio, ya que
+constituye una fórmula explícita con la cual la matriz estándar para un
+operador lineal $T:R^n\rightarrow R^m$ se puede expresar en términos de las
+imágenes de los vectores $\mathbf{e}_1,\mathbf{e}_2,\ldots,\mathbf{e}_n$ bajo
+$T$. Por razones que serán analizadas después, los vectores
+$\mathbf{e}_1,\mathbf{e}_2,\ldots,\mathbf{e}_n$ en \eqref{eqn:vect_base} se
+denominan vectores \bi{estándar básicos} para $R^n$.
+
+Debido a su importancia la expresión \eqref{eqn:A_como_T(e)} se planteará como
+un teorema para fines de referencia futura.
+
+\begin{theorem}
+  Si $T:R^n\rightarrow R^m$ es una transformación lineal y
+  $\mathbf{e}_1,\mathbf{e}_2,\ldots,\mathbf{e}_n$ son los vectores estándar
+  básicos para $R^n$, entonces la matriz estándar para $T$ es :
+  \begin{align*}
+    \begin{bmatrix}
+      T
+    \end{bmatrix}=
+  \begin{bmatrix}
+    T(\mathbf{e}_1) &T(\mathbf{e}_2) &\cdots&T(\mathbf{e}_n) 
+  \end{bmatrix}
+  \end{align*}
+  \label{theo:matriz_estandar}
+\end{theorem}
+
+%------------------------------------------
+\subsubsection{Interpretación geométrica de los autovectores}
+
+\begin{theorem}
+  Si $T:R^n\rightarrow R^n$ es un operador lineal, entonces el escalar se
+  denomina \bi{autovalor de $T$} si en $R^n$ existe un $\mathbf{x}$ diferente
+  de cero tal que:
+  \begin{align*}
+    T(\mathbf{x})=\lambda\mathbf{x}
+  \end{align*}
+  Los vectores $\mathbf{x}$ diferentes de cero que satisfacen la ecuación se
+  denominan \bi{autovectores de $T$ correspondietes a $\lambda$}.
+  \label{theo:transf_autovec}
+\end{theorem}
+
+%------------------------------------------
+%------------------------------------------
+%------------------------------------------
+\section{Espacios vectoriales generales}
+
+\subsection{Espacios vectoriales reales}
+En esta sección se generalizará aún más el concepto de vector. Se enunciará un
+conjunto de teoremas que, si una clase de objetos hace que se cumplan,
+permitirá denominar ``vectores'' a esos objetos. Los axiomas se elegirán
+abstrayendo las propiedades más importantes de los vectores en $R^n$, como
+consecuencia, los vectores en $R^n$ harán que se cumplan de manera automática
+estos axiomas.
+
+\subsubsection{Axiomas de espacios vectoriales}
+
+\begin{concept}
+  Sea $V$ un conjunto cualesquiera no vacío de objetos sobre el que están
+  definidas dos operaciones: la adición y la multiplicación por escalares
+  (números). Por \bi{adición} se entiende una regla que asocia cada par de
+  objetos de $\mathbf{u}$ y $\mathbf{v}$ en $V$ un objeto
+  $\mathbf{u}+\mathbf{v}$ denominado suma de $\mathbf{u}$ y $\mathbf{v}$; por
+  \bi{multiplicación escalar} se entiende una regla que asocia cada escalar
+  $k$ y cada objeto $\mathbf{u}$ en $V$ un objeto $k\mathbf{u}$, denominado
+  \bi{múltiplo escalar} de $\mathbf{u}$ por $k$. Si los objetos $\mathbf{u}$,
+  $\mathbf{v}$, $\mathbf{w}$ en $V$ y los escalares $k$ y $l$ satisfacen los
+  siguientes axiomas, entonces $V$ se denomina \bi{espacio vectorial}, y sus
+  objetos se denominan \bi{vectores}.
+  \begin{enumerate}[(1)]
+    \item Si $\mathbf{u}$ y $\mathbf{v}$ son objetos en $V$, entonces
+      $\mathbf{u}+\mathbf{v}$ está en $V$.
+    \item $\mathbf{u}+\mathbf{v}=\mathbf{v}+\mathbf{u}$
+    \item
+      $\mathbf{u}+(\mathbf{v}+\mathbf{w})=(\mathbf{u}+\mathbf{v})+\mathbf{w}$
+    \item Existe un objeto $\mathbf{0}$ en $V$, denominado \bi{vector cero} de
+      $V$, tal que $\mathbf{0}+\mathbf{u}=\mathbf{u}+\mathbf{0}=\mathbf{u}$
+      para todo $\mathbf{u}$ en $V$.
+    \item Para todo $\mathbf{u}$ en $V$ existe un objeto $-\mathbf{u}$ en
+      $V$, denominado \bi{negativo} de $\mathbf{u}$, tal que
+      $\mathbf{u}+(-\mathbf{u})=(-\mathbf{u})+\mathbf{u}=\mathbf{0}$.
+    \item Si $k$ es cualquier escalar y $\mathbf{u}$ es cualquier objeto en
+      $V$, entonces $k\mathbf{u}$ está en $V$.
+    \item $k(\mathbf{u}+\mathbf{v})=k\mathbf{u}+k\mathbf{v}$
+    \item $(k+l)\mathbf{u}=k\mathbf{u}+l\mathbf{u}$
+    \item $k(l\mathbf{u})=(kl)\mathbf{u}$
+    \item $1\mathbf{u}=\mathbf{u}$
+  \end{enumerate}
+\end{concept}
+
+\obse Dependiendo de la aplicación los escalares pueden ser números reales o
+complejos. Los espacios vectoriales en que los escalares son números complejos
+se denominan \bi{espacios vectoriales complejos}, y aquéllos donde los
+escalares deben ser reales se denominan \bi{espacios vectoriales reales}.
+
+El lector debe tener en mente que la definición de espacio vectorial no
+especifica la naturaleza de los vectores ni las operaciones. Cualquier tipo de
+objeto puede ser un vector y es posible que las operaciones de adición y
+multiplicación \emph{no guarden ninguna relación o semejanza con las
+operaciones vectoriales estándar sobre $R^n$}. El único requisito es que se
+cumplan los 10 axiomas en la definición de espacio vectorial. Algunos autores
+usan las notaciones $\oplus$ y $\odot$ en la suma vectorial y la
+multiplicación escalar para distinguir estas operaciones de la adición y la
+multiplicación de números reales.
+
+%------------------------------------------
+\subsubsection{Ejemplos de espacios vectoriales}
+
+Los siguientes ejemplos ilustran la variedad de espacios vectoriales posibles.
+En cada ejemplo se ejemplifica un conjunto no vacío $V$ y dos operaciones: la
+adición y la multiplicación escalar; luego se comprobará que se cumplen los 10
+axiomas de espacio vectorial, con lo cual $V$ se puede denominar, con las
+operaciones especificadas, espacio vectorial.
+
+\begin{enumerate}[\textsc{Ejemplo} 1:, wide=\parindent]
+  \item El conjunto $V=R^n$ con las operaciones estándar de adición y
+    multiplicación escalar, definido en la sección \ref{sec:vec_espacio_n} es
+    un espacio vectorial. Los axiomas 1 y 6 se deducen de las definiciones de
+    las operaciones estándar sobre $R^n$, los demás axiomas se deducen del
+    teorema \ref{theo:prop_esp_vec}.
+  \item Demostrar que el conjunto $V$ de todas las matrices $2\times 2$ con
+    elementos reales es un espacio vectorial si la adición vectorial se define
+    como la suma de matrices y la multiplicación escalar vectorial se define
+    como la multiplicación matricial.
+
+    \sol En este ejemplo resulta conveniente verificar los axiomas en el
+    siguiente orden: 1, 6, 2, 3, 7, , 9, 4, 5 y 10. Sea:
+    \begin{align*}
+      \mathbf{u}=
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      \qquad \mbox{y} \qquad
+      \mathbf{v}=
+      \begin{bmatrix}
+        v_{11} & v_{12} \\
+        v_{21} & v_{22}
+      \end{bmatrix}
+    \end{align*}
+    Para probar el axioma 1, es necesario mostrar que $\mathbf{u}+\mathbf{v}$
+    es un objeto en $V$, es decir debe demostrarse que $\mathbf{u}+\mathbf{v}$
+    es una matriz $2\times 2$. Pero este hecho se deduce por la definición de
+    adición de matrices, ya que:
+    \begin{align*}
+      \mathbf{u}+\mathbf{v}=
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      +
+      \begin{bmatrix}
+        v_{11} & v_{12} \\
+        v_{21} & v_{22}
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        u_{11} + v_{11} & u_{12} + v_{12}  \\
+        u_{21} + v_{21} & u_{22} + v_{22} 
+      \end{bmatrix}
+    \end{align*}
+    De manera semejante, el axioma 6 se cumple porque para cualquier número
+    real $k$ se tiene:
+    \begin{align*}
+      k\mathbf{u}=k
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        ku_{11} & ku_{12} \\
+        ku_{21} & ku_{22}
+      \end{bmatrix}
+    \end{align*}
+    de modo que $k\mathbf{u}$ es una matriz $2\times 2$ y en consecuencia, es
+    un objeto en $V$.
+
+    El axioma 2 se deduce del teorema \ref{theo:aritmat} \emph{(a)}, ya que:
+    \begin{align*}
+      \mathbf{u}+\mathbf{v}=
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      +
+      \begin{bmatrix}
+        v_{11} & v_{12} \\
+        v_{21} & v_{22}
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        v_{11} & v_{12} \\
+        v_{21} & v_{22}
+      \end{bmatrix}
+      +
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      =
+      \mathbf{v}+\mathbf{u}
+    \end{align*}
+    De manera semejante, el axioma 3 se deduce del inciso \emph{(b)} de ese
+    teorema, y los axiomas 7, 8 y 9 se deducen de los incisos \emph{(h)},
+    \emph{(j)} y \emph{(l)}, respectivamente, de ese teorema.
+
+    Para probar el axioma 4 es necesario encontrar un objeto $\mathbf{0}$ en
+    $V$ tal que $\mathbf{0}+\mathbf{u}=\mathbf{u}+\mathbf{0}=\mathbf{u}$ para
+    todo $\mathbf{u}$ en $V$. Esto puede lograrse al definir a $\mathbf{0}$
+    como:
+    \begin{align*}
+      \mathbf{0}=
+      \begin{bmatrix}
+        0&0\\
+        0&0
+      \end{bmatrix}
+    \end{align*}
+    Con esta definición:
+    \begin{align*}
+      \mathbf{0}+\mathbf{u}=
+      \begin{bmatrix}
+        0 & 0 \\
+        0 & 0
+      \end{bmatrix}
+      +
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      = \mathbf{u}
+    \end{align*}
+    Para probar el axioma 5 se debe demostrar que cada objeto $\mathbf{u}$
+    en $V$ tiene un negativo $-\mathbf{u}$ tal que
+    $\mathbf{u}+(-\mathbf{u})=\mathbf{0}$ y
+    $(-\mathbf{u})+\mathbf{u}=\mathbf{0}$. Esto se puede hacer definiendo el
+    negativo de $u$ como:
+    \begin{align*}
+      -\mathbf{u}=
+      \begin{bmatrix}
+        -u_{11} & -u_{12} \\
+        -u_{21} & -u_{22}
+      \end{bmatrix}
+    \end{align*}
+    Con esta definición:
+    \begin{align*}
+      \mathbf{u}+(-\mathbf{u})=
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      +
+      \begin{bmatrix}
+        -u_{11} & -u_{12} \\
+        -u_{21} & -u_{22}
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        0 & 0 \\
+        0 & 0
+      \end{bmatrix}
+      = \mathbf{0}
+    \end{align*}
+    y de manera semejante $(-\mathbf{u})+\mathbf{u}=\mathbf{0}$. Por último el
+    axioma 10 es un simple cálculo.
+    \begin{align*}
+      1\mathbf{u}=1
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      =
+      \begin{bmatrix}
+        u_{11} & u_{12} \\
+        u_{21} & u_{22}
+      \end{bmatrix}
+      =\mathbf{u}
+    \end{align*}
+
+  \item El ejemplo 2 es un caso especial de una clase más general de espacios
+    vectoriales. Los razonamientos de ese ejemplo se pueden adaptar para
+    demostrar que el conjunto $V$ de todas las matrices $m\times n$ con
+    elementos reales, junto con las operaciones de matrices y multiplicación
+    escalar, es un espacio vectorial. La matriz cero $m\times n$ es el vector
+    $\mathbf{0}$, y si $\mathbf{u}$ es la matriz $U_{m\times n}$, entonces la
+    matriz $-U$ es el negativo $-\mathbf{u}$ del vector $\mathbf{u}$. Este
+    espacio vectorial se denotará bajo el símbolo $M_{m\times n}$.
+  \item Sea $V$ el conjunto de las funciones con valores reales definidas
+    sobre toda recta real $(-\infty,\infty)$. Si $\mathbf{f}=f(x)$ y
+    $\mathbf{g}=g(x)$ son dos de estas funciones y $k$ es cualquier número
+    real, entonces la función suma $\mathbf{f}+\mathbf{g}$ y el múltiplo
+    $k\mathbf{f}$ se definen por:
+    \begin{align*}
+      (\mathbf{f}+\mathbf{g})(x)=f(x)+g(x) \\
+      (k\mathbf{f})(x)=kf(x)
+    \end{align*}
+    Con estas definiciones es posible demostrar que $V$ es un espacio
+    vectorial, el cual denotaremos por $\mathcal{F}(-\infty,\infty)$.
+
+    El vector $\mathbf{0}$ en $\mathcal{F}(-\infty,\infty)$ es la función
+    constante que es idénticamente cero para todo $x$. El negativo de un
+    vector $\mathbf{f}$ es la función $-\mathbf{f}=-f(x)$
+\end{enumerate}
+
+%------------------------------------------
+\subsubsection{Algunas propiedades de los vectores}
+
+\begin{theorem}
+  Sean $V$ un espacio vectorial, $\mathbf{u}$ un vector en $V$ y $k$ un
+  escalar; entonces:
+  \begin{enumerate}[(a)]
+    \item $0\mathbf{u}=\mathbf{0}$
+    \item $k\mathbf{0}=\mathbf{0}$
+    \item  $(-1)\mathbf{u}=-\mathbf{u}$
+    \item Si $k\mathbf{u}=\mathbf{0}$, entonces $k=0$ o $\mathbf{u}=0$
+  \end{enumerate}
+  \label{theo:prop_vect}
+\end{theorem}
+
+\demo Se demostrarán los incisos \emph{(a)} y \emph{(c)}.
+
+Para demostrar \emph{(a)} se puede escribir:
+\begin{align*}
+  0\mathbf{u}+0\mathbf{u} \\
+\end{align*}<++>
+
+
 \end{document}
