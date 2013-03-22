@@ -8,7 +8,7 @@
 #
 #* Creation Date : 11-03-2013
 #
-#* Last Modified : Wed 20 Mar 2013 08:03:26 PM ART
+#* Last Modified : jue 21 mar 2013 21:16:32 ART
 #
 #* Created By :  Ezequiel Castillo
 #
@@ -26,18 +26,18 @@ rc('text', usetex=True)
 
 
 
-    sys.exit()
-
-    pass
-
 class calcE(object):
     """ Super class"""
 
-    def __init__(self, vprom=None, alpha=None, vmin=None, freq=None,
+    def __init__(self, vprom=None, alpha=None, vmin=None, Ecut=None, freq=None,
                  temp=None, biasFile=None, enerFile=None, tempFile=None,
                  smoothFactor=None, tau=None):
+
+        if Ecut and freq:
+            raise NameError('Energy cut and scape frequence not at the same time!')
         if smoothFactor and tau:
             raise NameError('Smooth factor and tau not at the same time!')
+
         self.kB = 8.6173324*10**-5 # eV/K
         self.vprom = vprom
         self.alpha = alpha
@@ -48,10 +48,11 @@ class calcE(object):
         #self.deltaBias = np.loadtxt(self.biasFile, usecols=[1])
         #self.VBias = np.loadtxt(self.biasFile, usecols=[2])
         #self.VSinBias = self.VBias - self.deltaBias
+        self.tempFile = tempFile
         self.enerFile = enerFile
         self.enerPot = np.loadtxt(self.enerFile, usecols=[0])
-        self.timeNoBoost = np.arange(0.2,5000.2,0.2)
-        self.timeBoost = np.loadtxt('temp.dat', usecols=[0])
+        self.timeNoBoost = np.loadtxt(self.tempFile, usecols=[0])
+        self.timeBoost = np.loadtxt(self.tempFile, usecols=[0])
         self.smoothFactor = smoothFactor
         self.tau = tau
 
@@ -73,12 +74,11 @@ class calcE(object):
         return self.VbProm
 
     def evalVrepesado(self):
-        print self.VSinBias
-        plt.plot(self.timeNoBoost, self.VSinBias, 'o-g', label='Potencial no boosteado', markersize=1)
+        plt.plot(self.timeNoBoost, self.enerPot, 'o-g', label='Potencial no boosteado', markersize=1)
         plt.legend()
         plt.show()
 
-    def plotTime(self):
+    def time(self):
         A = np.vstack([self.timeNoBoost, np.ones(len(self.timeNoBoost))]).T
         S = np.linalg.lstsq(A, self.timeBoost)
         a, b = S[0]
@@ -124,33 +124,29 @@ class calcE(object):
 
         return np.array(newX), np.array(newY)
 
-    def checkCorr(self, fileNameX, fileNameY, numColX, numColY):
+    def checkCorr(self):#, Xvalues=self.timeBoost, Yvalues=self.enerPot):
 
-        def func(t, a, b, c):#, e, f):
-            """Funcion exponencial a fitear"""
+        def func(t, a, b, c):
+            """Fitting exponential function"""
             return a*np.exp(-t/b)+np.exp(-t/c)
 
         # Ignore overflow error (for curve_fit)
         np.seterr(over='ignore')
 
-        t = np.loadtxt(fileNameX, usecols=[numColX])
-        A = np.loadtxt(fileNameY, usecols=[numColY])
-        Aprom = np.average(A)
-        E = A-Aprom
-        corr = np.correlate(E, E, "full")
-        #ACF = corr/np.
-        #print len(corr)
-        #print t
-        #print len(t)
-        corr = corr[corr.size/2:]/(np.var(E)*len(E))
+        Aprom = np.average(Yvalues)
+        A = Yvalues-Aprom
+        corr = np.correlate(A, A, "full")
+
+        # Auto Correlation Function
+        ACF = corr[corr.size/2:]/(np.var(A)*len(A))
 
 
-        #Fiteado de la exponencial
-        popt, pcov = curve_fit(func, t, corr)
-        # Aca hacemos el calculo de tau. Integral de "func"
-        #tau = popt[0]/popt[1]#+popt[2]/popt[3]
+        # Exponential fit with Scipy's curve_fit
+        popt, pcov = curve_fit(func, Xvalues, ACF)
+
+        # Tau, integration of correlation function
         tau = popt[0]*popt[1]+popt[2]
-        print tau
+
         #print popt[0], popt[1], popt[2], popt[3]
         plt.plot(t, corr, 'o', label="ACF")
         plt.plot(t, func(t, *popt), label="Fitted Curve")
@@ -167,9 +163,9 @@ if __name__ == "__main__":
     """ A continuacion se definen las variables a utilizar por el programa. """
 
 
-    f = calcE(vprom=-1540.45, alpha=0.8, vmin=-1554.63, freq=1*10-3,
-              temp=300, biasFile='bias.dat', enerFile='ener.dat',
-              tempFile='temp.dat', smoothFactor=0.001)
+    #f = calcE(vprom=-1540.45, alpha=0.8, vmin=-1554.63, freq=1*10-3,
+              #temp=300, biasFile='bias.dat', enerFile='ener.dat',
+              #tempFile='temp.dat', smoothFactor=0.001)
 
     g = calcE(vprom=-1540.45, alpha=0.8, vmin=-1554.63, freq=1*10-3,
               temp=300, biasFile='bias.dat', enerFile='ener.dat',
@@ -180,11 +176,11 @@ if __name__ == "__main__":
     #ExVb = f.evalExVb()
     #VbProm = f.evalVbProm()
     ##f.plotData()
-    #V = f.evalVrepesado()
+    V = g.evalVrepesado()
     #V = f.plotPot()
     #E = g.plotPot()
 
-    checkCorr('temp.dat', 'ener.dat', 0, 0)
+    #checkCorr('temp.dat', 'ener.dat', 0, 0)
 
     #print 'Energy = %g eV' % (energy)
     #print 'DiffEnergy = %g eV' % (diffener)
