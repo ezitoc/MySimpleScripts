@@ -8,7 +8,7 @@
 #
 #* Creation Date : 11-03-2013
 #
-#* Last Modified : Mon 25 Mar 2013 04:37:14 PM ART
+#* Last Modified : Mon 25 Mar 2013 06:03:19 PM ART
 #
 #* Created By :  Ezequiel Castillo
 #
@@ -57,8 +57,7 @@ def checkCorr(Xvalues, Yvalues, showPlot=False):
     # Tau, integration of correlation function
     #tau = popt[0]*popt[1]+popt[2]
     tau = popt[0]+popt[1]+popt[2]+popt[3]+popt[4]
-    print tau
-    #sys.exit()
+    print "tau = %s" % (tau)
 
     #print popt[0], popt[1], popt[2], popt[3]
     if showPlot:
@@ -67,9 +66,11 @@ def checkCorr(Xvalues, Yvalues, showPlot=False):
         plt.legend(loc='upper right')
         plt.xlabel('Tiempo [ps]')
         plt.ylabel('$C(t)$')
-        #plt.axis([0,5*tau,-0.05,1])
+        plt.axis([0,30*tau,-0.05,1])
         plt.show()
         plt.savefig('corr.pdf', format='pdf', bbox_inches='tight')
+
+    return tau
 
 
 
@@ -130,7 +131,7 @@ class calcE(object):
         return self.VbProm
 
     def evalVrepesado(self):
-        """ We want to get <Vb>b"""
+        """ We want to overlap the V curve of a normal MD with the acelerated one """
         VbSN = np.array([ self.VSinBias[i]*math.exp(self.beta*self.deltaBias[i]) for i in range(len(self.VSinBias)) ])
         Norm = np.array([ math.exp(self.beta*self.deltaBias[i]) for i in range(len(self.VSinBias)) ])
         normFac = np.sum(Norm)
@@ -140,7 +141,28 @@ class calcE(object):
         #print self.VSinBias
         #sys.exit()
         Vbb = np.sum(VbSN)/np.sum(Norm)
-        checkCorr(self.timeNoBoost, self.VSinBias, showPlot=True)
+        tau = checkCorr(self.timeNoBoost, self.VSinBias, showPlot=False)
+        decor = 2*tau
+
+        """ Devolvemos ventanas de potencial para calcular un promedio"""
+        size = int(self.timeNoBoost[-1]/decor)
+        print size
+        sys.exit()
+        VSinBiasBlock = [VbSN[i:i+size] for i in range(0, len(VbSN), size)]
+        deltaBiasBlock = [self.deltaBias[i:i+size] for i in range(0, len(self.deltaBias), size)]
+
+        print len(VSinBiasBlock)
+        print len(deltaBiasBlock)
+        sys.exit()
+        
+        #Vrepes = []
+        #for i in range(len(VSinBiasBlock)):
+            #for j in range(len(VSinBiasBlock[i])):
+            #VbSN[i] = np.array([ VSinBiasBlock[i,j]*math.exp(self.beta*self.deltaBias[i]) \
+                    #for i in range(len(self.VSinBias)) ])
+
+        print VSinBiasBlock
+
         sys.exit()
         plt.plot(self.timeNoBoost, self.enerPot, 'o-g', label='Potencial no boosteado', markersize=1)
         plt.legend()
@@ -197,10 +219,6 @@ class calcE(object):
         lines = f.readlines()
         f.close()
 
-        #print lines
-        #sys.exit()
-
-
         totalAtoms = int(lines[0])
         size = totalAtoms+2
 
@@ -216,9 +234,6 @@ class calcE(object):
         size = totalAtoms
         coords = [coordsRaw[i:i+size] for i in range(0, len(coordsRaw), size)]
 
-        #print coords[1]
-        #sys.exit()
-
         I=[]
         for i in range(totalFrames):
             qI = []
@@ -228,16 +243,7 @@ class calcE(object):
                 qI.append(dictAtomMass[element]*(x**2+y**2+z**2))
             I.append(np.sum(qI))
 
-        
-
-        print I
-        sys.exit()
-        #I1 = [ lines[i:i+size] for i in range(0, len(lines), size) ]
-        #print I1[0]
-        #for line in lines:
-        #for line in lines:
-            #for i in range(size):
-
+        return I
 
 
 
@@ -254,8 +260,8 @@ if __name__ == "__main__":
               tempFile='temp.dat', AMD=True, tMax=50000, dt=0.2, dFrame=10,
               xyzFile='traj.xyz')
 
-    #V = g.evalVrepesado()
-    I = g.inertia()
+    V = g.evalVrepesado()
+    #I = g.inertia()
 
 
     #print 'Energy = %g eV' % (energy)
