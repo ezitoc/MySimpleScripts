@@ -8,7 +8,7 @@
 #
 #* Creation Date : 11-03-2013
 #
-#* Last Modified : Mon 25 Mar 2013 06:03:19 PM ART
+#* Last Modified : Tue 26 Mar 2013 11:41:31 AM ART
 #
 #* Created By :  Ezequiel Castillo
 #
@@ -133,6 +133,8 @@ class calcE(object):
     def evalVrepesado(self):
         """ We want to overlap the V curve of a normal MD with the acelerated one """
         VbSN = np.array([ self.VSinBias[i]*math.exp(self.beta*self.deltaBias[i]) for i in range(len(self.VSinBias)) ])
+        #VandDV = np.column_stack((VbSN, self.deltaBias))
+
         Norm = np.array([ math.exp(self.beta*self.deltaBias[i]) for i in range(len(self.VSinBias)) ])
         normFac = np.sum(Norm)
         #Vrepesado = VbSN/normFac
@@ -146,22 +148,35 @@ class calcE(object):
 
         """ Devolvemos ventanas de potencial para calcular un promedio"""
         size = int(self.timeNoBoost[-1]/decor)
-        print size
-        sys.exit()
-        VSinBiasBlock = [VbSN[i:i+size] for i in range(0, len(VbSN), size)]
-        deltaBiasBlock = [self.deltaBias[i:i+size] for i in range(0, len(self.deltaBias), size)]
+        VBlock = [VbSN[i:i+size] for i in range(0, len(VbSN), size)]
+        deltaVBlock = [self.deltaBias[i:i+size] for i in range(0, len(self.deltaBias), size)]
 
-        print len(VSinBiasBlock)
-        print len(deltaBiasBlock)
+        pesos = []
+        for block in deltaVBlock:
+            Norm = np.array([ math.exp(self.beta*block[i]) for i in range(len(block)) ])
+            pesos.append(np.sum(block))
+
+        print pesos
+        print np.sum(pesos)
+        print normFac
         sys.exit()
-        
+
+        Vrepes = []
+        for i,data in enumerate(VBlock):
+            Vrepes.append(np.sum(data)/pesos[i])
+            print pesos[i]
+
+        print Vrepes
+        print len(Vrepes)
+        sys.exit()
+
+
         #Vrepes = []
         #for i in range(len(VSinBiasBlock)):
             #for j in range(len(VSinBiasBlock[i])):
             #VbSN[i] = np.array([ VSinBiasBlock[i,j]*math.exp(self.beta*self.deltaBias[i]) \
                     #for i in range(len(self.VSinBias)) ])
 
-        print VSinBiasBlock
 
         sys.exit()
         plt.plot(self.timeNoBoost, self.enerPot, 'o-g', label='Potencial no boosteado', markersize=1)
