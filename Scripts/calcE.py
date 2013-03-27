@@ -8,7 +8,7 @@
 #
 #* Creation Date : 11-03-2013
 #
-#* Last Modified : Tue 26 Mar 2013 11:41:31 AM ART
+#* Last Modified : Wed 27 Mar 2013 08:16:42 PM ART
 #
 #* Created By :  Ezequiel Castillo
 #
@@ -80,7 +80,7 @@ class calcE(object):
     def __init__(self, vprom=None, alpha=None, vmin=None, Ecut=None, freq=None,
                  T=None, biasFile=None, enerFile=None, tempFile=None,
                  smoothFactor=None, tau=None, AMD=False, tMax=None, dt=None,
-                 dFrame=None, xyzFile=None):
+                 dFrame=None, xyzFile=None, MD_enerFile=None):
 
         if Ecut and freq:
             raise NameError('Energy cut and scape frequence not at the same time!')
@@ -112,6 +112,8 @@ class calcE(object):
         self.smoothFactor = smoothFactor
         self.tau = tau
         self.xyzFile = xyzFile
+        self.MD_enerFile = MD_enerFile
+        self.MD_enerPot = np.loadtxt(self.MD_enerFile, usecols=[0])
 
     def evalE(self):
         self.ener = (self.vprom + self.vmin * (self.alpha - 1) - self.kB *\
@@ -132,58 +134,61 @@ class calcE(object):
 
     def evalVrepesado(self):
         """ We want to overlap the V curve of a normal MD with the acelerated one """
-        VbSN = np.array([ self.VSinBias[i]*math.exp(self.beta*self.deltaBias[i]) for i in range(len(self.VSinBias)) ])
-        #VandDV = np.column_stack((VbSN, self.deltaBias))
 
-        Norm = np.array([ math.exp(self.beta*self.deltaBias[i]) for i in range(len(self.VSinBias)) ])
-        normFac = np.sum(Norm)
-        #Vrepesado = VbSN/normFac
-        #print Vrepesado
-        #print VbSN
-        #print self.VSinBias
-        #sys.exit()
-        Vbb = np.sum(VbSN)/np.sum(Norm)
+        # Arreglo con VbSN[i]=V[i]*exp(beta*DeltaV[i]), i.e., el
+        # numerador del valor de expectacion
+        VbSN = np.array([ self.VSinBias[i]*math.exp(self.beta*self.deltaBias[i]) for i in range(len(self.VSinBias)) ])
+
+        # Arreglo con normFac[i]=exp(beta*DeltaV[i]), i.e., el
+        # denominador del valor de expectacion
+        normFac = np.array( [math.exp(self.beta*self.deltaBias[i]) for i in range(len(self.deltaBias))]  )
+
+        # Calculo de correlacion
         tau = checkCorr(self.timeNoBoost, self.VSinBias, showPlot=False)
         decor = 2*tau
 
-        """ Devolvemos ventanas de potencial para calcular un promedio"""
-        size = int(self.timeNoBoost[-1]/decor)
+        # Cortamos VbSN y normFac de acuerdo a la cantidad de elementos
+        # del potencial que entran en un tiempo igual a decor
+        size = int(decor/self.dtSteps)
         VBlock = [VbSN[i:i+size] for i in range(0, len(VbSN), size)]
-        deltaVBlock = [self.deltaBias[i:i+size] for i in range(0, len(self.deltaBias), size)]
+        deltaVBlock = [normFac[i:i+size] for i in range(0, len(normFac), size)]
 
         pesos = []
         for block in deltaVBlock:
-            Norm = np.array([ math.exp(self.beta*block[i]) for i in range(len(block)) ])
             pesos.append(np.sum(block))
 
-        print pesos
-        print np.sum(pesos)
-        print normFac
-        sys.exit()
-
         Vrepes = []
-        for i,data in enumerate(VBlock):
+        for i, data in enumerate(VBlock):
             Vrepes.append(np.sum(data)/pesos[i])
-            print pesos[i]
 
-        print Vrepes
-        print len(Vrepes)
-        sys.exit()
+        # Tenemos que armar ahora un arreglo con los tiempos de la
+        # dinamica acelerada, que lo hacemos igual a:
+        #
+        # sum_i^N (deltaT*exp(beta*<deltaV(r_i)>))
+        #
+        # donde <deltaV> es el promedio en el intervalo de tiempo
 
+        #thyper = np.ones(len(deltaVBlock)) * decor
+        #print len(thyper)
+        #sys.exit()
 
-        #Vrepes = []
-        #for i in range(len(VSinBiasBlock)):
-            #for j in range(len(VSinBiasBlock[i])):
-            #VbSN[i] = np.array([ VSinBiasBlock[i,j]*math.exp(self.beta*self.deltaBias[i]) \
-                    #for i in range(len(self.VSinBias)) ])
+        deltaVBlock = [self.deltaBias[i:i+size] for i in range(0, len(self.deltaBias), size)]
 
+        thyper = []
+        value = 0
+        for block in deltaVBlock:
+            value = value + decor*math.exp(self.beta*np.average(block))
+            thyper.append(value)
 
-        sys.exit()
-        plt.plot(self.timeNoBoost, self.enerPot, 'o-g', label='Potencial no boosteado', markersize=1)
+        plt.plot(self.timeNoBoost, self.MD_enerPot, 'o-r', label='Potencial DM comun', markersize=3)
+        plt.plot(thyper, Vrepes, 'o-g', label='Potencial DM acelerada', markersize=1)
+        plt.xlabel('Tiempo [ps]')
+        plt.ylabel('$V$ [eV]')
         plt.legend()
         plt.show()
 
     def time(self):
+        """ At this point we want to check the linearity of time vs hyperdynamic time  """
         A = np.vstack([self.timeNoBoost, np.ones(len(self.timeNoBoost))]).T
         S = np.linalg.lstsq(A, self.timeBoost)
         a, b = S[0]
@@ -273,7 +278,7 @@ if __name__ == "__main__":
     g = calcE(vprom=-1540.45, alpha=0.8, vmin=-1554.63, freq=1*10-3,
               T=300, biasFile='bias.dat', enerFile='ener.dat',
               tempFile='temp.dat', AMD=True, tMax=50000, dt=0.2, dFrame=10,
-              xyzFile='traj.xyz')
+              xyzFile='traj.xyz', MD_enerFile='DM_ener.dat')
 
     V = g.evalVrepesado()
     #I = g.inertia()
