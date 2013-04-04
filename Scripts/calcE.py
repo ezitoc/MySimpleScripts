@@ -8,18 +8,20 @@
 #
 #* Creation Date : 11-03-2013
 #
-#* Last Modified : Wed 27 Mar 2013 08:16:42 PM ART
+#* Last Modified : Thu 04 Apr 2013 07:43:22 AM ART
 #
 #* Created By :  Ezequiel Castillo
 #
 #_._._._._._._._._._._._._._._._._._._._._.
 
 import sys
+import os
 import math
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import rc
 from scipy.optimize import curve_fit
+import pdb
 
 rc('font',**{'family':'serif','serif':['Palatino']})
 rc('text', usetex=True)
@@ -80,7 +82,9 @@ class calcE(object):
     def __init__(self, vprom=None, alpha=None, vmin=None, Ecut=None, freq=None,
                  T=None, biasFile=None, enerFile=None, tempFile=None,
                  smoothFactor=None, tau=None, AMD=False, tMax=None, dt=None,
-                 dFrame=None, xyzFile=None, MD_enerFile=None):
+                 dFrame=None, xyzFile=None, MD_enerFile=None, basedir=None):
+
+        self.basedir = basedir
 
         if Ecut and freq:
             raise NameError('Energy cut and scape frequence not at the same time!')
@@ -92,12 +96,17 @@ class calcE(object):
             else:
                 self.dtSteps = dt * dFrame
                 self.timeNoBoost = np.arange(self.dtSteps, tMax+self.dtSteps, self.dtSteps)
+        if not vprom and not MD_enerFile:
+            raise NameError('Must declare at least one of the following: vprom or MD_enerFile')
+        elif MD_enerFile:
+            self.MD_enerFile = MD_enerFile
+            self.MD_enerPot = np.loadtxt(os.path.join(self.basedir,self.MD_enerFile), usecols=[0])
 
 
         self.kB = 8.6173324*10**-5 # eV/K
         self.T = T # K
         self.beta = 1./(self.kB*self.T)
-        self.vprom = vprom
+        #self.vprom = vprom
         self.alpha = alpha
         self.vmin = vmin
         self.freq = freq
@@ -112,20 +121,27 @@ class calcE(object):
         self.smoothFactor = smoothFactor
         self.tau = tau
         self.xyzFile = xyzFile
-        self.MD_enerFile = MD_enerFile
-        self.MD_enerPot = np.loadtxt(self.MD_enerFile, usecols=[0])
 
-    def evalE(self):
-        self.ener = (self.vprom + self.vmin * (self.alpha - 1) - self.kB *\
+        if vprom:
+            self.vprom = vprom
+        else:
+            self.vprom = np.average(self.MD_enerPot)
+
+    def histo(self):
+        hist = plt.hist(self.MD_enerPot, 100)
+        plt.show()
+
+    def evalEcut(self):
+        self.Ecut = (self.vprom + self.vmin * (self.alpha - 1) - self.kB *\
                     self.temp * math.log(self.freq)) / self.alpha
-        return self.ener
+        return self.Ecut
 
     def diffE(self):
-        self.diffE = self.ener - self.vmin
+        self.diffE = self.Ecut - self.vmin
         return self.diffE
 
     def evalExVb(self):
-        self.ExVb = self.vprom + (self.vmin - self.ener) * (self.alpha - 1)
+        self.ExVb = self.vprom + (self.vmin - self.Ecut) * (self.alpha - 1)
         return self.ExVb
 
     def evalVbProm(self):
@@ -265,25 +281,47 @@ class calcE(object):
 
         return I
 
+    def escapeFactor(self):
+        escFac = 1. - float(np.count_nonzero(self.deltaBias))/float(len(self.deltaBias))
+        return escFac
+        pdb.set_trace()
+
+
 
 
 if __name__ == "__main__":
     """ A continuacion se definen las variables a utilizar por el programa. """
+
+    # The current working directory
+    #thedir = os.path.abspath(os.curdir)
+    thedir = os.getcwd()
+
+    dirs = [ name for name in os.listdir(thedir) if os.path.isdir(os.path.join(thedir, name)) ]
 
 
     #f = calcE(vprom=-1540.45, alpha=0.8, vmin=-1554.63, freq=1*10-3,
               #temp=300, biasFile='bias.dat', enerFile='ener.dat',
               #tempFile='temp.dat', smoothFactor=0.001)
 
-    g = calcE(vprom=-1540.45, alpha=0.8, vmin=-1554.63, freq=1*10-3,
+    g = calcE(basedir=thedir, alpha=0.8, vmin=-1554.63, freq=1*10-3,
               T=300, biasFile='bias.dat', enerFile='ener.dat',
               tempFile='temp.dat', AMD=True, tMax=50000, dt=0.2, dFrame=10,
               xyzFile='traj.xyz', MD_enerFile='DM_ener.dat')
+    g.escapeFactor()
 
-    V = g.evalVrepesado()
+    #V = g.evalVrepesado()
+    #H = g.v2prom()
     #I = g.inertia()
 
-
+    #for Alpha in dirs:
+        #os.chdir(os.path.join(thedir, Alpha))
+        #INSTANCE = calcE(basedir=thedir, alpha=Alpha, vmin=-1554.63, freq=1*10-3,
+                    #T=300, biasFile='bias.dat', enerFile='ener.dat',
+                    #tempFile='temp.dat', AMD=True, tMax=50000, dt=0.2, dFrame=10,
+                    #xyzFile='traj.xyz', MD_enerFile='DM_ener.dat')
+        
+        ## Factor de escape verdadero
+        #os.chdir(thedir)
     #print 'Energy = %g eV' % (energy)
     #print 'DiffEnergy = %g eV' % (diffener)
     #print '<Vb>b = %g eV' % (VbProm)
