@@ -8,7 +8,7 @@
 #
 #* Creation Date : 11-03-2013
 #
-#* Last Modified : Thu 04 Apr 2013 07:43:22 AM ART
+#* Last Modified : Mon 08 Apr 2013 06:20:03 PM ART
 #
 #* Created By :  Ezequiel Castillo
 #
@@ -23,7 +23,7 @@ from matplotlib import rc
 from scipy.optimize import curve_fit
 import pdb
 
-rc('font',**{'family':'serif','serif':['Palatino']})
+rc('font',**{'family':'serif','serif':['Palatino'],'size':8})
 rc('text', usetex=True)
 
 dictAtomMass = \
@@ -32,6 +32,38 @@ dictAtomMass = \
 'C':12.011,
 'H':1.008,
 'S':32.066}
+
+def pairwise(iterable):
+    itnext = iter(iterable).next
+    while True:
+        yield itnext( ), itnext( )
+
+def dictFromSequence(seq):
+    return dict(pairwise(seq))
+
+def replace_words(text, word_dic):
+    """
+    take a text and replace words that match a key in a dictionary with
+    the associated value, return the changed text
+    """
+    rc = re.compile('|'.join(map(re.escape, word_dic)))
+    def translate(match):
+        return word_dic[match.group(0)]
+    return rc.sub(translate, text)
+
+def multiple_subst(infile, replace_pattern):
+    # read the file
+    fin = open(infile, "r")
+    str1 = fin.read()
+    fin.close()
+    # add 'replace pattern' : 'replacement' to dictionary
+    dict_make = dictFromSequence(replace_pattern)
+    # call the function and get the changed text
+    str2 = replace_words(str1, dict_make)
+    # write changed text back out
+    fout = open("run-"+infile, "w")
+    fout.write(str2)
+    fout.close()
 
 
 def checkCorr(Xvalues, Yvalues, showPlot=False):
@@ -57,11 +89,8 @@ def checkCorr(Xvalues, Yvalues, showPlot=False):
     popt, pcov = curve_fit(func, Xvalues, ACF, maxfev = 10000)
 
     # Tau, integration of correlation function
-    #tau = popt[0]*popt[1]+popt[2]
     tau = popt[0]+popt[1]+popt[2]+popt[3]+popt[4]
-    print "tau = %s" % (tau)
 
-    #print popt[0], popt[1], popt[2], popt[3]
     if showPlot:
         plt.plot(Xvalues, ACF, 'o', label="ACF")
         plt.plot(Xvalues, func(Xvalues, *popt), label="Fitted Curve")
@@ -69,10 +98,81 @@ def checkCorr(Xvalues, Yvalues, showPlot=False):
         plt.xlabel('Tiempo [ps]')
         plt.ylabel('$C(t)$')
         plt.axis([0,30*tau,-0.05,1])
-        plt.show()
-        plt.savefig('corr.pdf', format='pdf', bbox_inches='tight')
+        #plt.show()
+        #plt.savefig('corr.pdf', format='pdf', bbox_inches='tight')
 
     return tau
+
+class createInputs(object):
+
+    def __init__(self, projectName='project', modFiles=None, filesToCopy=[]):
+        self.projectName = projectName
+        self.rootDir = os.path.abspath('.')
+        self.ignoreFiles = modFiles
+        self.filesToCopy = filesToCopy
+
+    def selectFiles(self):
+        """Return a list of files that won't be modified"""
+        if not self.filesToCopy:
+            #Copy all files by default.
+            filesList = [f for f in os.listdir(self.rootDir) if
+                         os.path.isfile(os.path.join(self.rootDir, f))]
+        else:
+            filesList = self.filesToCopy
+        if self.ignoreFiles:
+            filesListMod = [f for f in filesList if f not in self.ignoreFiles]
+            return filesListMod
+        else:
+            return filesList
+
+    def createFolders(self, suffixNo=None, suffixName=None, foldersName="run"):
+        """Create subfolders containing all files declared in the filesToCopy
+        option (all files included, otherwise) and ignoring those declared at the
+        modFiles option"""
+
+        if suffixNo and suffixName:
+            print "ERROR: Two suffix types declared. Declare only one."
+            sys.exit(1)
+
+        if suffixNo or suffixName:
+            if suffixNo:
+                self.suffixList = range(suffixNo)
+            else:
+                self.suffixList = suffixName
+        else:
+            print "ERROR: No suffix declared."
+            sys.exit(1)
+
+        self.foldersName = foldersName
+        # CWD = CWD/projectName
+        if not os.path.isdir(self.projectName):
+            os.mkdir(self.projectName)
+        else:
+            print 'WARN: folder "%s" already exists.' % (self.projectName)
+        os.chdir(self.projectName)
+        for suffix in self.suffixList:
+            self.folderName = '%s_%s' % (self.foldersName, suffix)
+        # CWD = CWD/projectName/folderName
+            os.mkdir(self.folderName)
+            os.chdir(self.folderName)
+            copySelectedFiles = self.selectFiles()
+            for file in copySelectedFiles:
+                shutil.copy(os.path.join(self.rootDir, file), os.curdir)
+        # CWD = CWD/projectName
+            os.chdir(os.pardir)
+
+        os.chdir(self.rootDir)
+
+class createProject(createInputs):
+    """  Ready to create inputs """
+
+    def __init__(self, templateFile=None, replacePatternAsList=None):
+        self.templateFile = templateFile
+        self.replacePatternAsList = replacePatternAsList
+
+    def modify(self):
+        multiple_subst(self.templateFile, self.replacePatternAsList)
+
 
 
 
@@ -82,7 +182,8 @@ class calcE(object):
     def __init__(self, vprom=None, alpha=None, vmin=None, Ecut=None, freq=None,
                  T=None, biasFile=None, enerFile=None, tempFile=None,
                  smoothFactor=None, tau=None, AMD=False, tMax=None, dt=None,
-                 dFrame=None, xyzFile=None, MD_enerFile=None, basedir=None):
+                 dFrame=None, xyzFile=None, MD_enerFile=None, basedir=None,
+                 dFrameXYZ=None):
 
         self.basedir = basedir
 
@@ -106,21 +207,23 @@ class calcE(object):
         self.kB = 8.6173324*10**-5 # eV/K
         self.T = T # K
         self.beta = 1./(self.kB*self.T)
-        #self.vprom = vprom
         self.alpha = alpha
         self.vmin = vmin
         self.freq = freq
         self.biasFile = biasFile
         self.VSinBias = np.loadtxt(self.biasFile, usecols=[0])
         self.deltaBias = np.loadtxt(self.biasFile, usecols=[1])
-        #self.VBias = np.loadtxt(self.biasFile, usecols=[2])
+        self.VBias = np.loadtxt(self.biasFile, usecols=[2])
         self.tempFile = tempFile
         self.enerFile = enerFile
         self.enerPot = np.loadtxt(self.enerFile, usecols=[0])
+        self.enerTot = np.loadtxt(self.enerFile, usecols=[2])
         self.timeBoost = np.loadtxt(self.tempFile, usecols=[0])
         self.smoothFactor = smoothFactor
         self.tau = tau
         self.xyzFile = xyzFile
+        self.dtStepsXYZ = dt * dFrameXYZ
+        self.timeXYZ = np.arange(self.dtStepsXYZ, tMax+self.dtStepsXYZ, self.dtStepsXYZ)
 
         if vprom:
             self.vprom = vprom
@@ -128,12 +231,15 @@ class calcE(object):
             self.vprom = np.average(self.MD_enerPot)
 
     def histo(self):
-        hist = plt.hist(self.MD_enerPot, 100)
-        plt.show()
+        plt.figure(1)
+        plt.subplot(221)
+        plt.hist(self.MD_enerPot, 50, color='g')
+        plt.axvline(x=self.evalEcut(), linewidth=2, color='r')
+        #plt.show()
 
     def evalEcut(self):
         self.Ecut = (self.vprom + self.vmin * (self.alpha - 1) - self.kB *\
-                    self.temp * math.log(self.freq)) / self.alpha
+                    self.T * math.log(self.freq)) / self.alpha
         return self.Ecut
 
     def diffE(self):
@@ -148,7 +254,7 @@ class calcE(object):
         self.VbProm = np.average(self.VBias)
         return self.VbProm
 
-    def evalVrepesado(self):
+    def plotVOverlaped(self, plot=True):
         """ We want to overlap the V curve of a normal MD with the acelerated one """
 
         # Arreglo con VbSN[i]=V[i]*exp(beta*DeltaV[i]), i.e., el
@@ -184,10 +290,6 @@ class calcE(object):
         #
         # donde <deltaV> es el promedio en el intervalo de tiempo
 
-        #thyper = np.ones(len(deltaVBlock)) * decor
-        #print len(thyper)
-        #sys.exit()
-
         deltaVBlock = [self.deltaBias[i:i+size] for i in range(0, len(self.deltaBias), size)]
 
         thyper = []
@@ -196,30 +298,34 @@ class calcE(object):
             value = value + decor*math.exp(self.beta*np.average(block))
             thyper.append(value)
 
-        plt.plot(self.timeNoBoost, self.MD_enerPot, 'o-r', label='Potencial DM comun', markersize=3)
-        plt.plot(thyper, Vrepes, 'o-g', label='Potencial DM acelerada', markersize=1)
-        plt.xlabel('Tiempo [ps]')
-        plt.ylabel('$V$ [eV]')
-        plt.legend()
-        plt.show()
+        if plot:
+            plt.subplot(224)
+            plt.plot(self.timeNoBoost, self.MD_enerPot, 'o-r', label='Potencial DM comun', markersize=3)
+            plt.plot(thyper, Vrepes, 'o-g', label='Potencial DM acelerada', markersize=1)
+            plt.xlabel('Tiempo [ps]')
+            plt.ylabel('$V$ [eV]')
+            plt.legend(loc='lower center')
+            #plt.show()
 
-    def time(self):
+    def compareTimes(self, plot=True):
         """ At this point we want to check the linearity of time vs hyperdynamic time  """
         A = np.vstack([self.timeNoBoost, np.ones(len(self.timeNoBoost))]).T
         S = np.linalg.lstsq(A, self.timeBoost)
         a, b = S[0]
         res = S[1][0]
-        plt.plot(self.timeNoBoost, self.timeBoost, 'o-g', label='alpha='+str(self.alpha), markersize=1)
-        plt.plot(timeBoostx, a*timeBoostx + b, 'r')
-        plt.legend(loc='upper left')
-        plt.show()
-        plt.savefig(str(self.alpha)+'.pdf', format='pdf', bbox_inches='tight')
+        if plot:
+            plt.subplot(222)
+            plt.plot(self.timeNoBoost, self.timeBoost, 'o-g', label='alpha='+str(self.alpha), markersize=1)
+            plt.plot(self.timeNoBoost, a*self.timeNoBoost + b, 'r')
+            plt.legend(loc='upper left')
+            #plt.show()
+        return a
 
     def plotPot(self):
         smoothX, smoothY = self.smoothData(self.timeBoost, self.enerPot)
         plt.plot(self.timeBoost, self.enerPot)
         plt.plot(smoothX, smoothY)
-        plt.show()
+        #plt.show()
 
     def smoothData(self, x, y):
         # Check
@@ -250,7 +356,7 @@ class calcE(object):
 
         return np.array(newX), np.array(newY)
 
-    def inertia(self):
+    def inertia(self, plot=True):
         f = open(self.xyzFile, 'r')
         lines = f.readlines()
         f.close()
@@ -279,14 +385,25 @@ class calcE(object):
                 qI.append(dictAtomMass[element]*(x**2+y**2+z**2))
             I.append(np.sum(qI))
 
-        return I
+
+        if plot:
+            plt.subplot(223)
+            plt.plot(self.timeXYZ, I, '-' )
+            plt.xlabel('Time [ps]')
+            plt.ylabel('$I$ [$\\textrm{uma}\\cdot\\AA ^2$]')
+            plt.legend()
+            #plt.show()
+
+        return np.amax(I)-np.amin(I)
 
     def escapeFactor(self):
         escFac = 1. - float(np.count_nonzero(self.deltaBias))/float(len(self.deltaBias))
         return escFac
-        pdb.set_trace()
 
-
+#---------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------
 
 
 if __name__ == "__main__":
@@ -296,32 +413,34 @@ if __name__ == "__main__":
     #thedir = os.path.abspath(os.curdir)
     thedir = os.getcwd()
 
-    dirs = [ name for name in os.listdir(thedir) if os.path.isdir(os.path.join(thedir, name)) ]
+    dirs = [ float(name) for name in os.listdir(thedir) if os.path.isdir(os.path.join(thedir, name)) ]
+
+    pdb.set_trace()
 
 
-    #f = calcE(vprom=-1540.45, alpha=0.8, vmin=-1554.63, freq=1*10-3,
-              #temp=300, biasFile='bias.dat', enerFile='ener.dat',
-              #tempFile='temp.dat', smoothFactor=0.001)
-
-    g = calcE(basedir=thedir, alpha=0.8, vmin=-1554.63, freq=1*10-3,
-              T=300, biasFile='bias.dat', enerFile='ener.dat',
-              tempFile='temp.dat', AMD=True, tMax=50000, dt=0.2, dFrame=10,
-              xyzFile='traj.xyz', MD_enerFile='DM_ener.dat')
-    g.escapeFactor()
-
-    #V = g.evalVrepesado()
-    #H = g.v2prom()
-    #I = g.inertia()
 
     #for Alpha in dirs:
-        #os.chdir(os.path.join(thedir, Alpha))
-        #INSTANCE = calcE(basedir=thedir, alpha=Alpha, vmin=-1554.63, freq=1*10-3,
+        #os.chdir(os.path.join(thedir, str(Alpha)))
+        #Instance = calcE(basedir=thedir, alpha=Alpha, vmin=-1554.63, freq=1*10**(-3),
                     #T=300, biasFile='bias.dat', enerFile='ener.dat',
                     #tempFile='temp.dat', AMD=True, tMax=50000, dt=0.2, dFrame=10,
-                    #xyzFile='traj.xyz', MD_enerFile='DM_ener.dat')
-        
+                    #xyzFile='traj.xyz', MD_enerFile='DM_ener.dat', dFrameXYZ=50)
+        #Ecut = Instance.evalEcut()
+        #diffE = Instance.diffE()
+        #ExVb = Instance.evalExVb()
+        #VbProm = Instance.evalVbProm()
+        #Instance.plotVOverlaped()
+        #fa = Instance.compareTimes()  # Factor de aceleracion
+        #fev = Instance.escapeFactor() # Factor de escape verdadero
+        #fes = Instance.freq           # Factor de escape supuesto
+        #inertiaDif = Instance.inertia()
+        #Instance.histo()
+        #plt.savefig(str(Alpha)+'.pdf', format='pdf', bbox_inches='tight')
+        #plt.close()
+
         ## Factor de escape verdadero
         #os.chdir(thedir)
+
     #print 'Energy = %g eV' % (energy)
     #print 'DiffEnergy = %g eV' % (diffener)
     #print '<Vb>b = %g eV' % (VbProm)
