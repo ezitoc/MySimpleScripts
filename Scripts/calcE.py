@@ -8,7 +8,7 @@
 #
 #* Creation Date : 11-03-2013
 #
-#* Last Modified : Mon 08 Apr 2013 06:20:03 PM ART
+#* Last Modified : Tue 09 Apr 2013 04:49:37 PM ART
 #
 #* Created By :  Ezequiel Castillo
 #
@@ -22,6 +22,7 @@ from matplotlib import pyplot as plt
 from matplotlib import rc
 from scipy.optimize import curve_fit
 import pdb
+import shutil
 
 rc('font',**{'family':'serif','serif':['Palatino'],'size':8})
 rc('text', usetex=True)
@@ -61,7 +62,7 @@ def multiple_subst(infile, replace_pattern):
     # call the function and get the changed text
     str2 = replace_words(str1, dict_make)
     # write changed text back out
-    fout = open("run-"+infile, "w")
+    fout = open(infile, "w")
     fout.write(str2)
     fout.close()
 
@@ -105,11 +106,14 @@ def checkCorr(Xvalues, Yvalues, showPlot=False):
 
 class createInputs(object):
 
-    def __init__(self, projectName='project', modFiles=None, filesToCopy=[]):
+    def __init__(self, projectName='project', subFolders=[], modFiles=None,
+                 filesToCopy=[]):
         self.projectName = projectName
-        self.rootDir = os.path.abspath('.')
-        self.ignoreFiles = modFiles
+        self.rootDir = os.path.abspath(os.curdir)
+        #self.rootDir = os.getcwd()
+        self.modFiles = modFiles
         self.filesToCopy = filesToCopy
+        self.subFolders = subFolders
 
     def selectFiles(self):
         """Return a list of files that won't be modified"""
@@ -119,61 +123,82 @@ class createInputs(object):
                          os.path.isfile(os.path.join(self.rootDir, f))]
         else:
             filesList = self.filesToCopy
-        if self.ignoreFiles:
-            filesListMod = [f for f in filesList if f not in self.ignoreFiles]
+        if self.modFiles:
+            filesListMod = [f for f in filesList if f not in self.modFiles]
             return filesListMod
         else:
             return filesList
 
-    def createFolders(self, suffixNo=None, suffixName=None, foldersName="run"):
+    def createFolders(self, foldersSuffix=None):
+
         """Create subfolders containing all files declared in the filesToCopy
         option (all files included, otherwise) and ignoring those declared at the
-        modFiles option"""
+        modFiles optioni.
+        By the moment you can only include one modFile.
+        """
 
-        if suffixNo and suffixName:
-            print "ERROR: Two suffix types declared. Declare only one."
-            sys.exit(1)
+        #if suffixNo and suffixName:
+            #print "ERROR: Two suffix types declared. Declare only one."
+            #sys.exit(1)
 
-        if suffixNo or suffixName:
-            if suffixNo:
-                self.suffixList = range(suffixNo)
-            else:
-                self.suffixList = suffixName
-        else:
-            print "ERROR: No suffix declared."
-            sys.exit(1)
+        #if suffixNo or suffixName:
+            #if suffixNo:
+                #self.suffixList = range(suffixNo)
+            #else:
+                #self.suffixList = suffixName
+        #else:
+            #print "ERROR: No suffix declared."
+            #sys.exit(1)
 
-        self.foldersName = foldersName
-        # CWD = CWD/projectName
         if not os.path.isdir(self.projectName):
             os.mkdir(self.projectName)
         else:
             print 'WARN: folder "%s" already exists.' % (self.projectName)
         os.chdir(self.projectName)
-        for suffix in self.suffixList:
-            self.folderName = '%s_%s' % (self.foldersName, suffix)
-        # CWD = CWD/projectName/folderName
-            os.mkdir(self.folderName)
-            os.chdir(self.folderName)
-            copySelectedFiles = self.selectFiles()
-            for file in copySelectedFiles:
+
+        selectedFiles = self.selectFiles()
+
+        # TODO: Check incopatibility between modFiles and selectedFiles
+
+        for subFolder in self.subFolders:
+            replacePatt = subFolder
+            if not os.path.isdir(subFolder):
+                os.mkdir(subFolder)
+            else:
+                print 'WARN: folder "%s" already exists.' % (subFolder)
+
+            os.chdir(subFolder)
+
+            for file in selectedFiles:
                 shutil.copy(os.path.join(self.rootDir, file), os.curdir)
-        # CWD = CWD/projectName
+
+            pattern = \
+                    [
+                    r"$ALPHA$", replacePatt]
+
+            multiple_subst(os.path.join(self.rootDir, self.modFiles), pattern)
+
             os.chdir(os.pardir)
 
-        os.chdir(self.rootDir)
-
-class createProject(createInputs):
-    """  Ready to create inputs """
-
-    def __init__(self, templateFile=None, replacePatternAsList=None):
-        self.templateFile = templateFile
-        self.replacePatternAsList = replacePatternAsList
-
-    def modify(self):
-        multiple_subst(self.templateFile, self.replacePatternAsList)
+        pdb.set_trace()
 
 
+
+
+
+
+        #for suffix in self.suffixList:
+            #self.folderName = '%s_%s' % (self.foldersName, suffix)
+        ## CWD = CWD/projectName/folderName
+            #os.mkdir(self.folderName)
+            #os.chdir(self.folderName)
+            #copySelectedFiles = self.selectFiles()
+            #for file in copySelectedFiles:
+                #shutil.copy(os.path.join(self.rootDir, file), os.curdir)
+        ## CWD = CWD/projectName
+            #os.chdir(os.pardir)
+
+        #os.chdir(self.rootDir)
 
 
 class calcE(object):
@@ -409,13 +434,17 @@ class calcE(object):
 if __name__ == "__main__":
     """ A continuacion se definen las variables a utilizar por el programa. """
 
+    theFolders = ['0.90', '0.91', '0.92', '0.95']
+    A = createInputs(projectName='AlphaTEST', subFolders=theFolders, 
+                     modFiles=['gems.gms'], filesToCopy=['ener.dat', 'DM_ener.dat'])
+    A.createFolders()
+
     # The current working directory
     #thedir = os.path.abspath(os.curdir)
     thedir = os.getcwd()
 
     dirs = [ float(name) for name in os.listdir(thedir) if os.path.isdir(os.path.join(thedir, name)) ]
 
-    pdb.set_trace()
 
 
 
