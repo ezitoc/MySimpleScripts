@@ -8,7 +8,7 @@
 #
 #* Creation Date : 11-03-2013
 #
-#* Last Modified : Fri 12 Apr 2013 06:22:40 PM ART
+#* Last Modified : Fri 12 Apr 2013 06:48:49 PM ART
 #
 #* Created By :  Ezequiel Castillo
 #
@@ -110,7 +110,7 @@ def checkCorr(Xvalues, Yvalues, showPlot=False):
 class createInputs(object):
 
     def __init__(self, projectName='project', subFolders=[], filesToCopy=[],
-                 modFilesAndPattern=None, pattern=None):
+                 modFilesAndPattern=None, pattern=None, ignoreFiles=None):
         self.rootDir = os.path.abspath(os.curdir)
         self.projectName = projectName
         self.subFolders = subFolders
@@ -118,6 +118,7 @@ class createInputs(object):
         self.modFiles = [modFile for modFile in modFilesAndPattern]
         self.filesToCopy = filesToCopy
         self.modFilesAndPattern = modFilesAndPattern
+        self.ignoreFiles = ignoreFiles
         #self.pattern = pattern
 
     def selectFiles(self):
@@ -128,11 +129,14 @@ class createInputs(object):
                          os.path.isfile(os.path.join(self.rootDir, f))]
         else:
             filesList = self.filesToCopy
-        if self.modFiles:
+        if self.ignoreFiles:
+            filesListMod = [f for f in filesList if f not in self.ignoreFiles]
+            filesList = filesListMod
+        elif self.modFiles:
             filesListMod = [f for f in filesList if f not in self.modFiles]
-            return filesListMod
-        else:
-            return filesList
+            filesList = filesListMod
+        pdb.set_trace()
+        return filesList
 
     def createFolders(self, foldersSuffix=None):
 
@@ -448,7 +452,6 @@ if __name__ == "__main__":
     #thirdLayer = {'modFiles':{'gems.gms':['pattern1', 'subst1', 'pattern2', 'subst2']}, 'nonModFiles':['allNonModFiles*']}
     #fourthLayer = []
 
-    
     vmin = -1554.63
     alfas = map(str, np.linspace(0.80, 0.99, 20))
     patternGems = ['$ALPHA$', '$ECUT$'] # El primer elemento de la lista tiene que corresponder con el parametro crudo a variar
@@ -469,10 +472,10 @@ if __name__ == "__main__":
 
     A = createInputs(projectName='AlphaTEST', subFolders=alfas,
                      modFilesAndPattern=filesAndPattern,
-                     filesToCopy=['ener.dat', 'DM_ener.dat'])
+                     ignoreFiles='DM_ener.dat')
+                     #filesToCopy=['ener.dat', 'DM_ener.dat'])
     A.createFolders()
 
-    pdb.set_trace()
     # The current working directory
     #thedir = os.path.abspath(os.curdir)
     thedir = os.getcwd()
