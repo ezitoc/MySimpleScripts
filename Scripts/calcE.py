@@ -8,7 +8,7 @@
 #
 #* Creation Date : 11-03-2013
 #
-#* Last Modified : Tue 09 Apr 2013 04:49:37 PM ART
+#* Last Modified : Fri 12 Apr 2013 06:22:40 PM ART
 #
 #* Created By :  Ezequiel Castillo
 #
@@ -16,13 +16,14 @@
 
 import sys
 import os
+import re
 import math
+import pdb
+import shutil
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import rc
 from scipy.optimize import curve_fit
-import pdb
-import shutil
 
 rc('font',**{'family':'serif','serif':['Palatino'],'size':8})
 rc('text', usetex=True)
@@ -54,6 +55,8 @@ def replace_words(text, word_dic):
 
 def multiple_subst(infile, replace_pattern):
     # read the file
+    match = re.search(r'.*/(.*)$', infile)
+    filename = match.group(1)
     fin = open(infile, "r")
     str1 = fin.read()
     fin.close()
@@ -62,7 +65,7 @@ def multiple_subst(infile, replace_pattern):
     # call the function and get the changed text
     str2 = replace_words(str1, dict_make)
     # write changed text back out
-    fout = open(infile, "w")
+    fout = open(os.path.join(os.getcwd(),filename), "w")
     fout.write(str2)
     fout.close()
 
@@ -106,14 +109,16 @@ def checkCorr(Xvalues, Yvalues, showPlot=False):
 
 class createInputs(object):
 
-    def __init__(self, projectName='project', subFolders=[], modFiles=None,
-                 filesToCopy=[]):
-        self.projectName = projectName
+    def __init__(self, projectName='project', subFolders=[], filesToCopy=[],
+                 modFilesAndPattern=None, pattern=None):
         self.rootDir = os.path.abspath(os.curdir)
-        #self.rootDir = os.getcwd()
-        self.modFiles = modFiles
-        self.filesToCopy = filesToCopy
+        self.projectName = projectName
         self.subFolders = subFolders
+        #self.modFiles = modFiles
+        self.modFiles = [modFile for modFile in modFilesAndPattern]
+        self.filesToCopy = filesToCopy
+        self.modFilesAndPattern = modFilesAndPattern
+        #self.pattern = pattern
 
     def selectFiles(self):
         """Return a list of files that won't be modified"""
@@ -134,7 +139,7 @@ class createInputs(object):
         """Create subfolders containing all files declared in the filesToCopy
         option (all files included, otherwise) and ignoring those declared at the
         modFiles optioni.
-        By the moment you can only include one modFile.
+        At the moment you can only include one modFile.
         """
 
         #if suffixNo and suffixName:
@@ -160,7 +165,7 @@ class createInputs(object):
 
         # TODO: Check incopatibility between modFiles and selectedFiles
 
-        for subFolder in self.subFolders:
+        for i, subFolder in enumerate(self.subFolders):
             replacePatt = subFolder
             if not os.path.isdir(subFolder):
                 os.mkdir(subFolder)
@@ -172,15 +177,13 @@ class createInputs(object):
             for file in selectedFiles:
                 shutil.copy(os.path.join(self.rootDir, file), os.curdir)
 
-            pattern = \
-                    [
-                    r"$ALPHA$", replacePatt]
-
-            multiple_subst(os.path.join(self.rootDir, self.modFiles), pattern)
+            for modFile in self.modFilesAndPattern:
+                pattern = self.modFilesAndPattern[modFile][i]
+                multiple_subst(os.path.join(self.rootDir, modFile), pattern)
 
             os.chdir(os.pardir)
 
-        pdb.set_trace()
+
 
 
 
@@ -207,7 +210,7 @@ class calcE(object):
     def __init__(self, vprom=None, alpha=None, vmin=None, Ecut=None, freq=None,
                  T=None, biasFile=None, enerFile=None, tempFile=None,
                  smoothFactor=None, tau=None, AMD=False, tMax=None, dt=None,
-                 dFrame=None, xyzFile=None, MD_enerFile=None, basedir=None,
+                 dFrame=None, xyzFile=None, MD_enerFile=None, basedir=os.getcwd(),
                  dFrameXYZ=None):
 
         self.basedir = basedir
@@ -235,20 +238,25 @@ class calcE(object):
         self.alpha = alpha
         self.vmin = vmin
         self.freq = freq
-        self.biasFile = biasFile
-        self.VSinBias = np.loadtxt(self.biasFile, usecols=[0])
-        self.deltaBias = np.loadtxt(self.biasFile, usecols=[1])
-        self.VBias = np.loadtxt(self.biasFile, usecols=[2])
-        self.tempFile = tempFile
-        self.enerFile = enerFile
-        self.enerPot = np.loadtxt(self.enerFile, usecols=[0])
-        self.enerTot = np.loadtxt(self.enerFile, usecols=[2])
-        self.timeBoost = np.loadtxt(self.tempFile, usecols=[0])
+
+        if biasFile:
+            self.biasFile = biasFile
+            self.VSinBias = np.loadtxt(self.biasFile, usecols=[0])
+            self.deltaBias = np.loadtxt(self.biasFile, usecols=[1])
+            self.VBias = np.loadtxt(self.biasFile, usecols=[2])
+        if tempFile:
+            self.tempFile = tempFile
+            self.timeBoost = np.loadtxt(self.tempFile, usecols=[0])
+        if enerFile:
+            self.enerFile = enerFile
+            self.enerPot = np.loadtxt(self.enerFile, usecols=[0])
+            self.enerTot = np.loadtxt(self.enerFile, usecols=[2])
+        if dFrameXYZ:
+            self.dtStepsXYZ = dt * dFrameXYZ
+            self.timeXYZ = np.arange(self.dtStepsXYZ, tMax+self.dtStepsXYZ, self.dtStepsXYZ)
         self.smoothFactor = smoothFactor
         self.tau = tau
         self.xyzFile = xyzFile
-        self.dtStepsXYZ = dt * dFrameXYZ
-        self.timeXYZ = np.arange(self.dtStepsXYZ, tMax+self.dtStepsXYZ, self.dtStepsXYZ)
 
         if vprom:
             self.vprom = vprom
@@ -263,8 +271,8 @@ class calcE(object):
         #plt.show()
 
     def evalEcut(self):
-        self.Ecut = (self.vprom + self.vmin * (self.alpha - 1) - self.kB *\
-                    self.T * math.log(self.freq)) / self.alpha
+        self.Ecut = (self.vprom + self.vmin * (float(self.alpha) - 1) - self.kB *\
+                    self.T * math.log(self.freq)) / float(self.alpha)
         return self.Ecut
 
     def diffE(self):
@@ -434,16 +442,43 @@ class calcE(object):
 if __name__ == "__main__":
     """ A continuacion se definen las variables a utilizar por el programa. """
 
-    theFolders = ['0.90', '0.91', '0.92', '0.95']
-    A = createInputs(projectName='AlphaTEST', subFolders=theFolders, 
-                     modFiles=['gems.gms'], filesToCopy=['ener.dat', 'DM_ener.dat'])
+
+    #firstLayer = ['projectName']
+    #secondLayer = ['folderOne', 'folderTwo', 'folderThree']
+    #thirdLayer = {'modFiles':{'gems.gms':['pattern1', 'subst1', 'pattern2', 'subst2']}, 'nonModFiles':['allNonModFiles*']}
+    #fourthLayer = []
+
+    
+    vmin = -1554.63
+    alfas = map(str, np.linspace(0.80, 0.99, 20))
+    patternGems = ['$ALPHA$', '$ECUT$'] # El primer elemento de la lista tiene que corresponder con el parametro crudo a variar
+    patternModelo = ['$ALPHA$']
+
+    Ecut = [calcE(alpha=ALPHA, MD_enerFile='DM_ener.dat', vmin=vmin, T=300,
+        freq=0.001).evalEcut() - vmin for ALPHA in alfas]
+    Ecut = map(str, Ecut)
+
+    fullPatternGems = []
+    for alfa, ecut in zip(alfas, Ecut):
+        fullPatternGems.append([patternGems[0], alfa, patternGems[1], ecut])
+
+    fullPatternModelo = [[patternModelo[0], alpha] for alpha in alfas]
+
+    filesAndPattern = {'gems.gms' : fullPatternGems,
+            'modelo.sge' : fullPatternModelo}
+
+    A = createInputs(projectName='AlphaTEST', subFolders=alfas,
+                     modFilesAndPattern=filesAndPattern,
+                     filesToCopy=['ener.dat', 'DM_ener.dat'])
     A.createFolders()
 
+    pdb.set_trace()
     # The current working directory
     #thedir = os.path.abspath(os.curdir)
     thedir = os.getcwd()
 
-    dirs = [ float(name) for name in os.listdir(thedir) if os.path.isdir(os.path.join(thedir, name)) ]
+    dirs = [ float(name) for name in os.listdir(thedir) if 
+            os.path.isdir(os.path.join(thedir, name)) ]
 
 
 
