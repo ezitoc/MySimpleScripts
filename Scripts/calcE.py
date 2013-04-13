@@ -8,7 +8,7 @@
 #
 #* Creation Date : 11-03-2013
 #
-#* Last Modified : Fri 12 Apr 2013 06:48:49 PM ART
+#* Last Modified : Fri 12 Apr 2013 08:29:03 PM ART
 #
 #* Created By :  Ezequiel Castillo
 #
@@ -135,7 +135,6 @@ class createInputs(object):
         elif self.modFiles:
             filesListMod = [f for f in filesList if f not in self.modFiles]
             filesList = filesListMod
-        pdb.set_trace()
         return filesList
 
     def createFolders(self, foldersSuffix=None):
@@ -270,7 +269,7 @@ class calcE(object):
     def histo(self):
         plt.figure(1)
         plt.subplot(221)
-        plt.hist(self.MD_enerPot, 50, color='g')
+        plt.hist(self.enerPot, 50, color='g')
         plt.axvline(x=self.evalEcut(), linewidth=2, color='r')
         #plt.show()
 
@@ -447,66 +446,66 @@ if __name__ == "__main__":
     """ A continuacion se definen las variables a utilizar por el programa. """
 
 
-    #firstLayer = ['projectName']
-    #secondLayer = ['folderOne', 'folderTwo', 'folderThree']
-    #thirdLayer = {'modFiles':{'gems.gms':['pattern1', 'subst1', 'pattern2', 'subst2']}, 'nonModFiles':['allNonModFiles*']}
-    #fourthLayer = []
+    #vmin = -1554.63
+    #alfas = map(str, np.linspace(0.80, 0.99, 20))
+    #patternGems = ['$ALPHA$', '$ECUT$'] # El primer elemento de la lista tiene que corresponder con el parametro crudo a variar
+    #patternModelo = ['$ALPHA$']
 
-    vmin = -1554.63
-    alfas = map(str, np.linspace(0.80, 0.99, 20))
-    patternGems = ['$ALPHA$', '$ECUT$'] # El primer elemento de la lista tiene que corresponder con el parametro crudo a variar
-    patternModelo = ['$ALPHA$']
+    #Ecut = [calcE(alpha=ALPHA, MD_enerFile='DM_ener.dat', vmin=vmin, T=300,
+        #freq=0.001).evalEcut() - vmin for ALPHA in alfas]
+    #Ecut = map(str, Ecut)
 
-    Ecut = [calcE(alpha=ALPHA, MD_enerFile='DM_ener.dat', vmin=vmin, T=300,
-        freq=0.001).evalEcut() - vmin for ALPHA in alfas]
-    Ecut = map(str, Ecut)
+    #fullPatternGems = []
+    #for alfa, ecut in zip(alfas, Ecut):
+        #fullPatternGems.append([patternGems[0], alfa, patternGems[1], ecut])
 
-    fullPatternGems = []
-    for alfa, ecut in zip(alfas, Ecut):
-        fullPatternGems.append([patternGems[0], alfa, patternGems[1], ecut])
+    #fullPatternModelo = [[patternModelo[0], alpha] for alpha in alfas]
 
-    fullPatternModelo = [[patternModelo[0], alpha] for alpha in alfas]
+    #filesAndPattern = {'gems.gms' : fullPatternGems,
+            #'SIDRA.sge' : fullPatternModelo}
 
-    filesAndPattern = {'gems.gms' : fullPatternGems,
-            'modelo.sge' : fullPatternModelo}
+    #A = createInputs(projectName='AlphaTEST', subFolders=alfas,
+                     #modFilesAndPattern=filesAndPattern,
+                     #ignoreFiles=['DM_ener.dat', 'calcE.py'])
+                     ##filesToCopy=['ener.dat', 'DM_ener.dat'])
+    #A.createFolders()
+    #pdb.set_trace()
 
-    A = createInputs(projectName='AlphaTEST', subFolders=alfas,
-                     modFilesAndPattern=filesAndPattern,
-                     ignoreFiles='DM_ener.dat')
-                     #filesToCopy=['ener.dat', 'DM_ener.dat'])
-    A.createFolders()
+#==========================================================================
 
     # The current working directory
     #thedir = os.path.abspath(os.curdir)
-    thedir = os.getcwd()
+    rootdir = os.getcwd()
 
-    dirs = [ float(name) for name in os.listdir(thedir) if 
+    os.chdir('AlphaTEST')
+
+    thedir = os.getcwd()
+    dirs = [ float(name) for name in os.listdir(thedir) if
             os.path.isdir(os.path.join(thedir, name)) ]
 
 
 
+    for Alpha in dirs:
+        os.chdir(str(Alpha))
+        Instance = calcE(basedir=rootdir, alpha=Alpha, vmin=-1554.63, freq=1*10**(-3),
+                    T=300, biasFile='bias.dat', enerFile='ener.dat',
+                    tempFile='temp.dat', AMD=True, tMax=50000, dt=0.2, dFrame=10,
+                    xyzFile='traj.xyz', MD_enerFile='DM_ener.dat', dFrameXYZ=50)
+        Ecut = Instance.evalEcut()
+        diffE = Instance.diffE()
+        ExVb = Instance.evalExVb()
+        VbProm = Instance.evalVbProm()
+        Instance.plotVOverlaped()
+        fa = Instance.compareTimes()  # Factor de aceleracion
+        fev = Instance.escapeFactor() # Factor de escape verdadero
+        fes = Instance.freq           # Factor de escape supuesto
+        inertiaDif = Instance.inertia()
+        Instance.histo()
+        plt.savefig(str(Alpha)+'.pdf', format='pdf', bbox_inches='tight', dpi=100)
+        plt.close()
 
-    #for Alpha in dirs:
-        #os.chdir(os.path.join(thedir, str(Alpha)))
-        #Instance = calcE(basedir=thedir, alpha=Alpha, vmin=-1554.63, freq=1*10**(-3),
-                    #T=300, biasFile='bias.dat', enerFile='ener.dat',
-                    #tempFile='temp.dat', AMD=True, tMax=50000, dt=0.2, dFrame=10,
-                    #xyzFile='traj.xyz', MD_enerFile='DM_ener.dat', dFrameXYZ=50)
-        #Ecut = Instance.evalEcut()
-        #diffE = Instance.diffE()
-        #ExVb = Instance.evalExVb()
-        #VbProm = Instance.evalVbProm()
-        #Instance.plotVOverlaped()
-        #fa = Instance.compareTimes()  # Factor de aceleracion
-        #fev = Instance.escapeFactor() # Factor de escape verdadero
-        #fes = Instance.freq           # Factor de escape supuesto
-        #inertiaDif = Instance.inertia()
-        #Instance.histo()
-        #plt.savefig(str(Alpha)+'.pdf', format='pdf', bbox_inches='tight')
-        #plt.close()
-
-        ## Factor de escape verdadero
-        #os.chdir(thedir)
+        # Factor de escape verdadero
+        os.chdir(os.pardir)
 
     #print 'Energy = %g eV' % (energy)
     #print 'DiffEnergy = %g eV' % (diffener)
