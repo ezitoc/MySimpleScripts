@@ -1,0 +1,88 @@
+
+%
+%
+%     File Name :
+%
+%       Purpose :
+%
+% Creation Date :
+%
+% Last Modified : Tue 05 Mar 2013 05:21:43 PM ART
+%
+%    Created By :  Ezequiel Castillo
+%
+%
+
+\documentclass[a4paper,12pt]{article}
+
+\include{mypreamble}
+
+\begin{document}
+
+\include{config}
+
+\section{Intro}
+
+En una simulación de Dinámica Molecular (DM) uno elige un potencial
+interatómico apropiado para describir las fuerzas entre los átomos y luego
+integra las ecuaciones clásicas de movimiento con condiciones de contorno
+apropiadas. Una característica particular de la DM es que sigue la verdadera
+evolución del sistema. Sin embargo, la limitación del tiempo de simulación
+accesible representa un obstáculo sustancial en cuanto a la predicción de
+ciertas propiedades. Para tener en cuenta las vibraciones atómicas es
+necesario utilizar un paso de tiempo cercano al femtosegundo, de modo que
+simular un microsegundo es bastante difícil hoy en día. Incluso utilizando
+cálculos paralelizados se alcanzan normalmente tiempos del orden de
+nanosegundos.
+
+
+Una posible alternativa para sobreponerse a este inconveniente lo constituye
+la ``dinámica  aceleradaLa'' en donde la trayectoria del sistema, atrapada en su estado
+actual, es simulada para encontrar una ruta apropiada para escapar más
+rápidamente que si lo hiciera con una DM directa. No se necesita información a
+priori acerca de cómo es la ruta de escape en el procedimiento; la trajectoria
+simplemente sigue su propio camino fuera de su estado.
+
+%------------------------------------------
+%------------------------------------------
+
+\section{Background}
+
+\subsection{Sistemas de eventos infrecuentes}
+
+La evolución dinámica de un sistema consiste en excursiones vibracionales
+dentro de un valle (o pozo) de potencial, interrumpidas por transiciones ocasionales
+entre los valles; estos eventos son infrecuentes en el sentido de que se
+necesita en promedio un tiempo muy largo de períodos vibracionales. En algún
+punto del tiempo, cuando se localiza la suficiente energía, la trayectoria pasa
+a través de una superficie divisoria. La dimensión de un sistema es
+$3N$-dimensional. Una trayectoria en este espacio de coordenadas
+$3N$-dimensional necesita pasar indefectiblemente por una cordillera de
+dimensiones $(3N-1)$-dimensional para llegar a otro valle. Sin embargo a veces
+pueden ocurrir sucesivos cruzamientos en tan sólo un período vebracional o
+dos. Estos son denominados eventos dinámicos correlacionados. En la mayoría de
+los métodos de Dinámica Acelerada (DA) asumimos que estos eventos correlacionados
+no ocurren (esta es una de las suposiciones más importantes de la Teoría del
+Estado de Transición, TST). Por lo tanto se define un tiempo de correlación
+($\tau_{corr}$) del sistema como la duración de memoria del sistema. Una
+trayectoria que haya residido un tiempo mayor a $\tau_{corr}$ quiere decir que
+el sistema se ha olvidado de cómo llegó ahí (es decir, que la probabilidad de
+salir de un valle es independiente de cómo llegó allí).
+
+La búsqueda que ocurre dentro de un pozo de potencial puede implicar un número
+grande de excursiones vibracionales. La llave de la DA es reconocer que para
+encontrar la secuencia correcta de transiciones de estado a estado, no es
+necesario recrear la dinámica vibracional perfectamente, siempre y cuando la
+probabilidad de encontrar cada una de las rutas de escape se mantenga.
+
+\begin{SCfigure}
+	\centering
+	\includegraphics[width=8cm]{basin.png}
+	\caption{En esencia, el sistema ``accidentalmente'' escapa del estado y
+	una nueva sesión de búsqueda vibracional empieza, sin memoria de cómo
+	llegó a ese estado.}
+	\label{fig:basin}
+\end{SCfigure}
+
+%------------------------------------------
+\end{document}
