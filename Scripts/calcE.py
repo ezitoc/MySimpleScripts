@@ -8,7 +8,7 @@
 #
 #* Creation Date : 11-03-2013
 #
-#* Last Modified : Tue 23 Apr 2013 04:19:12 AM ART
+#* Last Modified : Tue 23 Apr 2013 05:02:30 AM ART
 #
 #* Created By :  Ezequiel Castillo
 #
@@ -255,7 +255,7 @@ class calcE(object):
             self.MD_enerPot = np.loadtxt(os.path.join(self.basedir,self.MD_enerFile), usecols=[0])
         if generatePlot:
             self.generatePlot = generatePlot
-            if figSize and dpi:
+            if figSize and DPI:
                 #NOTE: La misma duda de plotId aplica aca tambien.
                 self.thePlot = plt.figure(figsize=figSize, dpi=DPI)
             else:
@@ -274,7 +274,7 @@ class calcE(object):
 
             if stepId == 0:
                 # NOTE: No se si debe ir plotId solo o con el self.
-                self.plotId = count(1)
+                plotId = count(1)
 
 
         self.kB = 8.6173324*10**-5 # eV/K
@@ -314,61 +314,44 @@ class calcE(object):
                     self.T * math.log(self.freq)) / float(self.alpha)
         self.diffE = self.Ecut - self.vmin
         self.ExVb = self.vprom + (self.vmin - self.Ecut) * (self.alpha - 1)
-
-
-    def histo(self):
-        #plt.figure(1, figsize=(8,6))
-        self.thePlot.add_subplot(self.nRG, self.nCG, next(self.plotId))
-        heights1, bins1, patches = plt.hist(self.enerPot, 30)
-        heights2, bins2, patches2 = plt.hist(self.MD_enerPot, 30)
-        plt.close()
-        plt.title('Alpha = %.2f' % (self.alpha))
-        center = (bins1[:-1]+bins1[1:])/2
-        # Repesado del histograma
-        heightsR = []
-        for E, height in zip(center, heights1):
-            if E < self.Ecut:
-                heightsR.append(height*np.exp((E-self.Ecut)*self.beta*(self.alpha-1)))
-            else:
-                heightsR.append(height)
-        center, width = makeBarsFromHisto(bins=bins2, widthFactor=1)
-        plt.bar(center, map(float, heights2)/(np.sum(heights2)*width), width=width, label='DM Comun', color='orange')
-
-        center, width = makeBarsFromHisto(bins=bins1, widthFactor=0.8)
-        plt.bar(center, map(float, heights1)/(np.sum(heights1)*(bins1[1]-bins1[0])), width=width, label='Acelerada No Repesada', color='blue')
-
-        center, width = makeBarsFromHisto(bins=bins1, widthFactor=0.6)
-        plt.bar(center, heightsR/(np.sum(heightsR)*(bins1[1]-bins1[0])), width=width, label='Acelerada Repesada', color='red')
-
-        locs,labels = plt.xticks()
-        plt.xticks(locs, map(lambda x: "%g" % x, locs-min(locs)))
-        plt.text(0.92, -0.07, "+%g" % min(locs), fontsize=10, transform = plt.gca().transAxes)
-        plt.legend(loc='upper left')
-        plt.axvline(x=self.Ecut, linewidth=2, color='g', ls='--')
-        #plt.savefig('Histogramas.pdf', format='pdf', bbox_inches='tight', dpi=50)
-        #plt.locator_params(nbins=4)
-        #plt.ticklabel_format(style='plain')
-        #plt.show()
-        #pdb.set_trace()
-
-        #plt.show()
-
-    #def evalEcut(self):
-        #self.Ecut = (self.vprom + self.vmin * (float(self.alpha) - 1) - self.kB *\
-                    #self.T * math.log(self.freq)) / float(self.alpha)
-        #return self.Ecut
-
-    #def diffE(self):
-        #self.diffE = self.Ecut - self.vmin
-        #return self.diffE
-
-    #def evalExVb(self):
-        #self.ExVb = self.vprom + (self.vmin - self.Ecut) * (self.alpha - 1)
-        #return self.ExVb
-
-    def evalVbProm(self):
         self.VbProm = np.average(self.VBias)
-        return self.VbProm
+
+
+    def histo(self, plot=True):
+        #plt.figure(1, figsize=(8,6))
+        if self.generatePlot:
+            if plot:
+                self.thePlot.add_subplot(self.nRG, self.nCG, next(plotId))
+                heights1, bins1, patches = plt.hist(self.enerPot, 30)
+                heights2, bins2, patches2 = plt.hist(self.MD_enerPot, 30)
+                plt.close()
+                plt.title('Alpha = %.2f' % (self.alpha))
+                center = (bins1[:-1]+bins1[1:])/2
+                # Repesado del histograma
+                heightsR = []
+                for E, height in zip(center, heights1):
+                    if E < self.Ecut:
+                        heightsR.append(height*np.exp((E-self.Ecut)*self.beta*(self.alpha-1)))
+                    else:
+                        heightsR.append(height)
+                center, width = makeBarsFromHisto(bins=bins2, widthFactor=1)
+                plt.bar(center, map(float, heights2)/(np.sum(heights2)*width), width=width, label='DM Comun', color='orange')
+
+                center, width = makeBarsFromHisto(bins=bins1, widthFactor=0.8)
+                plt.bar(center, map(float, heights1)/(np.sum(heights1)*(bins1[1]-bins1[0])), width=width, label='Acelerada No Repesada', color='blue')
+
+                center, width = makeBarsFromHisto(bins=bins1, widthFactor=0.6)
+                plt.bar(center, heightsR/(np.sum(heightsR)*(bins1[1]-bins1[0])), width=width, label='Acelerada Repesada', color='red')
+
+                locs,labels = plt.xticks()
+                plt.xticks(locs, map(lambda x: "%g" % x, locs-min(locs)))
+                plt.text(0.92, -0.07, "+%g" % min(locs), fontsize=10, transform = plt.gca().transAxes)
+                plt.legend(loc='upper left')
+                plt.axvline(x=self.Ecut, linewidth=2, color='g', ls='--')
+                #plt.savefig('Histogramas.pdf', format='pdf', bbox_inches='tight', dpi=50)
+                #plt.locator_params(nbins=4)
+                #plt.ticklabel_format(style='plain')
+                #plt.show()
 
     def plotVOverlaped(self, plot=True):
         """ We want to overlap the V curve of a normal MD with the acelerated one """
@@ -414,15 +397,16 @@ class calcE(object):
             value = value + decor*np.exp(self.beta*np.average(block))
             thyper.append(value)
 
-        if plot:
-            plt.subplot(224)
-            self.thePlot.add_subplot(self.nRG, self.nCG, next(self.plotId))
-            plt.plot(self.timeNoBoost, self.MD_enerPot, 'o-r', label='Potencial DM comun', markersize=3)
-            plt.plot(thyper, Vrepes, 'o-g', label='Potencial DM acelerada', markersize=1)
-            plt.xlabel('Tiempo [ps]')
-            plt.ylabel('$V$ [eV]')
-            plt.legend(loc='lower center')
-            #plt.show()
+        if self.generatePlot:
+            if plot:
+                #plt.subplot(224)
+                self.thePlot.add_subplot(self.nRG, self.nCG, next(plotId))
+                plt.plot(self.timeNoBoost, self.MD_enerPot, 'o-r', label='Potencial DM comun', markersize=3)
+                plt.plot(thyper, Vrepes, 'o-g', label='Potencial DM acelerada', markersize=1)
+                plt.xlabel('Tiempo [ps]')
+                plt.ylabel('$V$ [eV]')
+                plt.legend(loc='lower center')
+                #plt.show()
 
     def compareTimes(self, plot=True):
         """ At this point we want to check the linearity of time vs hyperdynamic time  """
@@ -430,21 +414,24 @@ class calcE(object):
         S = np.linalg.lstsq(A, self.timeBoost)
         a, b = S[0]
         res = S[1][0]
-        if plot:
-            plt.subplot(222)
-            self.thePlot.add_subplot(self.nRG, self.nCG, next(self.plotId))
-            plt.plot(self.timeNoBoost, self.timeBoost, 'o-g', label='alpha='+str(self.alpha), markersize=1)
-            plt.plot(self.timeNoBoost, a*self.timeNoBoost + b, 'r')
-            plt.legend(loc='upper left')
-            #plt.savefig('Times.pdf', format='pdf', bbox_inches='tight', dpi=100)
-            #plt.show()
+        if self.generatePlot:
+            if plot:
+                #plt.subplot(222)
+                self.thePlot.add_subplot(self.nRG, self.nCG, next(self.plotId))
+                plt.plot(self.timeNoBoost, self.timeBoost, 'o-g', label='alpha='+str(self.alpha), markersize=1)
+                plt.plot(self.timeNoBoost, a*self.timeNoBoost + b, 'r')
+                plt.legend(loc='upper left')
+                #plt.savefig('Times.pdf', format='pdf', bbox_inches='tight', dpi=100)
+                #plt.show()
         return a
 
-    def plotPot(self):
-        smoothX, smoothY = self.smoothData(self.timeBoost, self.enerPot)
-        plt.plot(self.timeBoost, self.enerPot)
-        plt.plot(smoothX, smoothY)
-        #plt.show()
+    def plotPot(self, plot=True):
+        if self.generatePlot:
+            if plot:
+                smoothX, smoothY = self.smoothData(self.timeBoost, self.enerPot)
+                plt.plot(self.timeBoost, self.enerPot)
+                plt.plot(smoothX, smoothY)
+                #plt.show()
 
     def smoothData(self, x, y):
         # Check
@@ -505,14 +492,15 @@ class calcE(object):
             I.append(np.sum(qI))
 
 
-        if generatePlot:
-            plt.subplot(223)
-            self.thePlot.add_subplot(self.nRG, self.nCG, next(self.plotId))
-            plt.plot(self.timeXYZ, I, '-' )
-            plt.xlabel('Time [ps]')
-            plt.ylabel('$I$ [$\\textrm{uma}\\cdot\\AA ^2$]')
-            plt.legend()
-            #plt.show()
+        if self.generatePlot:
+            if plot:
+                plt.subplot(223)
+                self.thePlot.add_subplot(self.nRG, self.nCG, next(self.plotId))
+                plt.plot(self.timeXYZ, I, '-' )
+                plt.xlabel('Time [ps]')
+                plt.ylabel('$I$ [$\\textrm{uma}\\cdot\\AA ^2$]')
+                plt.legend()
+                #plt.show()
 
         return np.amax(I)-np.amin(I)
 
@@ -572,24 +560,24 @@ if __name__ == "__main__":
     dirs.reverse()
 
 
-    dirs = [element for element in dirs if float(element) > 0.5]
+    dirs = [element for element in dirs if float(element) > 0.94]
 
     cmPerGraph = np.array([5.2, 5.2]) # (Ancho, Alto) en centimetros
     inPerGraph = cmPerGraph/2.54
-    numColGraph = 5
+    numColGraph = 3
     numRowGraph = len(dirs)
     figSize = (inPerGraph[0]*numColGraph, inPerGraph[1]*numRowGraph)
-    pdb.set_trace()
+    #pdb.set_trace()
     #dirs = [0.1, 0.18, 0.26, 0.34, 0.42, 0.5]
 
-    if os.path.isfile('factores.dat'):
-        os.remove('factores.dat')
+    #if os.path.isfile('factores.dat'):
+        #os.remove('factores.dat')
 
-    fout = open('factores.dat', 'a')
+    #fout = open('factores.dat', 'a')
 
-    fa = []
-    fev = []
-    fes = []
+    #fa = []
+    #fev = []
+    #fes = []
     for i,Alpha in enumerate(dirs):
         os.chdir(str(Alpha))
         Instance = calcE(basedir=rootdir, alpha=Alpha, vmin=-1554.63, freq=1*10**(-3),
@@ -597,31 +585,29 @@ if __name__ == "__main__":
                     tempFile='temp.dat', AMD=True, tMax=50000, dt=0.2, dFrame=10,
                     xyzFile='traj.xyz', MD_enerFile='DM_ener.dat', dFrameXYZ=50, 
                     generatePlot=True, filePlotName='alphaTest.pdf', multiPlot=True,
-                    numColGraph=numColGraph, numRowGraph=numRowGraph, stepId=i)
-        #Ecut = Instance.evalEcut()
-        #diffE = Instance.diffE()
-        #ExVb = Instance.evalExVb()
-        #Instance.histo(i)
-        #VbProm = Instance.evalVbProm()
-        #Instance.plotVOverlaped()
-        fa.append(Instance.compareTimes())  # Factor de aceleracion
-        fev.append(Instance.escapeFactor()) # Factor de escape verdadero
-        fes.append(Instance.freq)           # Factor de escape supuesto
+                    numColGraph=numColGraph, numRowGraph=numRowGraph, stepId=i,
+                    figSize=figSize)
+        Instance.histo()
+        Instance.plotVOverlaped()
+        pdb.set_trace()
+        #fa.append(Instance.compareTimes())  # Factor de aceleracion
+        #fev.append(Instance.escapeFactor()) # Factor de escape verdadero
+        #fes.append(Instance.freq)           # Factor de escape supuesto
         #fout.write("Alpha = %s\n" % Alpha)
         #fout.write("Factor aceleracion: %.2f\n" % fa)
         #fout.write("Factor escape verdadero: %.2f\n" % fev)
         #fout.write("Factor de escape supuesto: %.3f\n\n" % fes)
-        #inertiaDif = Instance.inertia()
+        inertiaDif = Instance.inertia()
         #plt.savefig(str(Alpha)+'.pdf', format='pdf', bbox_inches='tight', dpi=50)
         #plt.close()
 
         # Factor de escape verdadero
         os.chdir(os.pardir)
 
-    fout.close()
-    pdb.set_trace()
-    figure1 = plt.figure(title='AlphaTEST')
-    figure1.plot(dirs, fa, 'ro-', dirs, fev, 'g^-')
+    #fout.close()
+    #pdb.set_trace()
+    #figure1 = plt.figure(title='AlphaTEST')
+    #figure1.plot(dirs, fa, 'ro-', dirs, fev, 'g^-')
 
     #for i,Alpha in enumerate(dirs):
         #os.chdir(str(Alpha))
