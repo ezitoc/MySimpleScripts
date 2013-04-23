@@ -8,7 +8,7 @@
 #
 #* Creation Date : 11-03-2013
 #
-#* Last Modified : Fri 12 Apr 2013 08:29:03 PM ART
+#* Last Modified : Tue 23 Apr 2013 04:19:12 AM ART
 #
 #* Created By :  Ezequiel Castillo
 #
@@ -20,13 +20,20 @@ import re
 import math
 import pdb
 import shutil
+import itertools
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import rc
 from scipy.optimize import curve_fit
 
-rc('font',**{'family':'serif','serif':['Palatino'],'size':8})
+rc('font',**{'family':'serif','serif':['Palatino'],'size':10})
 rc('text', usetex=True)
+#rc('lines', linewidth='1.0')
+#rc('axes', linewidth='0.5')
+#rc('axes', style='plain')
+#rc('figure', **{'subplot.bottom':0.1})
+
+np.seterr(over='print')
 
 dictAtomMass = \
 {
@@ -34,6 +41,12 @@ dictAtomMass = \
 'C':12.011,
 'H':1.008,
 'S':32.066}
+
+def count(firstval=0, step=1):
+    x = firstval
+    while True:
+        yield x
+        x += step
 
 def pairwise(iterable):
     itnext = iter(iterable).next
@@ -79,7 +92,6 @@ def checkCorr(Xvalues, Yvalues, showPlot=False):
         return np.exp(-t/a)+np.exp(-t/b)+np.exp(-t/c)+np.exp(-t/d)+np.exp(-t/e)
 
     # Ignore overflow error (for curve_fit)
-    np.seterr(over='ignore')
 
     Aprom = np.average(Yvalues)
     A = Yvalues-Aprom
@@ -106,6 +118,12 @@ def checkCorr(Xvalues, Yvalues, showPlot=False):
         #plt.savefig('corr.pdf', format='pdf', bbox_inches='tight')
 
     return tau
+
+def makeBarsFromHisto(bins, widthFactor):
+    center = (bins[:-1]+bins[1:])/2
+    width = (bins[1]-bins[0])*widthFactor
+    return center, width
+
 
 class createInputs(object):
 
@@ -214,7 +232,9 @@ class calcE(object):
                  T=None, biasFile=None, enerFile=None, tempFile=None,
                  smoothFactor=None, tau=None, AMD=False, tMax=None, dt=None,
                  dFrame=None, xyzFile=None, MD_enerFile=None, basedir=os.getcwd(),
-                 dFrameXYZ=None):
+                 dFrameXYZ=None, generatePlot=False, filePlotName=None,
+                 multiPlot=False, figSize=None, DPI=100, stepId=0,
+                 numColGraph=None, numRowGraph=None):
 
         self.basedir = basedir
 
@@ -233,6 +253,28 @@ class calcE(object):
         elif MD_enerFile:
             self.MD_enerFile = MD_enerFile
             self.MD_enerPot = np.loadtxt(os.path.join(self.basedir,self.MD_enerFile), usecols=[0])
+        if generatePlot:
+            self.generatePlot = generatePlot
+            if figSize and dpi:
+                #NOTE: La misma duda de plotId aplica aca tambien.
+                self.thePlot = plt.figure(figsize=figSize, dpi=DPI)
+            else:
+                NameError('generatePlot option set to true, must declare figSize and dpi')
+            if multiPlot:
+                if numColGraph and numRowGraph:
+                    self.nCG = numColGraph
+                    self.nRG = numRowGraph
+                    self.numTotGraph = numRowGraph*numColGraph
+                else:
+                    NameError('MultiPlot option set to True, must declare both numColGraph and numRowGraph')
+            else:
+                self.nCG = 1
+                self.nRG = 1
+                self.numTotGraph = self.nRG*self.nCG
+
+            if stepId == 0:
+                # NOTE: No se si debe ir plotId solo o con el self.
+                self.plotId = count(1)
 
 
         self.kB = 8.6173324*10**-5 # eV/K
@@ -266,25 +308,63 @@ class calcE(object):
         else:
             self.vprom = np.average(self.MD_enerPot)
 
-    def histo(self):
-        plt.figure(1)
-        plt.subplot(221)
-        plt.hist(self.enerPot, 50, color='g')
-        plt.axvline(x=self.evalEcut(), linewidth=2, color='r')
-        #plt.show()
+        # Valores importantes
 
-    def evalEcut(self):
         self.Ecut = (self.vprom + self.vmin * (float(self.alpha) - 1) - self.kB *\
                     self.T * math.log(self.freq)) / float(self.alpha)
-        return self.Ecut
-
-    def diffE(self):
         self.diffE = self.Ecut - self.vmin
-        return self.diffE
-
-    def evalExVb(self):
         self.ExVb = self.vprom + (self.vmin - self.Ecut) * (self.alpha - 1)
-        return self.ExVb
+
+
+    def histo(self):
+        #plt.figure(1, figsize=(8,6))
+        self.thePlot.add_subplot(self.nRG, self.nCG, next(self.plotId))
+        heights1, bins1, patches = plt.hist(self.enerPot, 30)
+        heights2, bins2, patches2 = plt.hist(self.MD_enerPot, 30)
+        plt.close()
+        plt.title('Alpha = %.2f' % (self.alpha))
+        center = (bins1[:-1]+bins1[1:])/2
+        # Repesado del histograma
+        heightsR = []
+        for E, height in zip(center, heights1):
+            if E < self.Ecut:
+                heightsR.append(height*np.exp((E-self.Ecut)*self.beta*(self.alpha-1)))
+            else:
+                heightsR.append(height)
+        center, width = makeBarsFromHisto(bins=bins2, widthFactor=1)
+        plt.bar(center, map(float, heights2)/(np.sum(heights2)*width), width=width, label='DM Comun', color='orange')
+
+        center, width = makeBarsFromHisto(bins=bins1, widthFactor=0.8)
+        plt.bar(center, map(float, heights1)/(np.sum(heights1)*(bins1[1]-bins1[0])), width=width, label='Acelerada No Repesada', color='blue')
+
+        center, width = makeBarsFromHisto(bins=bins1, widthFactor=0.6)
+        plt.bar(center, heightsR/(np.sum(heightsR)*(bins1[1]-bins1[0])), width=width, label='Acelerada Repesada', color='red')
+
+        locs,labels = plt.xticks()
+        plt.xticks(locs, map(lambda x: "%g" % x, locs-min(locs)))
+        plt.text(0.92, -0.07, "+%g" % min(locs), fontsize=10, transform = plt.gca().transAxes)
+        plt.legend(loc='upper left')
+        plt.axvline(x=self.Ecut, linewidth=2, color='g', ls='--')
+        #plt.savefig('Histogramas.pdf', format='pdf', bbox_inches='tight', dpi=50)
+        #plt.locator_params(nbins=4)
+        #plt.ticklabel_format(style='plain')
+        #plt.show()
+        #pdb.set_trace()
+
+        #plt.show()
+
+    #def evalEcut(self):
+        #self.Ecut = (self.vprom + self.vmin * (float(self.alpha) - 1) - self.kB *\
+                    #self.T * math.log(self.freq)) / float(self.alpha)
+        #return self.Ecut
+
+    #def diffE(self):
+        #self.diffE = self.Ecut - self.vmin
+        #return self.diffE
+
+    #def evalExVb(self):
+        #self.ExVb = self.vprom + (self.vmin - self.Ecut) * (self.alpha - 1)
+        #return self.ExVb
 
     def evalVbProm(self):
         self.VbProm = np.average(self.VBias)
@@ -295,11 +375,11 @@ class calcE(object):
 
         # Arreglo con VbSN[i]=V[i]*exp(beta*DeltaV[i]), i.e., el
         # numerador del valor de expectacion
-        VbSN = np.array([ self.VSinBias[i]*math.exp(self.beta*self.deltaBias[i]) for i in range(len(self.VSinBias)) ])
+        VbSN = np.array([ self.VSinBias[i]*np.exp(self.beta*self.deltaBias[i]) for i in range(len(self.VSinBias)) ])
 
         # Arreglo con normFac[i]=exp(beta*DeltaV[i]), i.e., el
         # denominador del valor de expectacion
-        normFac = np.array( [math.exp(self.beta*self.deltaBias[i]) for i in range(len(self.deltaBias))]  )
+        normFac = np.array( [np.exp(self.beta*self.deltaBias[i]) for i in range(len(self.deltaBias))]  )
 
         # Calculo de correlacion
         tau = checkCorr(self.timeNoBoost, self.VSinBias, showPlot=False)
@@ -331,11 +411,12 @@ class calcE(object):
         thyper = []
         value = 0
         for block in deltaVBlock:
-            value = value + decor*math.exp(self.beta*np.average(block))
+            value = value + decor*np.exp(self.beta*np.average(block))
             thyper.append(value)
 
         if plot:
             plt.subplot(224)
+            self.thePlot.add_subplot(self.nRG, self.nCG, next(self.plotId))
             plt.plot(self.timeNoBoost, self.MD_enerPot, 'o-r', label='Potencial DM comun', markersize=3)
             plt.plot(thyper, Vrepes, 'o-g', label='Potencial DM acelerada', markersize=1)
             plt.xlabel('Tiempo [ps]')
@@ -351,9 +432,11 @@ class calcE(object):
         res = S[1][0]
         if plot:
             plt.subplot(222)
+            self.thePlot.add_subplot(self.nRG, self.nCG, next(self.plotId))
             plt.plot(self.timeNoBoost, self.timeBoost, 'o-g', label='alpha='+str(self.alpha), markersize=1)
             plt.plot(self.timeNoBoost, a*self.timeNoBoost + b, 'r')
             plt.legend(loc='upper left')
+            #plt.savefig('Times.pdf', format='pdf', bbox_inches='tight', dpi=100)
             #plt.show()
         return a
 
@@ -422,8 +505,9 @@ class calcE(object):
             I.append(np.sum(qI))
 
 
-        if plot:
+        if generatePlot:
             plt.subplot(223)
+            self.thePlot.add_subplot(self.nRG, self.nCG, next(self.plotId))
             plt.plot(self.timeXYZ, I, '-' )
             plt.xlabel('Time [ps]')
             plt.ylabel('$I$ [$\\textrm{uma}\\cdot\\AA ^2$]')
@@ -445,9 +529,10 @@ class calcE(object):
 if __name__ == "__main__":
     """ A continuacion se definen las variables a utilizar por el programa. """
 
+    projectName = 'AlphaTEST'
 
     #vmin = -1554.63
-    #alfas = map(str, np.linspace(0.80, 0.99, 20))
+    #alfas = map(str, np.linspace(0.1, 0.5, 6))
     #patternGems = ['$ALPHA$', '$ECUT$'] # El primer elemento de la lista tiene que corresponder con el parametro crudo a variar
     #patternModelo = ['$ALPHA$']
 
@@ -464,7 +549,7 @@ if __name__ == "__main__":
     #filesAndPattern = {'gems.gms' : fullPatternGems,
             #'SIDRA.sge' : fullPatternModelo}
 
-    #A = createInputs(projectName='AlphaTEST', subFolders=alfas,
+    #A = createInputs(projectName=projectName, subFolders=alfas,
                      #modFilesAndPattern=filesAndPattern,
                      #ignoreFiles=['DM_ener.dat', 'calcE.py'])
                      ##filesToCopy=['ener.dat', 'DM_ener.dat'])
@@ -477,35 +562,83 @@ if __name__ == "__main__":
     #thedir = os.path.abspath(os.curdir)
     rootdir = os.getcwd()
 
-    os.chdir('AlphaTEST')
+
+    os.chdir(projectName)
 
     thedir = os.getcwd()
     dirs = [ float(name) for name in os.listdir(thedir) if
             os.path.isdir(os.path.join(thedir, name)) ]
+    dirs.sort()
+    dirs.reverse()
 
 
+    dirs = [element for element in dirs if float(element) > 0.5]
 
-    for Alpha in dirs:
+    cmPerGraph = np.array([5.2, 5.2]) # (Ancho, Alto) en centimetros
+    inPerGraph = cmPerGraph/2.54
+    numColGraph = 5
+    numRowGraph = len(dirs)
+    figSize = (inPerGraph[0]*numColGraph, inPerGraph[1]*numRowGraph)
+    pdb.set_trace()
+    #dirs = [0.1, 0.18, 0.26, 0.34, 0.42, 0.5]
+
+    if os.path.isfile('factores.dat'):
+        os.remove('factores.dat')
+
+    fout = open('factores.dat', 'a')
+
+    fa = []
+    fev = []
+    fes = []
+    for i,Alpha in enumerate(dirs):
         os.chdir(str(Alpha))
         Instance = calcE(basedir=rootdir, alpha=Alpha, vmin=-1554.63, freq=1*10**(-3),
                     T=300, biasFile='bias.dat', enerFile='ener.dat',
                     tempFile='temp.dat', AMD=True, tMax=50000, dt=0.2, dFrame=10,
-                    xyzFile='traj.xyz', MD_enerFile='DM_ener.dat', dFrameXYZ=50)
-        Ecut = Instance.evalEcut()
-        diffE = Instance.diffE()
-        ExVb = Instance.evalExVb()
-        VbProm = Instance.evalVbProm()
-        Instance.plotVOverlaped()
-        fa = Instance.compareTimes()  # Factor de aceleracion
-        fev = Instance.escapeFactor() # Factor de escape verdadero
-        fes = Instance.freq           # Factor de escape supuesto
-        inertiaDif = Instance.inertia()
-        Instance.histo()
-        plt.savefig(str(Alpha)+'.pdf', format='pdf', bbox_inches='tight', dpi=100)
-        plt.close()
+                    xyzFile='traj.xyz', MD_enerFile='DM_ener.dat', dFrameXYZ=50, 
+                    generatePlot=True, filePlotName='alphaTest.pdf', multiPlot=True,
+                    numColGraph=numColGraph, numRowGraph=numRowGraph, stepId=i)
+        #Ecut = Instance.evalEcut()
+        #diffE = Instance.diffE()
+        #ExVb = Instance.evalExVb()
+        #Instance.histo(i)
+        #VbProm = Instance.evalVbProm()
+        #Instance.plotVOverlaped()
+        fa.append(Instance.compareTimes())  # Factor de aceleracion
+        fev.append(Instance.escapeFactor()) # Factor de escape verdadero
+        fes.append(Instance.freq)           # Factor de escape supuesto
+        #fout.write("Alpha = %s\n" % Alpha)
+        #fout.write("Factor aceleracion: %.2f\n" % fa)
+        #fout.write("Factor escape verdadero: %.2f\n" % fev)
+        #fout.write("Factor de escape supuesto: %.3f\n\n" % fes)
+        #inertiaDif = Instance.inertia()
+        #plt.savefig(str(Alpha)+'.pdf', format='pdf', bbox_inches='tight', dpi=50)
+        #plt.close()
 
         # Factor de escape verdadero
         os.chdir(os.pardir)
+
+    fout.close()
+    pdb.set_trace()
+    figure1 = plt.figure(title='AlphaTEST')
+    figure1.plot(dirs, fa, 'ro-', dirs, fev, 'g^-')
+
+    #for i,Alpha in enumerate(dirs):
+        #os.chdir(str(Alpha))
+        #Instance = calcE(basedir=rootdir, alpha=Alpha, vmin=-1554.63, freq=1*10**(-3),
+                    #T=300, biasFile='bias.dat', enerFile='ener.dat',
+                    #tempFile='temp.dat', AMD=True, tMax=50000, dt=0.2, dFrame=10,
+                    #xyzFile='traj.xyz', MD_enerFile='DM_ener.dat', dFrameXYZ=50)
+        #Instance.histo(i+1)
+
+        ## Factor de escape verdadero
+        #os.chdir(os.pardir)
+
+    ##plt.subplot(bottom=0.3)
+    #plt.savefig('Histograms.pdf', format='pdf', bbox_inches='tight', dpi=100)
+    #plt.close()
+
+
 
     #print 'Energy = %g eV' % (energy)
     #print 'DiffEnergy = %g eV' % (diffener)
