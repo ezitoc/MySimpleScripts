@@ -8,7 +8,7 @@
 #
 #* Creation Date : 11-03-2013
 #
-#* Last Modified : Tue 23 Apr 2013 05:31:21 PM ART
+#* Last Modified : Tue 23 Apr 2013 05:02:30 AM ART
 #
 #* Created By :  Ezequiel Castillo
 #
@@ -254,7 +254,6 @@ class calcE(object):
             self.MD_enerFile = MD_enerFile
             self.MD_enerPot = np.loadtxt(os.path.join(self.basedir,self.MD_enerFile), usecols=[0])
         if generatePlot:
-        pdb.set_trace()
             self.generatePlot = generatePlot
             if figSize and DPI:
                 #NOTE: La misma duda de plotId aplica aca tambien.
@@ -275,7 +274,7 @@ class calcE(object):
 
             if stepId == 0:
                 # NOTE: No se si debe ir plotId solo o con el self.
-                self.plotId = count(1)
+                plotId = count(1)
 
 
         self.kB = 8.6173324*10**-5 # eV/K
@@ -318,12 +317,11 @@ class calcE(object):
         self.VbProm = np.average(self.VBias)
 
 
-    def histo(self, plot=True, plotId=self.plotId):
+    def histo(self, plot=True):
         #plt.figure(1, figsize=(8,6))
         if self.generatePlot:
             if plot:
                 self.thePlot.add_subplot(self.nRG, self.nCG, next(plotId))
-                pdb.set_trace()
                 heights1, bins1, patches = plt.hist(self.enerPot, 30)
                 heights2, bins2, patches2 = plt.hist(self.MD_enerPot, 30)
                 plt.close()
@@ -569,6 +567,7 @@ if __name__ == "__main__":
     numColGraph = 3
     numRowGraph = len(dirs)
     figSize = (inPerGraph[0]*numColGraph, inPerGraph[1]*numRowGraph)
+    #pdb.set_trace()
     #dirs = [0.1, 0.18, 0.26, 0.34, 0.42, 0.5]
 
     #if os.path.isfile('factores.dat'):
@@ -590,6 +589,7 @@ if __name__ == "__main__":
                     figSize=figSize)
         Instance.histo()
         Instance.plotVOverlaped()
+        pdb.set_trace()
         #fa.append(Instance.compareTimes())  # Factor de aceleracion
         #fev.append(Instance.escapeFactor()) # Factor de escape verdadero
         #fes.append(Instance.freq)           # Factor de escape supuesto
