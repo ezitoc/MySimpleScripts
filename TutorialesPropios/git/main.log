@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.8.29)  15 FEB 2013 13:30
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.12.4)  24 APR 2013 20:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -729,8 +729,14 @@ File: tikzlibrary3d.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
 )
 (/home/ezequiel/.local/texlive/2012/texmf-dist/tex/latex/gnuplot/gnuplot-lua-ti
 kz.sty
-Package: gnuplot-lua-tikz 2012/02/07 (rev. 100) GNUPLOT Lua terminal style
+Package: gnuplot-lua-tikz 2011/11/07 (rev. 96a) GNUPLOT Lua terminal style
 
+(/home/ezequiel/.local/texlive/2012/texmf-dist/tex/latex/pgf/utilities/xxcolor.
+sty
+Package: xxcolor 2003/10/24 ver 0.1
+\XC@nummixins=\count149
+\XC@countmixins=\count150
+)
 (/home/ezequiel/.local/texlive/2012/texmf-dist/tex/generic/pgf/frontendlayer/ti
 kz/libraries/tikzlibraryarrows.code.tex
 File: tikzlibraryarrows.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
@@ -756,19 +762,11 @@ File: tikzlibraryplotmarks.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
 raryplotmarks.code.tex
 File: pgflibraryplotmarks.code.tex 2010/10/15 v2.10 (rcs-revision 1.12)
 ))
-(/home/ezequiel/.local/texlive/2012/texmf-dist/tex/generic/pgf/frontendlayer/ti
-kz/libraries/tikzlibrarybackgrounds.code.tex
-File: tikzlibrarybackgrounds.code.tex 2010/02/08 v2.10 (rcs-revision 1.2)
-\pgf@layerbox@background=\box43
-\pgf@layerboxsaved@background=\box44
-)
-(/home/ezequiel/.local/texlive/2012/texmf-dist/tex/latex/gnuplot/gnuplot-lua-ti
-kz-common.tex
 \gpvcharsize=\dimen196
 \gphcharsize=\dimen197
 \gpbasems=\dimen198
 \gpbaselw=\dimen199
-))
+)
 (/home/ezequiel/.local/texlive/2012/texmf-dist/tex/latex/oberdiek/grffile.sty
 Package: grffile 2012/04/05 v1.16 Extended file name support for graphics (HO)
 Package grffile Info: Option `multidot' is set to `true'.
@@ -789,15 +787,15 @@ Package: mhchem 2011/06/03 v3.11 for typesetting chemical formulae
 
 (/home/ezequiel/.local/texlive/2012/texmf-dist/tex/latex/tools/calc.sty
 Package: calc 2007/08/22 v4.3 Infix arithmetic (KKT,FJ)
-\calc@Acount=\count149
-\calc@Bcount=\count150
+\calc@Acount=\count151
+\calc@Bcount=\count152
 \calc@Adimen=\dimen202
 \calc@Bdimen=\dimen203
 \calc@Askip=\skip52
 \calc@Bskip=\skip53
 LaTeX Info: Redefining \setlength on input line 76.
 LaTeX Info: Redefining \addtolength on input line 77.
-\calc@Ccount=\count151
+\calc@Ccount=\count153
 \calc@Cskip=\skip54
 )
 (/home/ezequiel/.local/texlive/2012/texmf-dist/tex/latex/oberdiek/twoopt.sty
@@ -805,7 +803,7 @@ Package: twoopt 2008/08/11 v1.5 Definitions with two optional arguments (HO)
 )
 \tok@mhchem@ce@iii=\toks41
 \mhchem@arrowminlength=\skip55
-\mhchem@arrows@box=\box45
+\mhchem@arrows@box=\box43
 \mhchem@arrowlength@pgf=\skip56
 \mhchem@arrowminlength@pgf=\skip57
 \mhchem@bondwidth=\skip58
@@ -840,24 +838,24 @@ Package: blindtext 2012/01/06 V2.0 blindtext-Package
  (/home/ezequiel/.local/texlive/2012/texmf-dist/tex/latex/tools/xspace.sty
 Package: xspace 2009/10/20 v1.13 Space after command names (DPC,MH)
 )
-\c@blindtext=\count152
-\c@Blindtext=\count153
-\c@blind@countparstart=\count154
-\blind@countxx=\count155
-\blindtext@numBlindtext=\count156
-\blind@countyy=\count157
-\c@blindlist=\count158
-\c@blindlistlevel=\count159
-\c@blindlist@level=\count160
-\blind@listitem=\count161
-\c@blind@listcount=\count162
-\c@blind@levelcount=\count163
-\blind@mathformula=\count164
-\blind@Mathformula=\count165
-\c@blind@randomcount=\count166
-\c@blind@randommax=\count167
-\c@blind@pangramcount=\count168
-\c@blind@pangrammax=\count169
+\c@blindtext=\count154
+\c@Blindtext=\count155
+\c@blind@countparstart=\count156
+\blind@countxx=\count157
+\blindtext@numBlindtext=\count158
+\blind@countyy=\count159
+\c@blindlist=\count160
+\c@blindlistlevel=\count161
+\c@blindlist@level=\count162
+\blind@listitem=\count163
+\c@blind@listcount=\count164
+\c@blind@levelcount=\count165
+\blind@mathformula=\count166
+\blind@Mathformula=\count167
+\c@blind@randomcount=\count168
+\c@blind@randommax=\count169
+\c@blind@pangramcount=\count170
+\c@blind@pangrammax=\count171
 ))
 (./main.aux
 LaTeX Info: Redefining \. on input line 18.
@@ -888,16 +886,16 @@ LaTeX Info: Redefining \% on input line 18.
 
 (/home/ezequiel/.local/texlive/2012/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count170
+\scratchcounter=\count172
 \scratchdimen=\dimen204
-\scratchbox=\box46
-\nofMPsegments=\count171
-\nofMParguments=\count172
+\scratchbox=\box44
+\nofMPsegments=\count173
+\nofMParguments=\count174
 \everyMPshowfont=\toks50
-\MPscratchCnt=\count173
+\MPscratchCnt=\count175
 \MPscratchDim=\dimen205
-\MPnumerator=\count174
-\makeMPintoPDFobject=\count175
+\MPnumerator=\count176
+\makeMPintoPDFobject=\count177
 \everyMPtoPDFconversion=\toks51
 )
 (/home/ezequiel/.local/texlive/2012/texmf-dist/tex/latex/oberdiek/epstopdf-base
@@ -916,7 +914,7 @@ ys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\AtBeginShipoutBox=\box47
+\AtBeginShipoutBox=\box45
 Package hyperref Info: Link coloring OFF on input line 18.
 
 (/home/ezequiel/.local/texlive/2012/texmf-dist/tex/latex/hyperref/nameref.sty
@@ -926,7 +924,7 @@ Package: nameref 2010/04/30 v2.40 Cross-referencing by name of section
 ing.sty
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count176
+\c@section@level=\count178
 )
 LaTeX Info: Redefining \ref on input line 18.
 LaTeX Info: Redefining \pageref on input line 18.
@@ -935,7 +933,7 @@ LaTeX Info: Redefining \nameref on input line 18.
 \@outlinefile=\write4
 \openout4 = `main.out'.
 
-\c@lstlisting=\count177
+\c@lstlisting=\count179
 
 (/home/ezequiel/.local/texlive/2012/texmf-dist/tex/latex/ms/ragged2e.sty
 Package: ragged2e 2009/05/21 v2.1 ragged2e Package (MS)
@@ -988,39 +986,40 @@ LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10.95> not available
 
 
 {/home/ezequiel/.local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.ma
-p}] [2]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 143.
- [3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 143.
+p}] [2] [3]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 175.
+ [4]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 175.
  (./main.aux
 LaTeX Info: Redefining \. on input line 18.
 LaTeX Info: Redefining \% on input line 18.
 )
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 143.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 143.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 175.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 175.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 77B2CCB044878BB97BB90F6A01023B7B;595.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 143.
+(rerunfilecheck)             Checksum: 20EE8E88ABF1A1B8D914238784975117;713.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 175.
  ) 
 Here is how much of TeX's memory you used:
- 19317 strings out of 493488
- 344582 string characters out of 3136661
- 500512 words of memory out of 3000000
- 22174 multiletter control sequences out of 15000+200000
- 9539 words of font info for 39 fonts, out of 3000000 for 9000
+ 19287 strings out of 493488
+ 343158 string characters out of 3136661
+ 522951 words of memory out of 3000000
+ 22123 multiletter control sequences out of 15000+200000
+ 9886 words of font info for 40 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 60i,6n,57p,435b,1159s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 60i,6n,57p,435b,1913s stack positions out of 5000i,500n,10000p,200000b,50000s
 </home/ezequiel/.local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmbx12.pfb></home/ezequiel/.local/texlive/2012/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmbxti10.pfb></home/ezequiel/.local/texlive/2012/texmf-dist/fonts/ty
 pe1/public/amsfonts/cm/cmr12.pfb></home/ezequiel/.local/texlive/2012/texmf-dist
 /fonts/type1/public/amsfonts/cm/cmr17.pfb></home/ezequiel/.local/texlive/2012/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></home/ezequiel/.local/texl
-ive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on main.pdf (3 pages, 76543 bytes).
+exmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></home/ezequiel/.local/texl
+ive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></home/ezequiel/.
+local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on main.pdf (4 pages, 93022 bytes).
 PDF statistics:
- 123 PDF objects out of 1000 (max. 8388607)
- 110 compressed objects within 2 object streams
- 41 named destinations out of 1000 (max. 500000)
- 85 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 163 PDF objects out of 1000 (max. 8388607)
+ 148 compressed objects within 2 object streams
+ 64 named destinations out of 1000 (max. 500000)
+ 101 words of extra memory for PDF output out of 10000 (max. 10000000)
 
