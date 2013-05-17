@@ -6,7 +6,7 @@
 %
 % Creation Date : 06-02-2013
 %
-% Last Modified : Fri 15 Feb 2013 01:30:56 PM ART
+% Last Modified : Wed 24 Apr 2013 08:48:56 PM ART
 %
 %    Created By :  Ezequiel Castillo
 %
@@ -140,4 +140,36 @@ using the \texttt{clone} command). This command works if you cloned from a
 server to which you have write access and nobody have push in the meantime.
 
 
+\section{Reverting changes}
+\subsection{Revert a commit}
+Supose you commit files you didn't intended to commit. For example say you ran
+the following command:
+\begin{lstlisting}[style=input]
+git commit calcE.py -m 'Update calcE'
+\end{lstlisting}
+Then you must find the commit name with:
+\begin{lstlisting}[style=input]
+git log
+\end{lstlisting}
+We will find something like:
+\begin{lstlisting}[style=output]
+||commit 3fee482e587ed65acbafb46adfa953dbcd9a6e61
+Author: M. Ezequiel Castillo <ezecastillo@gmail.com>
+Date:   Wed Apr 24 20:09:03 2013 -0300
+
+    Update calcE.py
+
+commit e36950110dda5c906cf36f54626b739783db00ae
+Author: M. Ezequiel Castillo <ezecastillo@gmail.com>
+Date:   Wed Apr 24 20:07:07 2013 -0300
+
+    Revert ``Update?''
+
+origin  https://github.com/ezitoc/MySimpleScripts.git||
+\end{lstlisting}
+
+Then we can revert the commit ``\emph{Update calcE.py}'' with
+\begin{lstlisting}[style=input]
+git revert 3fee482e587ed65acbafb46adfa953dbcd9a6e61
+\end{lstlisting}
 \end{document}
