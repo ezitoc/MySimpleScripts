@@ -8,19 +8,34 @@
 #
 #* Creation Date : 04-06-2013
 #
-#* Last Modified : Tue 04 Jun 2013 04:20:03 PM ART
+#* Last Modified : Wed 05 Jun 2013 07:07:26 PM ART
 #
 #* Created By :  Ezequiel Castillo
 #
 #_._._._._._._._._._._._._._._._._._._._._.
 
-import numpy as np
+def cut(atom_list):
+    atom_list.insert(0, str(len(atom_list))+'\n\n')
 
-FILENAME = 'outfile.xyz'
+    return  atom_list
+
+def inmovilizar(steady_list, else_list):
+    print 'Los atomos inmovilizados son los primeros %i atomos' % (len(steady_list))
+    final = steady_list + else_list
+
+    final.insert(0, str(len(final))+'\n\n')
+
+    return final
+
+
+
+
+
+FILENAME = 'newout.xyz'
 MIN = 6.0
 MAX = 32.0
 
-OUTFILE = 'newout.xyz'
+OUTFILE = 'inmovilizar.xyz'
 
 infile = open(FILENAME, 'r')
 data = infile.readlines()
@@ -32,14 +47,20 @@ pos = data[2:]
 outf = open(OUTFILE, 'w')
 
 new_atoms = []
+garbage = []
 for line in pos:
     value = float(line.split()[3])
     if value > MIN and value < MAX:
         new_atoms.append(line)
+    else:
+        garbage.append(line)
 
-new_atoms.insert(0, str(len(new_atoms))+'\n\n')
+# Declare what you want to do
 
-for line in new_atoms:
+final_list = inmovilizar(garbage, new_atoms)
+
+# Write to file
+for line in final_list:
     outf.write(line)
 
 outf.close()
