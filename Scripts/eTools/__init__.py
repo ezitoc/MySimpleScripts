@@ -5,6 +5,7 @@ import sys
 import os
 import re
 import Siesta
+import Selection
 from itertools import count
 from pTools import *
 
