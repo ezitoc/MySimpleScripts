@@ -7,6 +7,7 @@ import re
 import Siesta
 import Selection
 from itertools import count
+from collections import namedtuple
 from pTools import *
 
 
@@ -30,21 +31,23 @@ def get_dirs(a_dir=None):
 def sort_list_of_strings(a_list):
     return sorted(a_list, key=lambda x:[int(y) for y in x.split('.')])
 
+Point = namedtuple('Point', 'x, y, z')
+
 class Atom(object):
 
     """ Atom class. Must be instantiated as:
-        an_atom = Atom(akey, x, y, z)
-        where akey is either the atomic number or the atom name.
+        an_atom = Atom(symbol, x, y, z)
+        where symbol is either the atomic number or the atom name.
         x, y and z are the atomic coordinates."""
 
-    def __init__(self, akey, x, y, z, siesta_move=(1,1,1)):
-        self.__position = (x, y, z)
+    def __init__(self, symbol, x, y, z, siesta_move=(1,1,1)):
+        self.__position = Point(x, y, z)
         self.siesta_move = siesta_move
 
-        if re.match(r'[a-zA-Z]+', akey):
-            self.symbol = akey
+        if re.match(r'[a-zA-Z]+', symbol):
+            self.symbol = symbol
         else:
-            self.atno = akey
+            self.atno = symbol
         if not self.symbol:
             self.symbol = self.atno_to_symbol()
 
@@ -64,10 +67,16 @@ class Atom(object):
     def symbol_to_atno(self):
         return symbol_to_atno[self.symbol]
 
+    def __repr__(self):
+        return '{name}({sym!r}, {pos.x}, {pos.y}, {pos.z})'.format(
+            name=self.__class__.__name__, sym=self.symbol,
+            pos=self.__position)
+
     #def __repr__(self):
         #return '%s %10.4f %10.4f %10.4f' % (self.symbol, self.__position[0],
                                             #self.__position[1],
                                             #self.__position[2])
+
 
 class Molecule(object):
 
