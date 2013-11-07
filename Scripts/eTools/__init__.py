@@ -40,6 +40,8 @@ class Atom(object):
         where symbol is either the atomic number or the atom name.
         x, y and z are the atomic coordinates."""
 
+    last_id = count()
+
     def __init__(self, symbol, x, y, z, siesta_move=(1,1,1)):
         self.__position = Point(x, y, z)
         self.siesta_move = siesta_move
@@ -51,15 +53,17 @@ class Atom(object):
         if not self.symbol:
             self.symbol = self.atno_to_symbol()
 
+        self.index = self.last_id.next()
+
     def get_position(self):
         return self.__position
 
     def set_position(self, x, y, z):
-        self.__position = (x, y, z)
+        self.__position = Point(x, y, z)
 
     def translate(self, x, y, z):
         x0, y0, z0 = self.__position
-        self.__position = (x0+x, y0+y, z0+z)
+        self.set_position(x0+x, y0+y, z0+z)
 
     def atno_to_symbol(self):
         return atno_to_symbol[self.atno]
@@ -70,7 +74,7 @@ class Atom(object):
     def __repr__(self):
         return '{name}({sym!r}, {pos.x}, {pos.y}, {pos.z})'.format(
             name=self.__class__.__name__, sym=self.symbol,
-            pos=self.__position)
+            pos=self.get_position())
 
     #def __repr__(self):
         #return '%s %10.4f %10.4f %10.4f' % (self.symbol, self.__position[0],
@@ -82,14 +86,17 @@ class Molecule(object):
 
     last_id = count()
 
-    def __init__(self, name='Generic', atom_list=[]):
+    def __init__(self, name='Generic', atom_list=None):
 
         if name == 'Generic':
             self.name = 'Generic' + str(self.last_id.next())
         else:
             self.name = name
 
-        self.atom_list = atom_list
+        if atom_list:
+            self.atom_list = atom_list
+        else:
+            self.atom_list = []
 
     def add_atom(self, atom):
         self.atom_list.append(atom)

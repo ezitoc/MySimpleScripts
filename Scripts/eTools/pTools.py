@@ -144,6 +144,17 @@ def FitData(x, y, type='Polynomial', force=False, grad=None):
     else:
         return x_new, ffit(x_new)
 
+def write_to_file(an_object, filename='default.xyz', type='xyz', mode='a'):
+
+    with open(filename, mode) as f:
+        if type == 'xyz':
+            f.write('%i\n\n' % len(an_object))
+            for atom in an_object:
+                f.write('%s %10.4f %10.4f %10.4f\n' % (atom.symbol,
+                                                        atom.get_position().x,
+                                                        atom.get_position().y,
+                                                        atom.get_position().z))
+
 
 def main():
     pass
