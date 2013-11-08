@@ -50,6 +50,17 @@ class Selection(eTools.Molecule):
                                       zmax)
         return self
 
+    def sphere(self, radius, center_atom=None, pos=None):
+        if not center_atom and not pos:
+            pos = eTools.Point(0, 0, 0)
+        elif pos:
+            pos = eTools.Point(pos[0], pos[1], pos[2])
+        elif atom:
+            pos = center_atom.get_position()
+
+
+
+
     def update_sel(self):
         for m_atom in self.atom_list:
             for i, o_atom in enumerate(self.orig_alist):
