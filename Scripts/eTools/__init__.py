@@ -4,6 +4,7 @@
 import sys
 import os
 import re
+import types
 import Siesta
 import Selection
 from itertools import count
@@ -101,8 +102,9 @@ class Molecule(object):
     def add_atom(self, atom):
         self.atom_list.append(atom)
 
-    def get_position(self):
-        return [atom.get_position() for atom in self.atom_list]
+    def remove_atom(self, i):
+        print 'Deleting {atom}'.format(atom=self.atom_list[i])
+        self.atom_list.pop(i)
 
     def load_from_file(self, filename, filetype='xyz'):
 
@@ -126,18 +128,65 @@ class Molecule(object):
                             float(spline[3]))
                 self.add_atom(an_atom)
 
-    def write_to_file(self, filename, type='xyz', mode='a'):
+    def move(self, x, y, z):
+        #for atom in self.atom_list:
+            #atom.translate(x, y, z)
+        self + [x, y, z]
+        return self
 
-        with open(filename, mode) as f:
-            if type == 'xyz':
-                f.write('%i\n\n' % self.__len__())
+    def __add__(self, an_object):
+
+        if isinstance(an_object, (self.__class__, Selection.Selection)):
+            #self.atom_list += an_object.atom_list
+            for atom in an_object:
+                self.add_atom(atom)
+
+        elif isinstance(an_object, Atom):
+            self.add_atom(an_object)
+
+        elif isinstance(an_object, types.ListType):
+            if len(an_object) == 3:
+                x, y, z = an_object
                 for atom in self.atom_list:
-                    f.write('%s %10.4f %10.4f %10.4f\n' % (atom.symbol,
-                                                         atom.get_position()[0],
-                                                         atom.get_position()[1],
-                                                         atom.get_position()[2]))
+                    atom.translate(x, y, z)
 
+        else:
+            raise IOError('Not addition supported of {name} object with \
+                            "{obj}"'.format(name=self.__class__.__name__,
+                            obj=an_object))
+        return self
 
+    def __sub__(self, an_object):
+
+        if isinstance(an_object, (self.__class__, Selection.Selection)):
+            #self.atom_list += an_object.atom_list
+            for i, orig_at in enumerate(self.atom_list):
+                for remove_at in an_object:
+                    if orig_at.index == remove_at.index:
+                        self.remove_atom(i)
+
+        elif isinstance(an_object, Atom):
+            for i, orig_at in enumerate(self.atom_list):
+                if orig_at.index == an_object.index:
+                    self.remove_atom(i)
+
+        elif isinstance(an_object, types.ListType):
+            if len(an_object) == 3:
+                x, y, z = an_object
+                for atom in self.atom_list:
+                    atom.translate(-1*x, -1*y, -1*z)
+
+        else:
+            raise IOError('Not addition supported of {name} object with \
+                            "{obj}"'.format(name=self.__class__.__name__,
+                            obj=an_object))
+        return self
+
+    def __radd__(self, an_object):
+        self.__add__(an_object)
+
+    def __rsub__(self, an_object):
+        self.__sub__(an_object)
 
     def __getitem__(self, index):
         return self.atom_list[index]
@@ -145,15 +194,14 @@ class Molecule(object):
     def __len__(self):
         return len(self.atom_list)
 
-    #def __repr__(self):
-        #str = 'This is a molecule named %s\n' % self.name
-        #str = str + 'It has %d atoms\n' % len(self.atom_list)
-        #return_str = ''
-        #for atom in self.atom_list:
-            #return_str = return_str + `atom` + '\n'
-        #return return_str
+    def __repr__(self):
+        return '{name}({atoms})'.format(name=self.__class__.__name__,
+                atoms=self.atom_list)
+
 
 class System(object):
+
+
     def __init__(self, molecule_list=None):
         self.molecule_list = molecule_list
 
