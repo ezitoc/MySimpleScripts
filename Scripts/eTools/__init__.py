@@ -5,12 +5,11 @@ import sys
 import os
 import re
 import types
-import Siesta
-import Selection
 from itertools import count
 from collections import namedtuple
 from pTools import *
 
+#__all__ = ['Atom', 'Molecule', 'Selection']
 
 atno_to_symbol = \
         {1: 'H',
@@ -47,7 +46,7 @@ class Atom(object):
         self.__position = Point(x, y, z)
         self.siesta_move = siesta_move
 
-        if re.match(r'[a-zA-Z]+', symbol):
+        if re.match(r'[a-zA-Z]+.*', symbol):
             self.symbol = symbol
         else:
             self.atno = symbol
@@ -77,11 +76,6 @@ class Atom(object):
             name=self.__class__.__name__, sym=self.symbol,
             pos=self.get_position())
 
-    #def __repr__(self):
-        #return '%s %10.4f %10.4f %10.4f' % (self.symbol, self.__position[0],
-                                            #self.__position[1],
-                                            #self.__position[2])
-
 
 class Molecule(object):
 
@@ -107,26 +101,38 @@ class Molecule(object):
         self.atom_list.pop(i)
 
     def load_from_file(self, filename, filetype='xyz'):
-
-
-        if filetype == 'xyz':
-            with open(filename, 'r') as f:
+        with open(filename, 'r') as f:
+            if filetype == 'xyz':
                 lines = f.readlines()[2:]
+            elif filetype == 'gro':
+                lines = [l.split() for l in f.readlines()[2:-1]]
+                lines = map(list, zip(*lines))
+                lines = [lines[1], lines[3], lines[4], lines[5]]
+                lines = map(list, zip(*lines))
+        self.load_from_list(lines, splitted=True)
 
-        self.load_from_list(lines)
-
-    def load_from_list(self, a_list):
-
+    def load_from_list(self, a_list, splitted=False):
         # Erase molecule
         self.atom_list = []
-
         for line in a_list:
-            spline = line.split()
-            if re.match(r'[a-zA-Z]+', spline[0]):
+            if splitted:
+                spline = line
+            else:
+                spline = line.split()
+            if re.match(r'[a-zA-Z]+.*', spline[0]):
                 an_atom = Atom(spline[0], float(spline[1]),
                             float(spline[2]),
                             float(spline[3]))
                 self.add_atom(an_atom)
+
+    def write_to_file(self, filename='default.xyz', fmt='xyz'):
+        with open(filename, 'w') as fout:
+            fout.write('{tot_at:5d}\n\n'.format(tot_at=len(self.atom_list)))
+            for atom in self.atom_list:
+                fout.write('{sym:3s}{x:13.8f}{y:13.8f}{z:13.8f}\n'.format(sym=atom.symbol,
+                                                                        x=atom.get_position().x,
+                                                                        y=atom.get_position().y,
+                                                                        z=atom.get_position().z))
 
     def move(self, x, y, z):
         #for atom in self.atom_list:
@@ -199,58 +205,69 @@ class Molecule(object):
                 atoms=self.atom_list)
 
 
-class System(object):
+class Selection(Molecule):
 
+    def __init__(self, a_system):
 
-    def __init__(self, molecule_list=None):
-        self.molecule_list = molecule_list
+        atom_list = []
 
-    def add_molecule(self, molecule):
-        self.molecule_list.append(molecule)
-        self.number_of_atoms = self.__len__()
+        if isinstance(a_system, Atom):
+            atom_list = a_system
 
-    def get_position(self):
-        return [pos for mol in self.molecule_list for pos in mol.get_position()]
+        elif isinstance(a_system, Molecule):
+            for atom in a_system:
+                atom_list.append(atom)
 
-    def get_species(self):
-        return list(set([atom.symbol for mol in self.molecule_list for atom in mol]))
+        elif isinstance(a_system, System):
+            for atom in a_system:
+                atom_list.append(atom)
 
-    #FIXME
-    #def xyz_to_zmatrix(self):
+        self.atom_list = atom_list
+        self.orig_alist = atom_list
 
-        #if os.path.isfile(self.InputFile):
-            #print "File \""+self.InputFile+"\" found."
-            #inputin = open(self.InputFile, 'r+')
-        #else:
-            #print "File \""+self.InputFile+"\" not found."
-            #sys.exit(1)
+    def _filter(self, func):
+        return filter(func, self.atom_list)
 
-        #inputin.write('\n#-- Atomic coordinates\n')
-        #inputin.write('%block Zmatrix\n')
-        #inputin.write('cartesian\n')
+    def remove_from_list(self, an_element):
+        if an_element in self.atom_list:
+            self.atom_list.remove(an_element)
 
-        #ostr = ''
-        #FIXME: self.system
-        #for i, atom in enumerate(self.system):
-            #ostr = ostr + '%2s%16.8f%16.8f%16.8f%3d%3d%3d%8d\n' % \
-                #(self.species_in_dict()[atom.symbol], atom.get_position()[0], atom.get_position()[1],
-                 #atom.get_position()[2], atom.siesta_move[0],
-                 #atom.siesta_move[1], atom.siesta_move[2], i+1)
+    def by_symbol(self, symbol):
+        self.atom_list = self._filter(lambda a: a.symbol == symbol)
+        return self
 
-        #return ostr
-        #inputin.write("""%endblock Zmatrix""")
-        #inputin.close()
-        #file.close()
+    def by_xrange(self, xmin, xmax):
+        self.atom_list = self._filter(lambda a: xmin <= a.get_position().x <=
+                                      xmax)
+        return self
 
-    def species_in_dict(self):
-        return {specie: i+1 for i, specie in enumerate(self.get_species())}
+    def by_yrange(self, ymin, ymax):
+        self.atom_list = self._filter(lambda a: ymin <= a.get_position().y <=
+                                      ymax)
+        return self
 
-    def __getitem__(self, index):
-        return [atom for mol in self.molecule_list for atom in mol][index]
+    def by_zrange(self, zmin, zmax):
+        self.atom_list = self._filter(lambda a: zmin <= a.get_position().z <=
+                                      zmax)
+        return self
 
-    def __len__(self):
-        total_atoms = 0
-        for molecule in self.molecule_list:
-            total_atoms += len(molecule)
-        return total_atoms
+    def sphere(self, radius, center_atom=None, pos=None):
+        if not center_atom and not pos:
+            pos = Point(0, 0, 0)
+        elif pos:
+            pos = Point(pos[0], pos[1], pos[2])
+        elif center_atom:
+            pos = center_atom.get_position()
+        self.atom_list = self._filter(lambda a: (a.get_position().x-pos.x)**2 +
+                                      (a.get_position().y-pos.y)**2 +
+                                      (a.get_position().z-pos.z)**2 <=
+                                      radius**2)
+        return self
 
+    def update_sel(self):
+        for m_atom in self.atom_list:
+            for i, o_atom in enumerate(self.orig_alist):
+                if m_atom.index == o_atom.index:
+                    self.orig_alist[i] = m_atom
+        self.atom_list = self.orig_alist
+        return self.atom_list
