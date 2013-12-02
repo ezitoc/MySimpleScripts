@@ -107,6 +107,8 @@ class Molecule(object):
             elif filetype == 'gro':
                 lines = [l.split() for l in f.readlines()[2:-1]]
                 lines = map(list, zip(*lines))
+                for a_list in
+                coords = map(float, [ lines[3], lines[4], lines[5] ])
                 lines = [lines[1], lines[3], lines[4], lines[5]]
                 lines = map(list, zip(*lines))
         self.load_from_list(lines, splitted=True)
@@ -114,6 +116,7 @@ class Molecule(object):
     def load_from_list(self, a_list, splitted=False):
         # Erase molecule
         self.atom_list = []
+        import pdb; pdb.set_trace()  # XXX BREAKPOINT
         for line in a_list:
             if splitted:
                 spline = line
