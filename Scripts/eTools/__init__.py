@@ -107,26 +107,26 @@ class Molecule(object):
             elif filetype == 'gro':
                 lines = [l.split() for l in f.readlines()[2:-1]]
                 lines = map(list, zip(*lines))
-                for a_list in
-                coords = map(float, [ lines[3], lines[4], lines[5] ])
-                lines = [lines[1], lines[3], lines[4], lines[5]]
-                lines = map(list, zip(*lines))
+                namelst = lines[1]
+                lines = [map(float, a_list) for a_list in lines[3:]]
+                lines.insert(0, namelst)
+                lines = zip(*lines)
+
         self.load_from_list(lines, splitted=True)
 
     def load_from_list(self, a_list, splitted=False):
         # Erase molecule
         self.atom_list = []
-        import pdb; pdb.set_trace()  # XXX BREAKPOINT
         for line in a_list:
             if splitted:
                 spline = line
             else:
                 spline = line.split()
-            if re.match(r'[a-zA-Z]+.*', spline[0]):
-                an_atom = Atom(spline[0], float(spline[1]),
-                            float(spline[2]),
-                            float(spline[3]))
-                self.add_atom(an_atom)
+            #if re.match(r'[a-zA-Z]+.*', spline[0]):
+            an_atom = Atom(spline[0], float(spline[1]),
+                        float(spline[2]),
+                        float(spline[3]))
+            self.add_atom(an_atom)
 
     def write_to_file(self, filename='default.xyz', fmt='xyz'):
         with open(filename, 'w') as fout:
