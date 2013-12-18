@@ -6,7 +6,6 @@ import os
 import re
 import types
 from itertools import count
-from collections import namedtuple
 from pTools import *
 
 #__all__ = ['Atom', 'Molecule', 'Selection']
@@ -22,6 +21,54 @@ atno_to_symbol = \
 
 symbol_to_atno = dict([[v,k] for k,v in atno_to_symbol.items()])
 
+DefaultSiestaKeys = \
+    {'SystemName': 'siesta',
+    'SystemLabel': 'siesta',
+    'NumberOfSpecies': None,
+    'NumberOfAtoms': None,
+    'PAO_BasisType': 'split',
+    'PAO_BasisSize': 'DZP',
+    'PAO_EnergyShift': '0.01 eV',
+    'PAO_SplitNorm': '0.15',
+    'MeshCutoff': '200.0 Ry',
+    'AtomicCoordinatesFormat': 'Ang',
+    'AtomCoorFormatOut': 'Ang',
+    'WriteCoorXmol': 'T',
+    'WriteMDXmol': 'T',
+    'WriteMDhistory': 'T',
+    'MD_UseSaveXV': 'T',
+    'DM_UseSaveDM': 'T',
+    'MD_UseSaveCG': 'T',
+    'XC_functional': 'GGA',
+    'XC_authors': 'PBE',
+    'SpinPolarized': 'T',
+    'MaxSCFIterations': '500',
+    'DM_MixingWeight': '0.01',
+    'DM_NumberPulay': '4',
+    'DM_Tolerance': '0.0001',
+    'SolutionMethod': 'diagon',
+    'MD_TypeOfRun': 'CG',
+    'MD_MaxForceTol': '0.01 eV/Ang',
+    'MD_NumCGsteps': '500',
+    'MD_MaxCGDispl': '0.05  Ang',
+    'LatticeConstant': '1.0 Ang',
+    'ZM_UnitsLength': 'Ang',
+    'ZM_UnitsAngle': 'deg'}
+
+DefaultSiestaBlockKeys = \
+    {'ChemicalSpeciesLabel': None,
+    'Kgrid_Monkhorst_Pack': None,
+    'LatticeVectors': None,
+    'AtomicCoordinatesOrigin': [0, 0, 0],
+    'Zmatrix': None}
+
+SiestaKeysFormat = \
+    {'ChemicalSpeciesLabel': '%3i%5i%10s\n',
+    'Kgrid_Monkhorst_Pack': '%4i%4i%4i%8.1f\n',
+    'LatticeVectors': None,
+    'AtomicCoordinatesOrigin': None,
+    'Zmatrix': '%4i%12.4f%12.4f%12.4f%3i%3i%3i\n'}
+
 def get_dirs(a_dir=None):
     if not a_dir:
         a_dir = os.curdir
@@ -31,7 +78,18 @@ def get_dirs(a_dir=None):
 def sort_list_of_strings(a_list):
     return sorted(a_list, key=lambda x:[int(y) for y in x.split('.')])
 
-Point = namedtuple('Point', 'x, y, z')
+def is_mono_dim_list(a_list):
+    for elem in a_list:
+        if isinstance(elem, types.ListType):
+            return False
+    return True
+
+class AttrDict(dict):
+    """ Class for accessing dict keys like an attribute  """
+    def __init__(self, *args, **kwargs):
+        super(AttrDict, self).__init__(*args, **kwargs)
+        self.__dict__ = self
+
 
 class Atom(object):
 
@@ -42,8 +100,10 @@ class Atom(object):
 
     last_id = count()
 
-    def __init__(self, symbol, x, y, z, siesta_move=(1,1,1)):
-        self.__position = Point(x, y, z)
+    def __init__(self, symbol, pos, siesta_move=(1,1,1)):
+
+        #self.pos = Point(x, y, z)
+        self.set_position(pos)
         self.siesta_move = siesta_move
 
         if re.match(r'[a-zA-Z]+.*', symbol):
@@ -55,15 +115,24 @@ class Atom(object):
 
         self.index = self.last_id.next()
 
-    def get_position(self):
-        return self.__position
+    def set_position(self, pos):
+        #if pos:
+        if len(pos) == 3:
+            self.pos = np.array(pos)
 
-    def set_position(self, x, y, z):
-        self.__position = Point(x, y, z)
+    def get_position(self, coord=None):
+        if coord:
+            if coord == 'x':
+                return self.pos[0]
+            if coord == 'y':
+                return self.pos[1]
+            if coord == 'z':
+                return self.pos[2]
+        else:
+            return self.pos
 
-    def translate(self, x, y, z):
-        x0, y0, z0 = self.__position
-        self.set_position(x0+x, y0+y, z0+z)
+    def translate(self, vec):
+        self.set_position(self.pos + vec)
 
     def atno_to_symbol(self):
         return atno_to_symbol[self.atno]
@@ -71,10 +140,22 @@ class Atom(object):
     def symbol_to_atno(self):
         return symbol_to_atno[self.symbol]
 
+    def __add__(self, vec):
+        self.pos += vec
+
+    def __sub__(self, vec):
+        self.pos -= vec
+
+    def __radd__(self, an_object):
+        self.__add__(an_object)
+
+    def __rsub____(self, an_object):
+        self.__sub__(an_object)
+
     def __repr__(self):
-        return '{name}({sym!r}, {pos.x}, {pos.y}, {pos.z})'.format(
+        return '{name}({sym!r}, {pos})'.format(
             name=self.__class__.__name__, sym=self.symbol,
-            pos=self.get_position())
+            pos=self.pos)
 
 
 class Molecule(object):
@@ -101,51 +182,57 @@ class Molecule(object):
         self.atom_list.pop(i)
 
     def load_from_file(self, filename, filetype='xyz'):
+
+        if filetype == 'xyz':
+            firstAtLine = 2
+            lastAtLine = None
+            nameCol = 0
+            firstPosCol = 1
+            lastPosCol = 4
+            toAng = 1
+        elif filetype == 'gro':
+            firstAtLine = 2
+            lastAtLine = -1
+            nameCol = 1
+            firstPosCol = 3
+            lastPosCol = 6
+            toAng = 10
+
         with open(filename, 'r') as f:
-            if filetype == 'xyz':
-                lines = f.readlines()[2:]
-            elif filetype == 'gro':
-                lines = [l.split() for l in f.readlines()[2:-1]]
-                lines = map(list, zip(*lines))
-                namelst = lines[1]
-                lines = [map(float, a_list) for a_list in lines[3:]]
-                lines.insert(0, namelst)
-                lines = zip(*lines)
 
-        self.load_from_list(lines, splitted=True)
+            lines = [l.split() for l in f.readlines()[firstAtLine:lastAtLine]]
+            lines = map(list, zip(*lines))
+            namelst = lines[nameCol]
+            lines = [map(float, a_list) for a_list in lines[firstPosCol:lastPosCol]]
+            posarr = np.array(lines)*toAng
+            posarr = posarr.T
 
-    def load_from_list(self, a_list, splitted=False):
-        # Erase molecule
-        self.atom_list = []
-        for line in a_list:
-            if splitted:
-                spline = line
-            else:
-                spline = line.split()
-            #if re.match(r'[a-zA-Z]+.*', spline[0]):
-            an_atom = Atom(spline[0], float(spline[1]),
-                        float(spline[2]),
-                        float(spline[3]))
-            self.add_atom(an_atom)
+        self.atom_list = [Atom(namelst[i], pos) for i, pos in enumerate(posarr)]
 
     def write_to_file(self, filename='default.xyz', fmt='xyz'):
         with open(filename, 'w') as fout:
             fout.write('{tot_at:5d}\n\n'.format(tot_at=len(self.atom_list)))
             for atom in self.atom_list:
                 fout.write('{sym:3s}{x:13.8f}{y:13.8f}{z:13.8f}\n'.format(sym=atom.symbol,
-                                                                        x=atom.get_position().x,
-                                                                        y=atom.get_position().y,
-                                                                        z=atom.get_position().z))
+                                                                        x=atom.pos[0],
+                                                                        y=atom.pos[1],
+                                                                        z=atom.pos[2]))
 
-    def move(self, x, y, z):
-        #for atom in self.atom_list:
-            #atom.translate(x, y, z)
-        self + [x, y, z]
-        return self
+    def get_geometry_center(self):
+        asum = np.zeros(3)
+        for atom in self.atom_list:
+            asum += atom.pos
+        asum /= len(self.atom_list)
+        return asum
+
+    def get_species(self):
+        return list(set([atom.symbol for atom in self.atom_list]))
+        #return {i+1:specie for i, specie in enumerate(species)}
+        #return OrderedDict({i+1:specie for i, specie in enumerate(species)})
 
     def __add__(self, an_object):
 
-        if isinstance(an_object, (self.__class__, Selection.Selection)):
+        if isinstance(an_object, (self.__class__, Selection)):
             #self.atom_list += an_object.atom_list
             for atom in an_object:
                 self.add_atom(atom)
@@ -153,11 +240,9 @@ class Molecule(object):
         elif isinstance(an_object, Atom):
             self.add_atom(an_object)
 
-        elif isinstance(an_object, types.ListType):
-            if len(an_object) == 3:
-                x, y, z = an_object
-                for atom in self.atom_list:
-                    atom.translate(x, y, z)
+        elif isinstance(an_object, (types.ListType, np.array)):
+            for atom in self.atom_list:
+                atom + an_object
 
         else:
             raise IOError('Not addition supported of {name} object with \
@@ -167,7 +252,7 @@ class Molecule(object):
 
     def __sub__(self, an_object):
 
-        if isinstance(an_object, (self.__class__, Selection.Selection)):
+        if isinstance(an_object, (self.__class__, Selection)):
             #self.atom_list += an_object.atom_list
             for i, orig_at in enumerate(self.atom_list):
                 for remove_at in an_object:
@@ -179,11 +264,9 @@ class Molecule(object):
                 if orig_at.index == an_object.index:
                     self.remove_atom(i)
 
-        elif isinstance(an_object, types.ListType):
-            if len(an_object) == 3:
-                x, y, z = an_object
-                for atom in self.atom_list:
-                    atom.translate(-1*x, -1*y, -1*z)
+        elif isinstance(an_object, (types.ListType, np.array)):
+            for atom in self.atom_list:
+                atom - an_object
 
         else:
             raise IOError('Not addition supported of {name} object with \
@@ -199,6 +282,7 @@ class Molecule(object):
 
     def __getitem__(self, index):
         return self.atom_list[index]
+        #return self.atom_list[index-1]
 
     def __len__(self):
         return len(self.atom_list)
@@ -240,30 +324,28 @@ class Selection(Molecule):
         return self
 
     def by_xrange(self, xmin, xmax):
-        self.atom_list = self._filter(lambda a: xmin <= a.get_position().x <=
+        self.atom_list = self._filter(lambda a: xmin <= a.pos[0] <=
                                       xmax)
         return self
 
     def by_yrange(self, ymin, ymax):
-        self.atom_list = self._filter(lambda a: ymin <= a.get_position().y <=
+        self.atom_list = self._filter(lambda a: ymin <= a.pos[1] <=
                                       ymax)
         return self
 
     def by_zrange(self, zmin, zmax):
-        self.atom_list = self._filter(lambda a: zmin <= a.get_position().z <=
+        self.atom_list = self._filter(lambda a: zmin <= a.pos[2] <=
                                       zmax)
         return self
 
-    def sphere(self, radius, center_atom=None, pos=None):
-        if not center_atom and not pos:
-            pos = Point(0, 0, 0)
-        elif pos:
-            pos = Point(pos[0], pos[1], pos[2])
+    def sphere(self, radius, pos=None, center_atom=None):
+        if pos.any():
+            center = pos
         elif center_atom:
-            pos = center_atom.get_position()
-        self.atom_list = self._filter(lambda a: (a.get_position().x-pos.x)**2 +
-                                      (a.get_position().y-pos.y)**2 +
-                                      (a.get_position().z-pos.z)**2 <=
+            center = center_atom.pos
+        else:
+            center = np.zeros(3)
+        self.atom_list = self._filter(lambda a: np.linalg.norm(a.pos - center) <=
                                       radius**2)
         return self
 
@@ -274,3 +356,117 @@ class Selection(Molecule):
                     self.orig_alist[i] = m_atom
         self.atom_list = self.orig_alist
         return self.atom_list
+
+
+class Siesta(object):
+
+    def __init__(self, sys=None, inFile='input.fdf', outFile='output.out',
+            errFile='err.log', siesta='siesta', suffix='-PBE'):
+        self.system = sys
+        self.inFile = inFile
+        self.outFile = outFile
+        self.errFile = errFile
+        self.siesta = siesta
+        self.pseudoSuffix = suffix
+        self.keys = AttrDict(DefaultSiestaKeys)
+        self.blockKeys = AttrDict(DefaultSiestaBlockKeys)
+
+        self.species = AttrDict({specie: i+1 for i, specie in
+                                 enumerate(self.system.get_species())})
+        self.siesta_system_attr()
+        self.setSysDepKeys()
+        #self.xyzFile = SystemLabel+'.xyz'
+        #self.aniFile = SystemLabel+'.ANI'
+
+    def siesta_system_attr(self):
+        for atom in self.system:
+            atom.zmatMove = [1, 1, 1]
+            atom.specieNo = self.species[atom.symbol]
+
+    def constrain(self, atomNumber, vec=[0, 0, 0]):
+        self.system[atomNumber-1].zmatMove = vec
+
+    def setSysDepKeys(self):
+        self.keys.NumberOfSpecies = len(self.system.get_species())
+        self.keys.NumberOfAtoms = len(self.system)
+        self.blockKeys.ChemicalSpeciesLabel = \
+        [[self.species[specie], symbol_to_atno[specie],
+          specie+self.pseudoSuffix] for specie in self.species]
+
+        self.blockKeys.Zmatrix = \
+        [[atom.specieNo, atom.pos[0], atom.pos[1], atom.pos[2],
+          atom.zmatMove[0], atom.zmatMove[1], atom.zmatMove[2]] for atom in
+         self.system]
+
+        self.setKgrid()
+        self.setLatticeVectors()
+
+    def setKgrid(self, kpoints=1):
+        self.blockKeys.Kgrid_Monkhorst_Pack = np.hstack((np.identity(3),np.zeros((3,1))))
+
+    def setLatticeVectors(self, latvec=None):
+        if latvec:
+            self.blockKeys.LatticeVectors = np.array(latvec)
+        else:
+            self.blockKeys.LatticeVectors = np.identity(3)*10
+
+    #def zmaMolecule(self, mol):
+
+    def createInput(self):
+        inF = open(self.inFile, 'w')
+
+        for a_key in self.keys:
+            inF.write('{keyword:<30}{value:>15}\n'.format(keyword=a_key,
+                                                          value=self.keys[a_key]))
+
+        for a_key in self.blockKeys:
+            inF.write('%block {}\n'.format(a_key))
+
+            if a_key is 'ChemicalSpeciesLabel':
+                for line in self.blockKeys[a_key]:
+                    inF.write(SiestaKeysFormat['ChemicalSpeciesLabel'] % tuple(line))
+
+            elif a_key is 'Zmatrix':
+                for line in self.blockKeys[a_key]:
+                    inF.write(SiestaKeysFormat['Zmatrix'] % tuple(line))
+
+            elif a_key is 'Kgrid_Monkhorst_Pack':
+                for line in self.blockKeys[a_key]:
+                    inF.write(SiestaKeysFormat['Kgrid_Monkhorst_Pack'] % tuple(line))
+
+            elif isinstance(self.blockKeys[a_key], np.ndarray):
+                np.savetxt(inF, self.blockKeys[a_key], fmt='%6.3f')
+
+            elif isinstance(self.blockKeys[a_key], types.ListType):
+                if is_mono_dim_list(self.blockKeys[a_key]):
+                    for elem in self.blockKeys[a_key]:
+                        inF.write('%6.3f' % elem)
+                    inF.write('\n')
+
+            inF.write('%endblock {}\n'.format(a_key))
+        inF.close()
+
+    def run(self):
+        inF = open(self.inFile, 'r')
+        outF = open(self.outFile, 'w')
+        errF = open(self.errFile, 'w')
+
+        p = subprocess.Popen([self.siesta], stdin=inF, stdout=outF,
+                             stderr=errF)
+        p.wait()
+        inF.close()
+        outF.flush()
+        errF.flush()
+        outF.close()
+        errF.close()
+
+    def Input_load(self):
+        if os.path.isfile(self.inFile):
+            print 'File "{}" found.'.format(self.inFile)
+            inF = open(inFile, 'r+')
+        else:
+            raise IOError('File "{}" not found.'.format(self.inFile))
+
+        #for line in inF:
+
+
