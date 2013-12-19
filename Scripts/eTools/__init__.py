@@ -410,7 +410,16 @@ class Siesta(object):
         else:
             self.blockKeys.LatticeVectors = np.identity(3)*10
 
-    #def zmaMolecule(self, mol):
+    def zmaMolecule(self, mol):
+        zmaMolecule = []
+        for i, atom in enumerate(mol):
+            if i is 0:
+                zmaMolecule.append([atom.specieNo, 0, 0, 0, atom.pos[0],
+                                    atom.pos[1], atom.pos[2],
+                                    atom.siesta_move[0], atom.siesta_move[1],
+                                    atom.siesta_move[2]])
+            if i is 1:
+                zmaMolecule.append([atom.specieNo, 1, 0, 0]<++>)<++>
 
     def createInput(self):
         inF = open(self.inFile, 'w')
