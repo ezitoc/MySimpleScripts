@@ -85,8 +85,10 @@ def get_dirs(a_dir=None):
     files = os.listdir(a_dir)
     return [ f for f in files if os.path.isdir(os.path.join(a_dir, f)) ]
 
+
 def sort_list_of_strings(a_list):
     return sorted(a_list, key=lambda x:[int(y) for y in x.split('.')])
+
 
 def is_mono_dim_list(a_list):
     for elem in a_list:
@@ -94,12 +96,14 @@ def is_mono_dim_list(a_list):
             return False
     return True
 
+
 def get_distance(obj1, obj2):
     if isinstance(obj1, Atom):
         pos1 = obj1.pos
     if isinstance(obj2, Atom):
         pos2 = obj2.pos
     return np.linalg.norm(pos1-pos2)
+
 
 def find_shortest_path(graph, start, end, path=[]):
     path = path + [start]
@@ -116,32 +120,6 @@ def find_shortest_path(graph, start, end, path=[]):
                     shortest = newpath
     return shortest
 
-def find_shortest_path(graph, start, length, path=[]):
-    path = path + [start]
-    #if start == end:
-    if len(path) == length
-        return path
-    if not graph.has_key(start):
-        return None
-    shortest = None
-    for node in graph[start]:
-        if node not in path:
-            newpath = find_shortest_path(graph, node, length-1, path)
-            if newpath:
-                if not shortest or len(newpath) < len(shortest):
-                    shortest = newpath
-    return shortest
-
-#def path_finder(graph, length, path=[]):
-    ##if not graph.has_key(start)
-    ##result = []
-    #for key in graph:
-        #a_path = [start]
-        #if length == 1:
-            #path.append(a_path)
-        #for node in graph[start]:
-            #if node == start:
-                #pass
 
 def get_angle(vec1, vec2):
     angle = np.arccos(np.inner(vec1, vec2)/
@@ -149,11 +127,194 @@ def get_angle(vec1, vec2):
     return np.rad2deg(angle)
 
 
+#def find_all_paths(graph, start, end, path=[]):
+    #path = path + [start]
+    #if start == end:
+        #return [path]
+    #if not graph.has_key(start):
+        #return []
+    #paths = []
+    #for node in graph[start]:
+        #if node not in path:
+            #newpaths = find_all_paths(graph, node, end, path)
+            #for newpath in newpaths:
+                #paths.append(newpath)
+    #return paths
+
+
 class AttrDict(dict):
     """ Class for accessing dict keys like an attribute  """
     def __init__(self, *args, **kwargs):
         super(AttrDict, self).__init__(*args, **kwargs)
         self.__dict__ = self
+
+
+class Graph(object):
+    def __init__(self, name='', adjList=None):
+        self.name = name
+        self.vertices = {} # vertex list
+        self.edges = [] # edge list
+        if adjList:
+            self.origAdjList = adjList
+            self.adjacencyList = self.load_graph(adjList)
+
+    def load_graph(self, graph):
+        for v in graph:
+            self.add_vertex(v)
+
+        adjacencyList = {}
+        for u in graph:
+            for vertex1 in self.vertices:
+                if vertex1.vertex is u:
+                    adjacencyList[vertex1] = []
+                    for i, v in enumerate(graph[u]):
+                        for vertex2 in self.vertices:
+                            if vertex2.vertex is v:
+                                adjacencyList[vertex1].append(vertex2)
+                                self.add_edge(vertex1, vertex2)
+        return adjacencyList
+
+    def add_vertex(self, v):
+        if isinstance(v, Vertex):
+            vertex = v
+        else:
+            vertex = Vertex(v)
+
+        #self.vertices.append(vertex)
+        self.vertices[vertex] = vertex.vertex
+        #return vertex
+
+    def add_edge(self, u, v):
+        self.edges.append(Edge(u, v))
+
+    #def breadth_first_search(self, start):
+        #Q = [start]
+        #D = {node:'inf' for node in self.adjacencyList}
+        #D[start] = 0
+        #T = []
+        #while len(Q) > 0:
+            #u = Q.pop(0)
+            #for v in graph[u]:
+                #if D[v] == 'inf':
+                    #D[v] = D[u]+1
+                    #Q.append(v)
+                    #T.append([u, v])
+        #return (D, T)
+
+    def breadth_first_search(self, start):
+        T = Tree(adjList=self.origAdjList)
+        #vertices = self.adjacencyList.copy()
+        #T.add_vertex(v=vertices.pop(start), lvl=0, parent=None)
+        for vertex in T.vertices:
+            if vertex.vertex is start.vertex:
+                T.root = vertex
+                vertex.level = 0
+                vertex.parent = None
+                start = vertex
+            else:
+                vertex.level = 'inf'
+                vertex.parent = None
+        #D = {node:'inf' for node in self.adjacencyList}
+        #D[start] = 0
+        Q = [start]
+        while len(Q) > 0:
+            u = Q.pop(0)
+            for v in T.adjacencyList[u]:
+                if v.level == 'inf':
+                    v.level = u.level + 1
+                    v.parent = u
+                    #T.add_vertex(v)
+                    T.add_edge(u, v)
+                    Q.append(v)
+        return T
+
+    #def depth_first_search(self):
+        #for vertex in self.vertices:
+            #vertex.level = 'inf'
+            #vertex.parent = None
+        #time = 0
+        #for vertex in self.vertices:
+            #if vertex.color  is 'inf':
+                #DFS_visit()
+
+    #def DFS_visit(self, v):
+        #pass
+
+    def find_path(graph, start, end, path=[]):
+        path = path + [start]
+        if start == end:
+            return path
+        if not graph.has_key(start):
+            return None
+        for node in graph[start]:
+            if node not in path:
+                newpath = find_path(graph, node, end, path)
+                if newpath: return newpath
+        return None
+
+    def find_all_paths(start, end, path=[]):
+        path = path + [start]
+        if start == end:
+            return [path]
+        if not self.adjacencyList.has_key(start):
+            return []
+        paths = []
+        for node in self.adjacencyList[start]:
+            if node not in path:
+                newpaths = find_all_paths(node, end, path)
+                for newpath in newpaths:
+                    paths.append(newpath)
+        return paths
+
+
+class Vertex(object):
+    def __init__(self, v=None):
+        self.vertex = v
+
+    def __repr__(self):
+        return '%s' % (self.vertex,)
+
+
+class Edge(object):
+    def __init__(self, u=None, v=None):
+        self.edge = (u, v)
+
+    def __repr__(self):
+        return '%s--%s' % (self.edge[0], self.edge[1])
+
+
+class Tree(Graph):
+    def __init__(self, adjList=None):
+        Graph.__init__(self, name=None, adjList=adjList)
+        self.root = None
+
+    def add_vertex(self, v):
+        if isinstance(v, Vertex):
+            vertex = TreeVertex(v.vertex)
+        else:
+            vertex = TreeVertex(v)
+
+        self.vertices[vertex] = vertex.vertex
+
+    def get_length_paths(self, n):
+        result = []
+        for vertex in self.vertices:
+            if vertex.level is n-1:
+                a_path = []
+                in_vertex = vertex
+                #while in_vertex.parent:
+                for i in range(n):
+                    a_path.append(in_vertex.vertex)
+                    in_vertex = in_vertex.parent
+                result.append(a_path)
+        return result
+
+
+class TreeVertex(Vertex):
+    def __init__(self, v, level=None, parent=None):
+        self.vertex = v
+        self.level = level
+        self.parent = parent
 
 
 class Atom(object):
@@ -252,7 +413,7 @@ class Molecule(object):
             self.load_from_file(fromFile)
 
         self.get_conections()
-        self.get_structure()
+        #self.get_structure()
 
     def update_mol(self):
         for i, atom in enumerate(self.atoms):
@@ -332,22 +493,33 @@ class Molecule(object):
         return conections
 
     def get_structure(self):
+        G = Graph(adjList=self.conections)
         bonds = []
         angles = []
         dihedrals = []
         not_bonded = []
-        for i, f_atom in enumerate(self.atoms):
-            for s_atom in self.atoms[i+1:]:
-                conect = find_shortest_path(self.conections, f_atom, s_atom)
-                if conect:
-                    if len(conect) == 2:
-                        bonds.append(conect)
-                    elif len(conect) == 3:
-                        angles.append(Angle(conect))
-                    elif len(conect) == 4:
-                        dihedrals.append(Dihedral(conect))
-                    else:
-                        not_bonded.append(conect)
+        for vertex in G.vertices:
+            T = G.breadth_first_search(vertex)
+            import pdb; pdb.set_trace()  # XXX BREAKPOINT
+            bonds += T.get_length_paths(2)
+            angles += T.get_length_paths(3)
+            dihedrals += T.get_length_paths(4)
+        #for i, f_atom in enumerate(self.atoms):
+            #for s_atom in self.atoms[i+1:]:
+                #conect = find_shortest_path(self.conections, f_atom, s_atom)
+                #if conect:
+                    #if len(conect) == 2:
+                        #bonds.append(conect)
+                    #elif len(conect) == 3:
+                        #angles.append(Angle(conect))
+                    #elif len(conect) == 4:
+                        #dihedrals.append(Dihedral(conect))
+                    #else:
+                        #not_bonded.append(conect)
+        for type_ in [bonds, angles, dihedrals, not_bonded]:
+            for conection in type_:
+                if conection[::-1] in type_:
+                    type_.remove(conection)
         self.bonds = bonds
         self.angles = angles
         self.dihedrals = dihedrals
