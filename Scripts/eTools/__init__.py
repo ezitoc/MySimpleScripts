@@ -17,6 +17,7 @@ atno_to_symbol = \
          7: 'N',
          8: 'O',
         16: 'S',
+        26: 'Fe',
         79: 'Au'}
 
 symbol_to_atno = dict([[v,k] for k,v in atno_to_symbol.items()])
@@ -28,6 +29,7 @@ VdW_Radii = \
          7: 0.75,
          8: 0.73,
         16: 1.02,
+        26: 0.75,
         79: 1.44
          }
 
@@ -102,7 +104,7 @@ def get_distance(obj1, obj2):
         pos1 = obj1.pos
     if isinstance(obj2, Atom):
         pos2 = obj2.pos
-    return np.linalg.norm(pos1-pos2)
+    return np.linalg.norm(pos1 - pos2)
 
 
 def find_shortest_path(graph, start, end, path=[]):
@@ -152,7 +154,8 @@ class AttrDict(dict):
 class Graph(object):
     def __init__(self, name='', adjList=None):
         self.name = name
-        self.vertices = {} # vertex list
+        #self.vertices = {} # vertex list
+        self.vertices = [] # vertex list
         self.edges = [] # edge list
         if adjList:
             self.origAdjList = adjList
@@ -180,8 +183,8 @@ class Graph(object):
         else:
             vertex = Vertex(v)
 
-        #self.vertices.append(vertex)
-        self.vertices[vertex] = vertex.vertex
+        self.vertices.append(vertex)
+        #self.vertices[vertex] = vertex.vertex
         #return vertex
 
     def add_edge(self, u, v):
@@ -252,7 +255,7 @@ class Graph(object):
                 if newpath: return newpath
         return None
 
-    def find_all_paths(start, end, path=[]):
+    def find_all_paths(self, start, end, path=[]):
         path = path + [start]
         if start == end:
             return [path]
@@ -261,7 +264,7 @@ class Graph(object):
         paths = []
         for node in self.adjacencyList[start]:
             if node not in path:
-                newpaths = find_all_paths(node, end, path)
+                newpaths = self.find_all_paths(node, end, path)
                 for newpath in newpaths:
                     paths.append(newpath)
         return paths
@@ -498,12 +501,26 @@ class Molecule(object):
         angles = []
         dihedrals = []
         not_bonded = []
-        for vertex in G.vertices:
-            T = G.breadth_first_search(vertex)
-            import pdb; pdb.set_trace()  # XXX BREAKPOINT
-            bonds += T.get_length_paths(2)
-            angles += T.get_length_paths(3)
-            dihedrals += T.get_length_paths(4)
+        for vertex1 in G.vertices:
+            for vertex2 in G.vertices:
+                conections = G.find_all_paths(vertex1, vertex2)
+                if len(conections[0]) > 1:
+                    for conection in conections:
+                        if len(conection) == 2:
+                            bonds.append(Bond(conection))
+                        elif len(conection) == 3:
+                            angles.append(Angle(conection))
+                        elif len(conection) == 4:
+                            dihedrals.append(Dihedral(conection))
+                        else:
+                            not_bonded.append(conection)
+
+        #for vertex in G.vertices:
+            #T = G.breadth_first_search(vertex)
+            #import pdb; pdb.set_trace()  # XXX BREAKPOINT
+            #bonds += T.get_length_paths(2)
+            #angles += T.get_length_paths(3)
+            #dihedrals += T.get_length_paths(4)
         #for i, f_atom in enumerate(self.atoms):
             #for s_atom in self.atoms[i+1:]:
                 #conect = find_shortest_path(self.conections, f_atom, s_atom)
@@ -518,6 +535,7 @@ class Molecule(object):
                         #not_bonded.append(conect)
         for type_ in [bonds, angles, dihedrals, not_bonded]:
             for conection in type_:
+                import pdb; pdb.set_trace()  # XXX BREAKPOINT
                 if conection[::-1] in type_:
                     type_.remove(conection)
         self.bonds = bonds
@@ -596,25 +614,80 @@ class Molecule(object):
                 atoms=self.atoms)
 
 
-class Bond(object):
-    pass
+class Conection(object):
+
+    def get_atoms_from_list(self, list_):
+
+        self.atoms = []
+
+        if len(list_) is 1:
+            list_ = list_[0]
+
+        #if type_ is 'Bond':
+            #l = 2
+        #elif type_ is 'Angle':
+            #l = 3
+        #elif type_ is 'Dihedral':
+            #l = 4
+
+        for elem in list_:
+            if isinstance(elem, Atom):
+                self.atoms.append(elem)
+            elif isinstance(elem, Vertex):
+                self.atoms.append(elem.vertex)
+
+    def __getitem__(self, index):
+        return self.atoms[index]
+
+    def __len__(self):
+        return len(self.atoms)
+
+    def __contains__(self, x):
+        return x in self.atoms
+
+class Bond(Conection):
+    def __init__(self, *args):
+
+        self.get_atoms_from_list(args)
+
+        vec1 = self.atoms[0].pos - self.atoms[1].pos
+
+        self.distance = get_distance(self.atoms[0], self.atoms[1])
+
+    def set_angle(self):
+        pass
+
+    def __add__(self):
+        pass
+
+    def __radd__(self):
+        pass
+
+    def __sub__(self):
+        pass
+
+    def __rsub__(self):
+        pass
+
+    def __repr__(self):
+        return '{name} {at1} {at2} = {distance} Angstroms'.format(name=self.__class__.__name__,
+                at1=self.atoms[0], at2=self.atoms[1], distance=self.distance)
 
 
-class Angle(object):
-    def __init__(self,*args):
-        if len(args) is 1:
-            if isinstance(args[0], types.ListType):
-                self.atom1, self.atom2, self.atom3 = args[0]
-        elif len(args) is 3:
-            for elem in args:
-                if not isinstance(elem, Atom):
-                    raise TypeError('Not Atom Instance')
-            self.atom1, self.atom2, self.atom3 = args
-        else:
-            raise IOError('A list of three atom or three atoms needed')
+class Angle(Conection):
+    def __init__(self, *args):
 
-        vec1 = self.atom1.pos - self.atom2.pos
-        vec2 = self.atom3.pos - self.atom2.pos
+        self.get_atoms_from_list(args)
+
+        #if len(args) is 1:
+            #self.get_atoms_from_list(args[0])
+        #elif len(args) is 3:
+            #self.get_atoms_from_list(args)
+        #else:
+            #raise IOError('A list of three atom or three atoms needed')
+
+        vec1 = self.atoms[0].pos - self.atoms[1].pos
+        vec2 = self.atoms[2].pos - self.atoms[1].pos
 
         self.angle = get_angle(vec1, vec2)
 
@@ -634,27 +707,30 @@ class Angle(object):
         pass
 
     def __repr__(self):
-        return '{name} {at1} {at2} {at3} = {angle}'.format(name=self.__class__.__name__,
-                at1=self.atom1, at2=self.atom2, at3=self.atom3, angle=self.angle)
+        return '{name} {at1} {at2} {at3} = {angle} º'.format(name=self.__class__.__name__,
+                at1=self.atoms[0], at2=self.atoms[1], at3=self.atoms[2], angle=self.angle)
 
 
-class Dihedral(object):
+class Dihedral(Conection):
     def __init__(self,*args):
-        if len(args) is 1:
-            if isinstance(args[0], types.ListType):
-                self.atom1, self.atom2, self.atom3, self.atom4 = args[0]
-        elif len(args) is 4:
-            for elem in args:
-                if not isinstance(elem, Atom):
-                    raise TypeError('Not Atom Instance')
-            self.atom1, self.atom2, self.atom3, self.atom4 = args
-        else:
-            raise IOError('A list of four atom or four atoms needed')
 
-        vec1 = self.atom1.pos - self.atom2.pos
-        vec2 = self.atom3.pos - self.atom2.pos
+        self.get_atoms_from_list(args)
+
+        #if len(args) is 1:
+            #if isinstance(args[0], types.ListType):
+                #self.atom1, self.atom2, self.atom3, self.atom4 = args[0]
+        #elif len(args) is 4:
+            #for elem in args:
+                #if not isinstance(elem, Atom):
+                    #raise TypeError('Not Atom Instance')
+            #self.atom1, self.atom2, self.atom3, self.atom4 = args
+        #else:
+            #raise IOError('A list of four atom or four atoms needed')
+
+        vec1 = self.atoms[0].pos - self.atoms[1].pos
+        vec2 = self.atoms[2].pos - self.atoms[1].pos
         vec3 = - vec2
-        vec4 = self.atom4.pos - self.atom3.pos
+        vec4 = self.atoms[3].pos - self.atoms[2].pos
 
         n1 = np.cross(vec1, vec2)
         n2 = np.cross(vec3, vec4)
@@ -674,9 +750,9 @@ class Dihedral(object):
         pass
 
     def __repr__(self):
-        return '{name} {at1} {at2} {at3} {at4} = {dihedral}'.format(
-            name=self.__class__.__name__, at1=self.atom1, at2=self.atom2,
-            at3=self.atom3, at4=self.atom4, dihedral=self.dihedral)
+        return '{name} {at1} {at2} {at3} {at4} = {dihedral} º'.format(
+            name=self.__class__.__name__, at1=self.atoms[0], at2=self.atoms[1],
+            at3=self.atoms[2], at4=self.atoms[3], dihedral=self.dihedral)
 
 
 class Selection(Molecule):
